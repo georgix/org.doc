@@ -1,0 +1,20 @@
+#+TITLE: Coding toolkit: emacs
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+#+LINK_HOME: http://
+#+LINK_UP: http://
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main-ltr.css" />  <link rel="stylesheet" type="text/css" href="css/shared.css" />  <link rel="stylesheet" type="text/css" href="css/common.css" /> 
+
+
+* org mode
+** export Markdown .md from org mode
+
+- M-x customize-variable RET org-export-backends
+
+- check the "markdown" option
+
+- publish org mode to md file: C-c C-e m m
+
+** links
+
+http://blog.csdn.net/pfanaya/article/details/6676307

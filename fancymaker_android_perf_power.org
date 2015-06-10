@@ -6,4 +6,46 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main-ltr.css" />  <link rel="stylesheet" type="text/css" href="css/shared.css" />  <link rel="stylesheet" type="text/css" href="css/common.css" /> 
 
 
-* kernel 
+* cpufreq
+
+** cpufreq
+
+* hotplug
+
+** mpdecision
+
+* suspend
+
+** suspend
+
+** earlysuspend
+
+** autosleep
+
+** wakeup_count
+
+[[http://blog.csdn.net/wlwl0071986/article/details/42672591][earlysuspend、autosleep以及wakeup_count三种休眠机制的分析和比较]]
+
+* boost
+
+** input boost
+
+** perf lock
+
+** PMS
+
+*** setInteractive
+
+
+#+BEGIN_SRC 
+
+张三->李四: 嘿，小四儿, 写博客了没?
+Note right of 李四: 李四愣了一下，说：
+李四-->张三: 忙得吐血，哪有时间写。
+
+#+END_SRC
+
+*** setPowerHint
+
+*** setAutoSuspend
+
