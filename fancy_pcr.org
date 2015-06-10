@@ -1,0 +1,1115 @@
+http://work.lenovo.com/issue/browse/PCR
+
+#+TITLE: MBG PCR LIST
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+
+
+|  id | class       | summary                                                            | platform   | status  | accept? | submit? | review                                                   |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|   1 | dram size   | ZRAM/KSM                                                           | 8794       | valid   | TBD     |         | small dram size project                                  |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|   2 | boot time   | multi-thread to scan package; increase GC threshold                | mtk & 8794 | valid   | Yes     | no      | verify on k9 ?                                           |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|   3 | perf        | app switch time with 空灵触控：fixed by app                        |            | invalid | N       |         | app bug & fixed, ignore                                  |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|   4 | touch       | list view scroll too short distance: SCROLL_FRICTION/TOUCH_SLOP    | common     | valid   | TBD     |         | customize according to sceen size and 阻尼系数           |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|   5 | benchmark   | Antutu: cheating by gpu/cpu performance mode when detect antutu    | mtk & 8794 | valid   | TBD     | no      | qcom add new Performance interface in framework          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|   6 | audio       | BT A2DP when suspend (adjust cpu schedule policy)                  | common     | valid   | No      | no      | side effect on power, patch only if with same bug        |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|   7 | call        | incoming call                                                      | common     | valid   | N       |         | L call app may not suffer the problem                    |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|   8 | suspend     | resume from suspend and light screen                               | qcom       | valid   | Yes     | partial | reduce delay in setup hw registers, and some dsi config? |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|   9 | dram        | LMK parameter adjust                                               | common     | invalid | Yes     | yes     | 12/256/512 used for k9                                   |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  10 | boot        | broadcast slow at boot up time                                     | common     | invalid | N       |         | google fix this problem,                                 |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  11 | boot        | broadcast slow at boot up time (dup)                               | common     | dup     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  12 | ui          | volumn button hard to use                                          |            | invalid | N       |         | not perf issue, ignore                                   |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  13 | boot time   | factory mode boot up time : remove selinux(restorecon_xxx("/sys"") | mtk only   | valid   | N       |         | qcom do not need this                                    |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  14 | app crash   | app freeze: expand default binder buffer size by 128KB             | common     | valid   | No      | no      | not merge if no failure                                  |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  15 | dram        | adjust vmalloc threshold to avoid vmalloc fail                     | common     | valid   | No      | no      | not merge if no vmalloc fail                             |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  16 | boot time   | raise the preload GC threshold to avoid frequent GC (dup)          | common     | dup     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  17 | boot time   | boost first time bootup with LOCAL_DEX_PREOPT (odex, user load)    | common     | valid   | TBD     |         | ART                                                      |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  18 | media       | galary database update too slow after sd swap                      | common     | valid   | Yes     | partial | jcommand to rm media dbs, retest with k9?                |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  19 | database    | EMMC NOSYNC mode: SQLITE_NO_SYNC (sqlite3.c)                       | common     | invalid | N       |         | for poor emmc                                            |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  20 | database    | ATOMIC_WRITE mode (k900)                                           | common     | valid   | Yes     | no      | merge after verify with k9                               |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  21 | launcher    | adjust LMK adj for laucher to avoid kill when low memory           | common     | invalid | N       |         | useful for small memory devices                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  22 | touch       | adjust long press time from 500ms to 350-400ms (ref 240ms)         | common     | valid   | TBD     |         | behavior, not perf issue                                 |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  23 | settings    | reduce settings  memory usage                                      | common     | invalid | N       |         | for small memory devices                                 |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  24 | 3rd app     | improve key 3rd party app perf with HW_accel                       | common     | valid   | N       |         | check top 3rd party app default enable hw_accl           |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  25 | app lauch   | temperary adjust cpu sched policy to boost app launch              | common     | valid   | Yes     | no      | merge after verify on k9                                 |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  26 | low power   | adjust cpu sched policy (set cpu freq limit according to app list) | common     | valid   | No      | no      | impact user experience, not recommend on high-end device |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  27 | touch       | false alarm in edge, touch driver filter                           | common     | valid   | TBD     |         | not perf issue                                           |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  28 | app         | calling app perf                                                   | common     | invalid | N       |         | implement in app, not perf issue                         |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  29 | app lauch   | [PCR-25]boost first time app lauch(no screenshot for home screen)  | common     | valid   | Yes     | no      | include in PCR-25                                        |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  30 | animation   | switch animation                                                   | common     | invalid | N       |         | not perf issue                                           |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  31 | gesture     | improve gesture performance in screen off mode                     | common     | invalid | N       |         | no code                                                  |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  32 | camera      | boost camera start up flow in screen off mode                      | common     | invalid | N       |         | no code                                                  |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  33 | toolchain   | gcc-4.8-linaro, -O2, neon-vfp4 (stability issue)                   | common     | invalid | N       |         | no code                                                  |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  34 | orientation | qcom improve orientation change perf                               | qcom       | invalid | N       |         | qcom driver include the patch                            |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  35 | display     | opengl tuning                                                      | common     | valid   | Y       | no      | need customization                                       |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  36 | touch       | touch FW (landlock distance tuning)                                | common     | invalid | N       |         | FW, not SW                                               |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  37 | dram        | config zram size to balance perf/function                          | common     | invalid | N       |         | small memory devices only                                |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  38 | dram        | DRAM turbo mode (risky)                                            | common     | invalid | N       |         | stability issue                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  39 | input       | improve input event response by change cpu freq                    | common     | valid   | Yes     |         | qcom new Performance api support this ?                  |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|  40 | perf        | neon in skia/bionic memcpy                                         | mtk        | valid   | Yes     |         | no code                                                  |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 117 | low power   | same as PCR-26                                                     | common     | dup     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 118 | display     | non-linear backlight                                               | common     | valid   | TBD     |         | not perf issue                                           |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 119 | low power   | same as PCR-26                                                     |            | dup     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 120 | camera      | boost camera lauch                                                 | qcom, mtk  | valid   | Yes     | yes     |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 123 | low power   | limit cpu freq according to thermal                                | qcom       | valid   | Yes     | no      | need verify on k9                                        |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 124 | dalvik      | GC threshold                                                       | mtk        | dup     | N       |         | no code                                                  |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 125 | wifi        | wifi RTS threshold 2347->2346                                      | common     | new     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 127 | wifi        | wifi ST enhance                                                    | common     | new     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 133 | home        | return to home screen slow (reduce snapshot operation 2->1)        | common     | valid   | Yes     | no      | no code                                                  |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 141 | perf        | From PCR-10, a VIP broadcast channel                               |            | dup     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 142 | display     | resume and display light up 600ms                                  |            | dup     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 143 | display     | PCR-8: resume and display light up (optimize to 300ms)             |            | dup     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 144 | perf        | PCR-14/15                                                          | common     | dup     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 146 | wifi        | wifi signal strength                                               |            | new     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 147 | perf        | PCR-141                                                            |            | new     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 154 | BT a2dp     | PCR-6                                                              |            | dup     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 156 | display     | PCR-35                                                             |            | dup     | N       |         |                                                          |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+| 160 | touch       | touch feedback                                                     |            | new     | N       |         | not perf issue                                           |
+|-----+-------------+--------------------------------------------------------------------+------------+---------+---------+---------+----------------------------------------------------------|
+|     |             |                                                                    |            |         |         |         |                                                          |
+
+
+* zram/ksm
+
+** memory low after long time usage
+
+** for android version above 4.2 and small dram devices
+
+** ksm -> 开机时配置扫描页数和频率，zram -> 开机建立和挂载swap分区供压缩
+
+** kernel/msm
+arch/arm/configs/msm8974_defconfig
+#+BEGIN_SRC sh
++CONFIG_SWAP=y
++CONFIG_ZRAM=y
++CONFIG_ZRAM_DEBUG=y
++CONFIG_ZSMALLOC=y
++CONFIG_KSM=y
+#+END_SRC
+
+** vendor/qcom/copper
+AndroidBoard.mk
+#+BEGIN_SRC sh
++#include $(CLEAR_VARS)
++LOCAL_MODULE := fstab.zram
++LOCAL_MODULE_TAGS := optional
++LOCAL_MODULE_CLASS := ETC
++LOCAL_SRC_FILES := $(LOCAL_MODULE)
++LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT)
++include $(BUILD_PREBUILT)
+#+END_SRC
+
+fstab.zram
+#+BEGIN_SRC sh
++/dev/block/zram0 none swap defaults zramsize=1073741824
+#+END_SRC
+
+init.target.rc
+#+BEGIN_SRC sh
+on fs
+ mount_all fstab.qcom
++swapon_all fstab.zram
++write /proc/sys/vm/swappiness 100
++write /sys/kernel/mm/ksm/pages_to_scan 100
++write /sys/kernel/mm/ksm/sleep_millisecs 500
++write /sys/kernel/mm/ksm/run 1
+#+END_SRC
+
+msm8974.mk
+#+BEGIN_SRC sh
++PRODUCT_PACKAGES += fstab.zram
+#+END_SRC
+
+* boot: boot time
+
+** long boot time in normal boot
+
+** multi-thread to scan package; increase GC threshold
+
+** frameworks/base
+core/java/com/android/internal/os/ZygoteInit.java
+#+BEGIN_SRC java
+-private static final int PRELOAD_GC_THRESHOLD = 50000;
++private static final int PRELOAD_GC_THRESHOLD = 500000;
+#+END_SRC
+
+services/java/com/android/server/pm/Installer.java
+
+services/java/com/android/server/pm/PackageManagerService.java
+
+** frameworks/native
+cmds/installd/installd.c/.h
+
+*** TODO change too much and different on L, not reviewed
+
+* touch: list view scroll too slow
+
+** 手指滑动相同距离，列表滚动距离短
+
+** frameworks/base
+core/java/android/view/view/ViewConfiguration.java
+#+BEGIN_SRC java
+private static final int TOUCH_SLOP = 8 -> 5;
+private static final float SCROLL_FRICTION = 0.015f -> 0x011f;
+#+END_SRC
+
+core/res/res/values/config.xml
+#+BEGIN_SRC xml
+<dimen name="config_viewConfigurationTouchSlop">8dp</dimen> -> 5dp
+#+END_SRC
+
+*** TODO need customize according to screen characteristics
+
+
+* app swith
+
+** ignore (app fix)
+
+
+* benchmark: antutu
+
+** cheat by cpu/gpu performance mode when detect benchmark app (improve benchmark by 1000-2500)
+
+** hacking method
+
+- activity 运行时检测包名，antutu->performance mode, activity 切后台/退出时，恢复。
+- hotplug mode -> performance mode
+  - cpu governor set to performance
+  - disable DVFS
+  - all cpu plug on, high freq
+  - gpu loading_threshold 100%, freq (mali)
+  - disable thermal
+- performance mode -> hotplug mode
+  - cpu governor set to hotplug
+  - enable DVFS
+  - gpu loading_threshold 80%, freq(DVFS)
+  - enable thermal
+
+** frameworks/base
+services/java/com/android/server/am/ActivityManagerService.java
+#+begin_src java
+private final void handleAppDiedLocked(Process Record app,
+	boolean restarting, boolean allowRestart) {
++	if (null != app.info.packageName && app.info.packageName.contains(mStackSupervisor.getPackageName())) {
+		String str = mStackSupervisor.readSysFile(mStackSupervisor.mCpuFreqFilePath, '\0');
+		if (!TextUtils.isEmpty(str) && (str.trim().compareTo("41") == 0 ? true : false)) {
+			mStackSupervisor.writeSysFile("0", mStackSupervisor.mCpuFreqFilePath);
+			mStackSupervisor.mSetCpuFreqMark = 1;
+		}
++	}
+}
+#+end_src
+
+services/java/com/android/server/am/ActivityStackSupervisor.java
+
+#+begin_src java
++package int mSetFreqMark = 1;
++String mCpuFreqFilePath = "/sys/devices/system/cpu/cpu0/rq-stats/mpctl";
++private int mPackageName[] = {0xc6, 0xde, 0xda, 0x5c, 0xc2, 0xdc, 0xe8, 0xea, 0xe8, 0xea};
+
+final ActivityRecord acitvityIdleInternalLocked(final IBinder token, boolean from Timeout,
+Configuration config) {
++	if (null != r.packageName) {
+		if (r.packageName.contains(getPackageName())) {
+			if (mSetCpuFreqMark != 0) {
+				String str = readSysFile(mCpuFreqFilePath, '\0');
+				if (!TextUtils.isEmpty(str) && str.trim().compareTo("0") == 0 ? true : false))
+					writeSysFile("41", mCpuFreqFilePath);
+				mSetCpuFreqMark = 0;
+		} else {
+			if (mSetCpuFreqMark != 1) {
+				String str = readSysFile(mCpuFreqFilePath, '\0');
+				if (!TextUtils.isEmpty(str) && str.trim().compareTo("41") == 0 ? true : false))
+					writeSysFile("0", mCpuFreqFilePath);
+				mSetCpuFreqMark = 0;
+		}
++	}
+}
+
+void writeSysFile(String values, String filePath) {
+...;
+}
+
+String readSysFile(String file, char endChar) {
+...;
+}
+
+String getPackageName() {
+...;
+}
+#+end_src
+
++ sc.lenovo.com:8080/#/c/270787/
+
+** TODO [#A] qcom has add a common Performance api(perflock) in framework laywer in L
+
+[ro.vendor.extension_library]: [libqti-perfd-client.so]
+
+frameworks/base/core/res/res/values/config.xml
+
+#+begin_src xml
+    <!-- Whether cpu boost is enabled for overscroller fling. -->
+    <bool name="config_enableCpuBoostForOverScrollerFling">false</bool>
+    <integer name="flingboost_timeout_param">0</integer>
+    <integer name="flingboost_schedboost_param">0</integer>
+    <integer name="flingboost_cpuboost_param">0</integer>
+    <integer name="flingboost_pcdisbl_param">0</integer>
+    <integer name="flingboost_ksmboost_param">0</integer>
+
+    <!-- Whether cpu boost is enabled for horizontal scroll. -->
+    <bool name="config_enableCpuBoostForScroller">false</bool>
+    <integer name="scrollboost_timeout_param">0</integer>
+    <integer name="scrollboost_schedboost_param">0</integer>
+    <integer name="scrollboost_cpuboost_param">0</integer>
+    <integer name="scrollboost_pcdisbl_param">0</integer>
+    <integer name="scrollboost_ksmboost_param">0</integer>
+
+    <!-- Configuration to enable non-default PDP during IWLAN -->
+    <bool name="config_feature_iwlan_enabled">false</bool>
+    <!-- set to false if we dont need to consider data
+         service state to display signal strength bars -->
+    <bool name="config_combined_signal">true</bool>
+
+    <!-- Whether cpu boost is enabled for both application's 1st launch,subsequent
+         launch and in-app-activity -->
+    <bool name="config_enableCpuBoostForAppLaunch">false</bool>
+    <integer name="launchboost_timeout_param">0</integer>
+    <integer name="launchboost_schedboost_param">0</integer>
+    <integer name="launchboost_cpuboost_param">0</integer>
+    <integer name="launchboost_cpu_6_7_offline_param">0</integer>
+    <integer name="launchboost_pcdisbl_param">0</integer>
+    <integer name="launchboost_ksmboost_param">0</integer>
+#+end_src
+
+* BT A2DP when suspend
+
+** 灭屏状态音乐卡顿
+
+** 蓝牙耳机播放音乐，cpu在灭屏状态使用2 core, 音乐停止，让cpu恢复灭屏single core default setting.
+
+** external/bluetooth/bluedroid
+audio_a2dp_hw/audio_a2dp_hw.c
+#+begin_src c
+#define A2DP_CTRL_PROPERTY "audio.a2dp.status"
+
++static  void a2dp_cpu_ctrl(int stats)
+{
+	if (stats)
+		property_set(A2DP_CTRL_PROPERTY, "play");
+	else
+		property_set(A2DP_CTRL_PROPERTY, "stop");
+}
+
+static int start_audio_datapathh(struct a2dp_stream_out *out)
+{
++ 	a2dp_cpu_ctrl(true);
+}
+
+statuc int stop_audio_datapath(struct a2dp_stream_out *out)
+{
++	a2dp_cpu_ctrl(false);
+}
+#+end_src
+
+** system/core
+init/property_service.c
+#+begin_src c
++{ "audio.a2dp.", AID_MEDIA, 0},
+#+end_src
+
+** vendor/qcom-proprietary
+mpdecision/decision.c
+#+begin_src c
++static int display_on = 1;
++static int bt_play = 0;
+
+int mpdecision_lock_min_cores(int min)
+{
++	pthread_mutex_lock(&hotplug_mutex);
+	display_on = min > 1 ? 1 : 0;
+	if (!display_on && bt_play) {
+		pthread_mutex_unlock(&hotplug_mutex);
+		do_lock_min_cores(2);
+	} else if (display_on && lock_lock_min_cores == 2) {
+		pthread_mutex_unlock(&hotplug_mutex);
+		do_lock_min_cores(1);
+	} else
++		pthread_mutex_unlock(&hotplug_mutex);
+}
+
+static void *do_perf_monitor(void *data)
+{
+-	int core_num = cmd / 10;
+-	int governor = cmd % 10;
++	int core_num, governor;
+	if (cmd > 100) {
+		bt_play = 2 - cmd / 100;
+		cmd = cmd % 100;
+	}
+	core_num = cmd / 10;
++	governor = cmd % 10;
+
+	if (core_num > 0) {
+		if (core_num > num_cpus)
+			core_num = num_cpus;
++		pthread_mutex_lock(&hotplug_mutex);
+		if (!display_on && bt_play)
+			if (core_num < 2)
+				core_num = 2;
+		else if (display_on && bt_play)
+			core_num = 1;
++		pthread_mutex_lock(&hotplug_mutex);
+		do_lock_min_cores(core_num);
+	}
+#+end_src
+
+** device/qcom/common
+rootdir/etc/init.qcom.rc
+#+begin_src sh
+on property:audio.a2dp.status=play
+	write /sys/devices/system/cpu/cpu0/rq-stats/mpctl 122
+
+on property:audio.a2dp.status=stop
+	write /sys/devices/system/cpu/cpu0/rq-stats/mpctl 212
+#+end_src
+
+* call app: incoming call response
+
+** 待机来电亮屏时间，提高响铃和页面显示的同步性
+
+** 通话界面显示的逻辑优化，UI加载的时间优化，平衡来电铃音，亮屏速度与锁屏界面处理时机等，理论上缩短时间300-500ms.
+
+** packages/apps/LenovoTeleservice
+
+src/com/android/phone/CallController.java
+
+src/com/android/phone/ErrorDialogActivity.java
+src/com/android/phone/OutgoingCallBroadcaster.java
+src/com/android/phone/PhoneUtils.java
+src/com/android/phone/msim/MSimCallNotifier.java
+
+* resume from suspend (screen light up)
+
+** 优化亮屏速度 （使用双MIPI DSI方案的平台）
+qcom原来的实现方式对每个DSI实现一次初始化，包含GPIO设置和延时，修改后，LCD reset和上电只做一次，延时也只做一次，节省LCD初始化时间。优化2K屏的DSI多通道多余操作，使得driver层的各项执行时间减少
+
+** kernel/msm
+*** TODO arch/arm/boot/dts/msm8974-mdss.dtsi
+#+begin_src sh
+mdss_dsi0:qcom,mdss_dsi@fd922800 {
+- 	qcom,platform-supply-entry1;
+   	qcom,platform-supply-entry2;
+	qcom,platform-supply-entry3;
+	
+-mdss_dsi1: qcom,mdss_dsi@fd922e00 {};
+#+end_src
+
+*** DONE drivers/video/msm/mdss/mdss_dsi.c
+#+begin_src c
+gpio_direction_output(ctrl_pdata->disp_vsp_gpio, 1);
+- msleep(1);
++ udelay(100);
+wmb();
+gpio_direction_output(ctrl_pdata->disp_vsn_gpio, 1);
+-sleep(20);
++msleep(4);
+#+end_src
+
+*** DONE drivers/vidio/msm/mdss/mdss_dsi_panel.c
+#+begin_src c
+- gpio_set_value((ctrl_pdata->rst_gpio), 1);
+- msleep(20);
++ if(gpio_is_valid(ctrl_pdata->rst_gpio)) {
++ 	gpio_set_value((ctrl_pdata->rst_gpio), 1);
++	msleep(10);
++ }
+#+end_src
+
+*** TODO drivers/video/msm/mdss/mdss_r63319.h
+#+begin_src c
+static char ultra_mode_cmd0[] = {0x55, 0x73}; //old {0x55, 0x03}
+static char ultra_mode_cmd1[] = {0xca, 0x01, 0x80, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0x20, 0x20 ...};
+static char ultra_mode_cmd2[] = {0xba, 0x05, 0x3c, 0xff, 0x00, 0x00, 0x00};
+static char ultra_mode_cmd3[] = {0xbd, 0x01, 0xb4, 0xa0};
+#+end_src
+
+* LMK
+
+** small free dram size (*procrank*)
+调整LMK参数，减少应用数量，提高内存回收threshold, 清理非前台应用
+** frameworks/native
+*** DONE build/phone-xhdpi-1024-dalvik-heap.mk
+#+begin_src sh
+dalvik.vm.heapgrowthlimit=192m # old is 96m
+dalvik.vm.heapsize=512m # old is 256m
+#+end_src
+*** TODO why include xhdpi-1024 not xhdpi-2048 for 3GB project(k9)?
+
+* broadcast slow
+
+MTK建立单独的VIP broadcast queue，后来发现是android原生bug, 已经fix.
+
+** frameworks/base
+services/java/com/android/server/am/ActivityManagerService.java
+
+* broadcast slow
+
+* volumn button hard to use  
+
+* boot up time in facotry mode (MTK only)
+
+* app freeze and image tranfer fail in wechat
+
+** expand binder buffer size by 128KB
+
+** frameworks/native
+libs/binder/ProcessState.cpp
+#+begin_src cpp
++ #define BINGER_VM_SIZE ((1*1024*1024) - (4096 * 2) + (4096 * 32)) // ((1*1024*1024) - (4096 *2))
+#+end_src
+
+* vmalloc fail
+
+** kernel/msm
+arch/arm/mm/mmu.c
+#+begin_src c
+static void * __initdata vmalloc_min = (void *)(VMALLOC_END - (300 << 20) - VMALLOC_OFFSET); // (VMALLOC_END - (240 << 20) - VMALLOC_OFFSET)
+#+end_src
+
+* boot up time GC
+** raise the preload GC threshold to avoid frequent GC
+** frameworks/base
+core/java/com/android/internal/os/ZygoteInit.java
+#+begin_src java
+private static final int PRELOAD_GC_THRESHOLD = 500000; //50000
+#+end_src
+
+* boost first time bootup with LOCAL_DEX_PREOPT
+
+** build
+core/prebuilt.mk
+
+* galary database update too slow after sd swap
+
+** 双sdcard, SD swap后，强制删除数据库，保证下次开机后快速更新media database, 保证galary, music快速访问数据库
+- jcommand
+- init.rc
+- 在应用中deviceinfo/lenovousb/SwitchStoragePrefereceCategory.java clearDatabase()中call
+  - SystemProperties.set("sys.jcommand_para", "[CLEAR_DATABASE]");
+  - SystemProperties.set("ctl.start", "jcommand");
+
+** DONE device/lenovo/s7
+init.lenovo.rc
+#+begin_src sh
++ service jcommand /system/bin/sh /system/bin/jcommand.sh
+class main
+disabled
+oneshot
+#+end_src
+
+** TODO device/lenovo/8939_kk(testmode/jcommand.h)
+#+begin_src sh   
++function ClearDatabase() {
+	echo "clear database"
+	rm /data/data/com.android.providers.media/databases/external.db
+	rm /data/data/com.android.providers.media/databases/external.db-shm
+	rm /data/data/com.android.providers.media/databases/external.db-wal
+}
+#+end_src
+
+* EMMC NOSYNC mode: SQLITE_NO_SYNC (sqlite3.c)
+
+*  ATOMIC_WRITE mode (k900)
+
+** improve小数据写入性能(<4KB)
+sqlite benchmark, AndroBench, RL Benchmark, Acreve Benchmark
+
+** external/sqlite
+
+dist/Android.mk
+#+begin_src sh
++ -DSQLITE_ENABLE_ATOMIC_WRITE
+#+end_src
+
+dist/sqlite3.c
+#+begin_src c
+static int unixDeviceCharacteristics(sqlite3_file *id) {
+	unixFile *p = (unixFile*)id;
+-	if (p->ctrlFlags & UNIXFILE_PSOW) {
+		return SQLITE_IOCAP_POWERSAFE_OVERWRITE;
+	} else {
+		return 0;
+-	}
++	int return Value = 0;
+	if (p->ctrlFlags & UNIXFILE_PSROW) {
+		returnValue = SQLITE_IOCAP_POWERSAFE_OVERWRITE;
+	}
+	#ifdef SQLITE_ENABLE_ATOMIC_WRITE
+	returnValue |= SQLITE_IOCAP_ATOMIC4K;
+	#endif
++	return returnValue;
+}
+
+#+end_src
+
+*  adjust LMK adj for laucher to avoid kill when low memory
+
+** when a activity is launched, laucher is switched to BG activity, and maybe killed by LMK in system low memory condition
+dumpsys meminfo
+
+** frameworks/base
+
+services/java/com/android/server/am/ActivityManagerService.java
+#+begin_src java
+private final int computeOomAdjLocked(ProessRecord app, int hiddenAdj, int clientHiddenAdj,
+	int emptyAdj, ProcessRecord TOP_APP, boolean recursed, boolean doingAll) {
+
+	if (app.processName.equals("android.process.media")) { };
++	if (app.processName.equals("android.process.acore")) {
+		adj = ProcessList.FOREGROUND_APP_ADJ;
+		schedGroup = Process.THREAD_GROUP_DEFAULT;
+		app.adjType = "launcher";
++	}
+}
+#+end_src
+
+* adjust long press time from 500ms to 350-400ms (ref 240ms)
+
+** frameworks/base
+core/java/android/view/ViewConfiguration.java
+#+begin_src java
+private static final int DEFAULT_LONG_PRESS_TIMEOUT = 300; // 500
+#+end_src
+
+packages/SettingsProvider/res/values/defaults.xml
+#+begin_src xml
+<integer name="def_long_press_timeout_millis">300</integer> //500
+#+end_src
+
+* reduce settings  memory usage
+
+** settings app lauch slow
+
+开启系统过渡动画，优化初始化流程与界面布局，减少第一响应时间
+(systrace)
+
+** packages/apps/Settings
+
+AndroidManifest.xml
+#+begin_src xml
+<activity android:name=".LenovoTabSettings"
+-	android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar"
++	android:theme="@style/ThemeCustomactionBar"
+#+end_src
+  
+res/values/lenovo_style.xml
+#+begin_src xml
+<style name="CustomeActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+	<item name="android:windowActionBarOverlay">true</item>
+	<item name="android:displayOptions">showHome|useLogo</item>
+	<item name="android:homeLayout">@layout/settings_tabs_pager</item>
+</style>
+#+end_src
+
+src/com/android/settings/AllSettings.java
+#+begin_src java
+public void onResume() {
+-	invalidateHeaders();
++	mHandler.sendEmptyMessageDelayed(REFRESH, 200);
+}
+
++private static final int REFRESH = 1212;
+
+private Handler mHandler = new Handler() {
+	public void handleMessage(Message msg) {
+		switch (msg.what) {
++		case REFRESH:
+			invalidateHeaders();
++			break;
+		}
+	}
+}
+#+end_src
+
+* key third party app optimize
+
+** 对常见未开启硬件加速app强制开启，保证帧率
+(showfps)
+
+** frameworks/base
+core/java/android/content/pm/PackageParser.java
+#+begin_src java
++static final ArrayList<String> HWACCENAPPLIST = new ArrayList<String>();
+static {
+	HWACCENAPPLIST.add("com.sina.weibo");
+	HWACCENAPPLIST.add("com.qzone");
++}
+
++for (int i = 0: i < HWACCENAPPLIST.size(); i++) {
+	if (owner.packageName.contains(HWACCENAPPLIST.get(i)))
+		hardwareAccelerated = true;
++}
+#+end_src
+
+* boot app lauch by temporary change cpu sched policy
+
+** qcom change cpu policy to interactive and online core = 2, mtk plug on multi-core and keep for several seconds (need customization by project)
+verify mini freq works after modification
+#+begin_src sh
+cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
+#+end_src
+
+** TODO kernel/msm
+drivers/cpufreq/cpufreq_ondemand.c
+#+begin_src c
++ /* good touch experience */
+#define LENOVO_CPU_INPUT_BOOST_HIGH_PERF
+#ifdef LENOVO_CPU_INPUT_BOOST_HIGH_PERF
+#define DEF_CPU_INPUT_BOOST_NUM	(4)
+#else
+#define DEF_CPU_INPUT_BOOST_NUM (2)
+#endif
+
++/* for input boost, 4 cores, highest cpu freq */
+#ifdef LENOVO_CPU_INPUT_BOOST_HIGH_PERF
+unsigned long next_jiffies = 0;
+#define DVFS_F4	(300000)
+
+static unsigned int cpu_num_base;
+module_param(cpu_num_base, int, 0644);
+#endif
+
+static void do_dbs_timer(strut work_struct *work)
+{
+	mutex_lock(&dbs_info->timer_mutex);
+	/* for input boost, 4 core and highest cpu freq */
+	#ifdef LENOVO_CPU_INPUT_BOOST_HIGH_PERF
+	if (dbs_info->cur_policy->min == dbs_info->cur_policy->max
+		&& next_jiffies == 0 && 0 == cpu) {
+		cpu_num_base = 4;
+		next_jiffies = jiffies + msecs_to_jiffies(5000);
+	}
+
+	if (next_jiffies != 0 && jiffies > next_jiffies && 0 == cpu) {
+		next_jiffies = 0;
+		dbs_info->cur_policy->min = (DVFS_F4);
+		cpu_num_base = 1;
+	} else if (next_jiffies != 0 && jiffies < next_jiffies)
+		cpu_num_base = 4;
+	#endif
+#+end_src
+
+** TODO frameworks/native
+services/surfaceflinger/SurfaceFlinger.cpp
+#+begin_src cpp
+void SurfaceFlinger::computeVisibleRegions(
+	const LayerVector& currentLayers, uint32_t layerStack,
+	Region& outDirtyRegion, Region& outOpaqueRegion)
+{
+	while (i--) {
+	/* for main display: remove ext layer or background projector layer for all modes once mProjectableLayerVisibleOnMainDisplay is false */
+-	if ((bIgnoreLayers && indexLOI != (int)i) ||
+
++	if ((!dpy && (!mProjectableLayerVisibleOnMainDisplay && layr->isProjectorable())) ||
+		/* for other display: remove project layer in mirror mode ONLY, and mProjectableLayerVisibleOnMainDisplay is false
++		(dpy && !mDisplayExtensionMode && !mProjectableLayerVisibleOnMainDisplay && layer->isProjectorable()) ||
+		/* for other display: remove internal layer; remove none projectable layers in ext mode */
+-		(dpy && mDisplayExtensionMode && !layer->isProjectorable())) {
++		(dpy && mDisplayExtensionMode && !layer->isProjectorable() && (strstr(layer->getName(), "Projectionapplication.VideoActivity") == NULL))) {
+		/* ignore all other layers except the layers marked as ext_only by setting visible non transparent region empty */
+
+#+end_src
+	
+** TODO frameworks/base
+services/java/com/android/server/am/ActivityStack.java
+#+begin_src java
+final void startPausingLocked(boolean userLeaving, boolean uiSleeping) {
+-	if (next == null || next.task != prev.task) {
+/* do not screenshot when prev is home task */
++ 	if ((next == null || next.task != prev.task) && !prev.task.isHomeTask()) {
+#+end_src
+
+* low power: adjust cpu sched policy to achieve balance of power and performance
+
+** CPU限频方案，针对不同场景制定合适的频率策略
+- 有功耗问题再考虑此solution
+- 根据名单，限制CPU最高频率，调整动态调频和多核管理策略，在性能损失可以忽略的前提下，达到功耗平衡点
+- 名单主要关注CPU负荷比较重的场景，按游戏，上网，视频，社交，导航等分类，根据乐商店TOP应用，做CPU频率优化
+
+** frameworks/base
+core/java/android/view/Choreographer.java
+#+begin_src java
++private static FrameDisplayEventReceiver mFakeDisplayEventReceiveer;
+
+private Choreographer(Looper looper)
+{
++	mFakeDisplayEventReceiver = mDisplayEventReceiver;
+}
+
++public static void setVsyncType(int value) {
+	mFakeDisplayEventReceiver.setVsyncType(value);
+}
+#+end_src
+
+core/java/android/view/DisplayEventReceiver.java
+#+begin_src java
++private static native void nativeSetVsyncType(int receiverPtr, int value);
+
+/* FPS_60_30 */
++public void setVsyncType(int value) {
+	if (mReceiverPtr != 0)
+		nativeSetVsyncType(mReceiverPtr, value);
+}
+#+end_src
+core/jni/android_view_DisplayEventReceiver.cpp
+#+begin_src cpp
+class NativeDisplayEventReceiver : public LooperCallback {
+public:
++	status_t setVsyncType(int value);
+  
++status_t NativeDisplayeventReceiver::setVsyncType(int value) {
+	status_t status = mReceiver.setVsyncType(value);
+	if( status)
+		return status;
+	return OK;
+}
+#+end_src
+
+services/java/com/android/server/am/ActivityStack.java
+#+begin_src java
+private void completePauseLocked() {
++	Choreographer.setVsyncType(60);
+}
+#+end_src
+
+services/java/com/android/server/am/ActivityStackSupervisor.java
+#+begin_src java
++static Map<String, Integer> map = new HashMap<String, Integer>();
++static {
+	map.put("com.lenovo.browser", 1728000);
+	map.put("com.UCMobile.cmcc", 1728000);
+	map.put("com.tencent.mm", 1728000);
+
+	map.put("com.autonavi.cmccmap", 1267200);
+...;
+}
+
++private static final String LIMIT_CPU_LIST = "/data/list.txt";
++private static List<String> mCpuList = new ArrayList<String>();
+
+-public void setFpsHashMap(boolean flag) {};
++public void setFpsHashMap() {
+	mCpuList = splitFileIntoList(LIMIT_CPU_LIST);
+	for (int i = 0; i < mCpuList.size(); i++) {
+		String str = mCpuList.get(i);
+		String type = getLimitType(str);
+		String pkg = getLimitPackageName(str);
+		int freq = Integer.parseInt(getLimitFreq(str));
+		if (type.equals("add"))
+			map.put(pkg, freq);
+		else if (type.equals("del"))
+			map.remove(pkg);
+	}
+}
+#+end_src
+
+* touch false alarm in the edge, filter in touch driver
+
+** 窄边框边缘误触
+
+** kernel/msm
+drivers/input/touchscreen/s3408/synaptics_dsx_i2c.c
+#+begin_src c
+int X_DEL = 10; //0
+#+end_src
+
+* 通话界面启动速度
+
+* boost first time app lauch
+
+** frameworks/base
+services/java/com/android/server/am/ActivityStack.java
+#+begin_src java
+final void startPausingLocked(boolean userLeaving, boolean uiSleeping) {
+-	if (next == null || next.task != prev.task) {
+/* do not screenshot when prev is home task */
++ 	if ((next == null || next.task != prev.task) && !prev.task.isHomeTask()) {
+#+end_src
+
+* switch animation
+
+* screen off gesture
+
+* screen off camera
+
+* linaro toolchain update
+
+** linux-arm-androideabi-4.8-linaro
+- thumb -O2 optimize
+- mfpu neon-vfp4 (neon V2)
+- makefile (toolchain and O2)
+
+* qcom improve orientation change perf
+
+** kernel/msm
+drivers/video/msm/mdss/mdss_fb.c
+
+drivers/video/msm/mdss/mdss_fb.h
+
+drivers/video/msm/mdss/mdss_mdp_intf_video.c
+
+drivers/video/msm/mdss/mdss_mdp_overlay.c
+
+* opengl parameter tuning
+
+** tuning
+- http://source.android.com/devices/tuning.html
+- http://pompidev.net/2013/09/20/opengl-texture-size-and-performance-texture-cache-androidios-gles-2/, texture and cache size
+
+** frameworks/base
+libs/hwui/Properties.h
+#+begin_src c
+#define DEFAULT_TEXTURE_CACHE_SIZE 72.0f //128.0f
+#define DEFAULT_LAYER_CACHE_SIZE 48.0f //16.0f
+#define DEFAULT_RENDER_BUFFER_CACHE_SIZE 8.0f //2.0f
+#define DEFAUlT_PATH_CACHE_SIZE 40.0f //10.0f
+#define DEFAULT_GRADIENT_CAHE_SIZE 1.0f //0.5f
+#define DEFAULT_DROP_SHADOW_CACHE_SIZE 6.0f //2.0f
+#+end_src
+
+libs/hwui/font/FontUtil.h
+#+begin_src c
+#define DEFAULT_TEXT_SMALL_CACHE_HEIGHT 1024 //512
+#define DEFAULT_TEXT_LARGE_CACHE_HEIGHT 1024 //512
+#+end_src
+
+* touch FW (landlock distance tuning)
+
+* config zram size to balance perf/function
+
+* DRAM turbo mode (risky)
+
+* improve input event response by change cpu freq
+
+** cpu/gpu provile in certain context
+- input 响应速度
+- android powerhal
+
+** kernel/msm
+drivers/cpufreq/cpufreq-ondemand.c
+#+begin_src c
++static int hardkey_boost = 0;
+
+static void do_dbs_timer(struct work_strut *work)
+{
+-	next_jiffies = jiffies + msecs_to_jiffies(5000);
++	if (hardkey_boost) {
+		next_jiffies = jiffies;
+		hardkey_boost = 0;
+	} else
++		next_jiffies = jiffies + msecs_to_jiffies(5000);
+}
+
+static void dbs_input_event(struct input_handle *handle, unsigned int type
+	unsigned int code, int value)
+{
++	/* for input(hard key) boost 4 core, highest cpu freq */
+	#ifdef LENOVO_CPU_INPUT_BOOST_HIGH_PERF
+	if ((type == EV_KEY) && value == 1 && (KEY_MENU == code || KEY_HOMEPAGE == code || KEY_BACK == code)) {
+		struct cpu_dbs_info_s *dbs_info = &per_cpu(od_cpu_dbs_info, 0);
+		dbs_info->cur_policy->min = dbs_info->cur_policy->max;
+		hardkey_boost = 1;
+	}
+	#endif
+#+end_src
+
+* neon in skia bionic memcpy
+
+* [PCR-117]low power
+
+** push app list to devcie is possible
+
+** frameworks/base
+services/java/com/android/server/am/ActivityManagerService.java
+
+#+begin_src java
++	private HandlerThread mHandlerThread;
++ 	private PULimitHandler mCpuLimitHandler = null;
+
+
+public void systemReady(final Runnable goingCallback) {
++	mHandlerThread = new HandlerThread("ScanCPULimitList");
+	mHandlerThread.start(0;
+	mCPULimitHandler = new CPUlimitHandler(mHandlerThread.getLooper());
+	mCPULimitHandler.removeMessages(0);
+	Message ScanBeginMsg = new Message();
+	ScanBeginMsg.what = 0;
++	mCPULimitHandler.sendMessageDelayed(ScanBeginMsg, 60000);
+
+}
+
++private final class CPULimitHandler extends Handler {
+	public CPULimitHandler (Looper looper) {
+		super(looper, null, true);
+	}
+
+	@Override
+	public void handleMessage(Message msg) {
+		switch(msg.whaat) {
+		case 0:
+			mStackSupervisor.setFpsHashMap();
+			break;
+		}
+	}
+}
+
+#+end_src
+
+* [PCR-118]non-linear backlight
+
+** kernel/msm
+drivers/video/msm/mdss/dss_dsi_panel.c
+
+#+begin_src c
+static void mdss_dsi_panel_blkt_dcs(struct mdss_dsi_ctrl_pdata *ctrl, int level)
+{
+	if (level >=0 && level <=10)
+		real_level = (unsigned long)level;
+	else if(level <= 128 && level > 10)
+		real_level = ((unsigned long)level*65 + 530)/118;
+	else if (level <=205 && level > 128)
+		real_level = ((unsigned long)level*80 - 4465)/77;
+	else if (level <=255 && level > 205)
+		real_level = (unsigned long)level*2 - 255;
+}
+#+end_src
+
+* [PCR-120]boost camera lauch
+
+** kernel/msm
+
+arch/arm/boot/dts/msm8974-camera.dtsi
+#+begin_src c
+&master0 {
+	qcom,hw-thigh = <20>; //78
+	qcom,hw-tlow = <28>; //114
+	qcom,hw-tsu-sto = <6>; //28
+	qcom,hw-tsu-sta = <7>; //28
+	qcom,hw-thd-dat = <13>; //10
+	qcom,hw-thd-sta = <11>; //77
+	qcom,hw-tbuf = <25>; //118
+	qcom,hw-tsp = <3>; //1
+}
+#+end_src
+
+* [PCR-123] cpu freq limit according to cpu thermal sensor
+
+** vendor/qcom-proprietary
+thermal-engine/ss-data.c
+#+begin_src c
+static struct setting_info ss_cfgs_8974_pro_ac[] =
+{
+	{
+		.set_point = 80000, //90000
+	}
+}
+#+end_src
+
+thermal-engine/ss_algorithm.c
+#+begin_src
++static int handle_timer_done = 0;
+
+static void handle_timer_sig(void)
+{
+
++if(sampling_count >= 20 && !priv_control) {
+	if (sampling_count <= 60)
+		fix_mitigation_lvl(&algo_clnt[idx]);
+	else
+		sampling_count = 0;
+	handle_timer_done = 1;
+	continue;
++}
+if (EO < 0) {};
+algo_clnt[idx].tc_delay = 0;
++handle_timer_done = 1;
+
+static void *algo_monitor(void *data)
+{
+	while(1) {
+		handle_timer_sig();
++		if (handle_timer_done) {
+			handle_timer_done = 0;
+			sampling_count++;
++		}
+	}
+}
+
+#+end_src
+
+* [PCR-124] dalvik GC threshold
+
+* [PCR-160] touch feedback
+** frameworks/base
+
+policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+
+

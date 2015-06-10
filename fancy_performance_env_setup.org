@@ -1,0 +1,18 @@
+
+* systrace
+
+android doc: /android-sdk-windows/docs/tools/help/systrace.html
+
+$ cd android-sdk/platform-tools/systrace
+$ python systrace.py --time=10 -o mynewtrace.html sched gfx view wm
+
+python download: https://www.python.org/downloads/release
+
+The systrace.py use select() api, and that does not work on windows platform, instead we can android sdk monitor tool (ddms) to capture systrace file.
+
+systrace will create a trace.html file, which should be viewed in a modern html5 browser (chrome/firefox), and use keyboard shotcut to navigate the html report.
+(w/s for zoom in/out, a/d for shift left/right)
+
+* traceview
+
+* ftrace

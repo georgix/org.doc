@@ -1,0 +1,435 @@
+#+TITLE: Android Performance: Boot
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+#+LINK_HOME: http://
+#+LINK_UP: http://
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main-ltr.css" />  <link rel="stylesheet" type="text/css" href="css/shared.css" />  <link rel="stylesheet" type="text/css" href="css/common.css" /> 
+
+
+* boot flow break down
+
+** android boot process overview
+
+http://embien.com/blog/android-boot-process-and-optimization/
+
+[[file:emacs_img/15_04_30_android_boot_process.png]]
+
+
+** pl/lk
+http://processors.wiki.ti.com/index.php/Optimize_Linux_Boot_Time
+
+** TODO kernel
+*** profiling
+
+Raw data can be extracted by following command at the shell prompt:
+
+$ dmesg | grep initcall
+
+However, sorting the drivers and subsystems by the time time spent in the respective "initcall" is more useful.
+
+If CONFIG_PRINTK_TIME is enabled:
+#+begin_src
+$ dmesg | grep initcall | sort -k8 -n
+#+end_src
+If CONFIG_PRINTK_TIME is disabled:
+#+begin_src
+$ dmesg | grep initcall | sort -k6 -n
+#+end_src
+Same information can be viewed graphically via bootgraph script included in the kernel sources. This requires CONFIG_PRINTK_TIME to be enabled.
+#+begin_src    
+$ dmesg | perl scripts/bootgraph.pl > boot.svg
+#+end_src
+
+[[../perf_tool/Opdenacker-boot-time.pdf][http://elinux.org/images/4/43/Opdenacker-boot-time.pdf]]
+
+*** Measuring kernel boot with ftrace
+[ftrace]requirements for early boot (http://elinux.org/Measuring_Function_Duration_with_FTrace)
+- early clock
+- start location for tracing (optimally start_kernel)
+- static buffer
+- static parameters
+
+*** MISC solution
+
+- LZO compression (30% less time, 10% larger size comparing to gzip)
+
+** init
+
+** Profiling
+
+*** bootchart
+- patch
+[[../fm_perf_work/patch/150430_bootchart_03_01.diff]]
+[[../fm_perf_work/patch/150430_bootchart_03_02.diff]]
+[[../fm_perf_work/patch/150430_bootchart_03_03.diff]]
+
+- build
+#+begin_src sh
+touch ../LINUX/android/system/core/init/init.c
+export INIT_BOOTCHART=true
+make -j16 all
+#+end_src
+
+- capture log
+
+#+begin_src sh
+adb shell "echo 60 > /data/bootchart-start"
+adb pull /data/bootchart bootchart
+cd bootchart
+tar zcvf *
+#+end_src
+
+- gen graph view
+#+begin_src sh
+git clone https://github.com/mmeeks/bootchart.git
+cd bootchart/
+make
+python pybootchartgui.py -f pdf bootchart.tgz
+#+end_src
+
+[[../fm_perf_work/bootchart2/bootchart.pdf]]
+
+*** systrace
+- add to /system/bin/aplog.sh    
+#+begin_src sh
+echo "early systrace"
+atrace -t 30 -b 51200 -a com.zui.laucher,fingerprint_client,system_server,com.android.systemui -z gfx input view webview wm am sm audio video camera hal app res dalvik rs bionic power sched irq freq idle disk mmc load sync workq memreclaim > /dev/systrace_boot.trace
+#+end_src
+
+- gen trace.html
+#+begin_src sh
+python d:/dev/android-sdk/android-sdk-windows/platform-tools/systrace/systrace2.py  --from-file=systrace_boot-S105.trace  -o systrace_boot-S105.html
+#+end_src
+
+[[../fm_perf_work/bootup/systrace_boot-S105.html]]
+
+*** strace
+
+*** ltrace
+
+*** log
+
+#+begin_src dmesg
+
+<6>[   23.730949] Boot completed [   28.563] adsp: sns_dd_bmg160_set_attr:attr = 13
+<6>[   23.730953] [   28.564] adsp: sns_dd_bmg160_set_attr:attr = 1
+<6>[   23.730955] [   28.564] adsp: bmg160_set_mode (2)
+<6>[   23.730957] [   28.566] adsp: bmg160_set_mode CFG REG (0x80)
+<6>[   23.730959] [   28.614] adsp: sns_dd_acc_bma2x2_set_attr: sensor = 1, attr = 13
+<6>[   23.730962] [   28.615] adsp: sns_dd_acc_bma2x2_set_attr: sensor = 31, attr = 1
+<6>[   23.730965] [   28.615] adsp: sns_dd_acc_bma2x2_set_attr: sensor = 1, attr = 1
+<6>[   23.730968] [   28.615] adsp: sns_dd_acc_bma2x2_config_mode: sensor = 1, power = 1
+<6>[   23.730971] [   28.615] adsp: bma2x2_set_powerstate: power = 1
+<6>[   23.730973] [   28.620] adsp: bma2x2_set_powerstate: CFG REG (0x80)
+<3>[   23.731750] init: cannot find '/system/bin/qrngp', disabling 'qrngp'
+<3>[   23.732131] init: Warning!  Service wcg_mac_tool needs a SELinux domain defined; please fix!
+<6>[   23.733093]  alarm_resson=androidboot.bootreason=unknown
+<6>[   23.760668] msm_thermal:store_cc_enabled Core control disabled
+Thu Jan 29 07:30:39 CST 1970
+
+<6>[   23.805780] msm_thermal:store_cc_enabled Core control enabled
+
+01-29 07:30:27.499   936   936 I SystemServer: LockSettingsService
+01-29 07:30:27.509   936   936 I SystemServer: Status Bar
+01-29 07:30:27.519   936   936 I SystemServer: Clipboard Service
+01-29 07:30:27.519   936   936 I SystemServer: NetworkManagement Service
+01-29 07:30:27.529   936   936 I SystemServer: Text Service Manager Service
+01-29 07:30:27.539   936   936 I SystemServer: Network Score Service
+01-29 07:30:27.539   936   936 I SystemServer: NetworkStats Service
+01-29 07:30:27.549   936   936 I SystemServer: NetworkPolicy Service
+01-29 07:30:27.759   936   936 I SystemServer: Connectivity Service
+01-29 07:30:27.779   936   936 I SystemServer: Network Service Discovery Service
+01-29 07:30:27.779   936   936 I SystemServer: DPM Service
+01-29 07:30:27.779   936   936 I SystemServer: DPM configuration set to 0
+01-29 07:30:27.779   936   936 I SystemServer: UpdateLock Service
+01-29 07:30:27.889   936   936 I SystemServer: Location Manager
+01-29 07:30:27.899   936   936 I SystemServer: Country Detector
+01-29 07:30:27.899   936   936 I SystemServer: Search Service
+01-29 07:30:27.899   936   936 I SystemServer: DropBox Service
+01-29 07:30:27.899   936   936 I SystemServer: Wallpaper Service
+01-29 07:30:27.909   936   936 I SystemServer: Audio Service
+01-29 07:30:27.939   936   936 I SystemServer: Wired Accessory Manager
+01-29 07:30:27.949   936   936 I SystemServer: Serial Service
+01-29 07:30:27.979   936   936 I SystemServer: DiskStats Service
+01-29 07:30:27.979   936   936 I SystemServer: SamplingProfiler Service
+01-29 07:30:27.979   936   936 I SystemServer: NetworkTimeUpdateService
+01-29 07:30:27.989   936   936 I SystemServer: CommonTimeManagementService
+01-29 07:30:27.989   936   936 I SystemServer: CertBlacklister
+01-29 07:30:27.989   936   936 I SystemServer: Assets Atlas Service
+01-29 07:30:28.029   936   936 I SystemServer: Media Router Service
+01-29 07:30:28.029   936   936 I SystemServer: BackgroundDexOptService
+01-29 07:30:28.039   936   936 D SystemServer: Wipower not supported
+01-29 07:30:28.039   936   936 I SystemServer: Digital Pen Service
+01-29 07:30:28.079   936   936 I SystemServer: Successfully loaded DigitalPenService class
+01-29 07:30:28.079   936   936 I SystemServer: AppIconThemeServices
+01-29 07:30:28.089   936   936 I SystemServer: Successfully loaded AppIconThemeServices class:xui.content.res.AppIconThemeServices@14286c9b
+01-29 07:30:28.099   936   936 I WindowManager: SAFE MODE not enabled
+01-29 07:30:28.879   936   964 V WindowManager: Write Sys File,FilePath: /sys/devices/virtual/touch/tp_dev/gesture_on Value: 0
+01-29 07:30:28.879   936   964 V WindowManager: Write Sys File,FilePath: sys/devices/virtual/touch/tp_dev/glove_on Value: 0
+01-29 07:30:29.039   936   936 I SystemServer: Making services ready
+01-29 07:30:29.049   936   936 I SystemServer: WebViewFactory preparation
+01-29 07:30:30.159   936   936 V WindowManager: addAppToken: AppWindowToken{231da039 token=Token{106d3000 ActivityRecord{229b9683 u0 com.zui.launcher/.Launcher t24}}} to stack=0 task=24 at 0
+01-29 07:30:30.789   936   936 V WindowManager: Write Sys File,FilePath: /sys/devices/virtual/touch/tp_dev/gesture_on Value: 0
+01-29 07:30:30.789   936   936 V WindowManager: Write Sys File,FilePath: sys/devices/virtual/touch/tp_dev/glove_on Value: 0
+01-29 07:30:31.209   936  1220 V WindowManager: Based on layer: Adding window Window{3f0bbf22 u0 com.zui.launcher/com.zui.launcher.Launcher} at 0 of 3
+
+01-29 07:30:31.799   592   612 D BootAnimation: waiting for media player to complete.
+
+01-29 07:30:31.939  1442  1442 D KeyguardUpdateMonitor: handleBatteryUpdate
+01-29 07:30:31.939  1442  1442 D KeyguardUpdateMonitor: handleBatteryUpdate
+01-29 07:30:31.939   936   936 V KeyguardServiceDelegate: *** Keyguard connected (yay!)
+01-29 07:30:31.949  1442  1474 D ArtLock : KeyguardService onSystemReady
+01-29 07:30:31.949  1442  1474 D KeyguardViewMediator: onSystemReady
+01-29 07:30:31.949  1442  1474 V KeyguardUpdateMonitor: *** register callback for com.android.systemui.keyguard.KeyguardViewMediator$1@c3579d8
+01-29 07:30:31.949  1442  1474 V KeyguardUpdateMonitor: *** unregister callback for null
+
+01-29 07:30:31.949  1442  1474 D KeyguardViewMediator: doKeyguard: showing the lock screen
+01-29 07:30:31.949  1442  1474 D KeyguardViewMediator: showLocked
+01-29 07:30:31.959  1442  1474 D ArtLock : KeyguardService onScreenTurnedOn
+01-29 07:30:31.959  1442  1474 D KeyguardViewMediator: onScreenTurnedOn, seq = 1
+01-29 07:30:31.959  1442  1474 D KeyguardViewMediator: notifyScreenOnLocked
+01-29 07:30:31.959  1442  1474 D ArtLock : KeyguardService onBootCompleted
+01-29 07:30:32.059  1442  1442 D KeyguardUpdateMonitor: handleRingerModeChange(2)
+01-29 07:30:32.099  1442  1442 V KeyguardTouchDelegate: Connected to keyguard
+01-29 07:30:32.099  1442  1442 D KeyguardViewMediator: handleShow
+
+01-29 07:30:32.179  1442  1442 D KeyguardUpdateMonitor: handleKeyguardVisibilityChanged(1)
+01-29 07:30:32.179  1442  1442 D KeyguardUpdateMonitor: handleKeyguardBouncerChanged(0)
+01-29 07:30:32.179   936  1893 V KeyguardServiceDelegate: **** SHOWN CALLED ****
+01-29 07:30:32.219  1442  1442 D KeyguardViewMediator: handleKeyguardDoneDrawing
+01-29 07:30:32.229  1442  1442 W KeyguardSecurityViewFlipper: onMeasure: widthSpec MeasureSpec: EXACTLY 1080 should be AT_MOST
+01-29 07:30:32.229  1442  1442 W KeyguardSecurityViewFlipper: onMeasure: widthSpec MeasureSpec: EXACTLY 1080 should be AT_MOST
+01-29 07:30:32.229  1442  1442 W KeyguardSecurityViewFlipper: onMeasure: heightSpec MeasureSpec: EXACTLY 1509 should be AT_MOST
+01-29 07:30:32.259  1442  1442 D KeyguardViewMediator: handleKeyguardDoneDrawing
+01-29 07:30:35.489  1442  1442 D KeyguardUpdateMonitor: received broadcast android.intent.action.BATTERY_CHANGED
+01-29 07:30:35.489  1442  1442 D KeyguardUpdateMonitor: handleBatteryUpdate
+
+01-29 07:30:36.799   592   612 D BootAnimation: media player is completed.
+
+01-29 07:30:37.069  1442  1442 D KeyguardUpdateMonitor: received broadcast android.intent.action.BOOT_COMPLETED
+01-29 07:30:37.939  1442  1442 D KeyguardUpdateMonitor: received broadcast android.intent.action.SIM_STATE_CHANGED
+#+end_src
+
+#+begin_src sh
+cat logcat* | gawk -F ' '  '{print $6}' | sort | uniq -c
+#+end_src
+
+** bootanimation
+
+*** DONE reduce audio waiting timeout duration (5s -> 0)
+
+** zygote
+
+*** TODO many GC ops in zygote (~300ms)
+
+** SurfaceFlinger
+
+** AMS
+
+** PMS
+*** DONE pre-odex (first boot ~5min -> ~90s)
+*** DONE scan apk (10s -> 3s)
+*** DONE patchoat to data app (side effect of pre-odex, extra impact 6s): fixed by skip data link file
+*** TODO hard copy preodex-ed oat file to data madatory ?
+
+** WMS
+*** DONE DEBUG_BOOT
+
+#+begin_src logcat
+01-30 09:45:59.130   618   618 W BootAnimation: CMDLINE: androidboot.bootreason=unknown
+01-30 09:45:59.130   618   618 W BootAnimation: ro.boot.mode: warmReset_0x02
+01-30 09:45:59.290   296   296 I SamplingProfilerIntegration: Profiling disabled.
+01-30 09:45:59.290   296   296 D Zygote  : begin preload
+01-30 09:45:59.290   296   296 I Zygote  : Preloading classes...
+
+01-30 09:46:13.109   618   636 D BootAnimation: waiting for media player to complete.
+
+01-30 09:46:17.759  1481  1481 D DraggableGridViewPager: onMeasure width: 916  height: 372
+01-30 09:46:17.769   951  1388 I WindowManager: enableScreenIfNeededLocked: mDisplayEnabled=false mForceDisplayEnabled=false mShowingBootMessages=false mSystemBooted=true
+01-30 09:46:17.769   951  1388 I WindowManager: java.lang.RuntimeException: here
+01-30 09:46:17.769   951  1388 I WindowManager: 	at com.android.server.wm.WindowManagerService.enableScreenIfNeededLocked(WindowManagerService.java:5703)
+01-30 09:46:17.769   951  1388 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLockedInner(WindowManagerService.java:10236)
+01-30 09:46:17.769   951  1388 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLockedLoop(WindowManagerService.java:8848)
+01-30 09:46:17.769   951  1388 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLocked(WindowManagerService.java:8790)
+01-30 09:46:17.769   951  1388 I WindowManager: 	at com.android.server.wm.WindowManagerService.relayoutWindow(WindowManagerService.java:3287)
+01-30 09:46:17.769   951  1388 I WindowManager: 	at com.android.server.wm.Session.relayout(Session.java:197)
+01-30 09:46:17.769   951  1388 I WindowManager: 	at android.view.IWindowSession$Stub.onTransact(IWindowSession.java:273)
+01-30 09:46:17.769   951  1388 I WindowManager: 	at com.android.server.wm.Session.onTransact(Session.java:130)
+01-30 09:46:17.769   951  1388 I WindowManager: 	at android.os.Binder.execTransact(Binder.java:446)
+01-30 09:46:17.769   951   983 I WindowManager: performEnableScreen: mDisplayEnabled=false mForceDisplayEnabled=false mShowingBootMessages=false mSystemBooted=true mOnlyCore=false
+01-30 09:46:17.769   951   983 I WindowManager: java.lang.RuntimeException: here
+01-30 09:46:17.769   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performEnableScreen(WindowManagerService.java:5787)
+01-30 09:46:17.769   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService$H.handleMessage(WindowManagerService.java:7975)
+01-30 09:46:17.769   951   983 I WindowManager: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+01-30 09:46:17.769   951   983 I WindowManager: 	at android.os.Looper.loop(Looper.java:135)
+01-30 09:46:17.769   951   983 I WindowManager: 	at android.os.HandlerThread.run(HandlerThread.java:61)
+01-30 09:46:17.769   951   983 I WindowManager: 	at com.android.server.ServiceThread.run(ServiceThread.java:46)
+01-30 09:46:17.769   951   983 I WindowManager: ******** booted=true msg=false haveBoot=false haveApp=false haveWall=true wallEnabled=true haveKeyguard=true
+01-30 09:46:17.769   951   983 I WindowManager: checkBootAnimationComplete: Waiting for anim complete
+01-30 09:46:17.769   951   983 I WindowManager: performEnableScreen: Waiting for anim complete
+01-30 09:46:17.869   288   288 E USB_UICC: Timeout! No signal received. Retry num = 18
+01-30 09:46:17.969   951   983 I WindowManager: CHECK_IF_BOOT_ANIMATION_FINISHED:
+01-30 09:46:17.969   951   983 I WindowManager: checkBootAnimationComplete: Waiting for anim complete
+01-30 09:46:18.029   304   304 I ServiceManager: Waiting for service AtCmdFwd...
+
+01-30 09:46:18.109   618   636 D BootAnimation: media player is completed.
+
+01-30 09:46:18.169   951   983 I WindowManager: CHECK_IF_BOOT_ANIMATION_FINISHED:
+01-30 09:46:18.169   951   983 I WindowManager: checkBootAnimationComplete: Animation complete!
+01-30 09:46:18.169   951   983 I WindowManager: performEnableScreen: mDisplayEnabled=false mForceDisplayEnabled=false mShowingBootMessages=false mSystemBooted=true mOnlyCore=false
+01-30 09:46:18.169   951   983 I WindowManager: java.lang.RuntimeException: here
+01-30 09:46:18.169   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performEnableScreen(WindowManagerService.java:5787)
+01-30 09:46:18.169   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService$H.handleMessage(WindowManagerService.java:8186)
+01-30 09:46:18.169   951   983 I WindowManager: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+01-30 09:46:18.169   951   983 I WindowManager: 	at android.os.Looper.loop(Looper.java:135)
+01-30 09:46:18.169   951   983 I WindowManager: 	at android.os.HandlerThread.run(HandlerThread.java:61)
+01-30 09:46:18.169   951   983 I WindowManager: 	at com.android.server.ServiceThread.run(ServiceThread.java:46)
+01-30 09:46:18.169   951   983 I WindowManager: ******** booted=true msg=false haveBoot=false haveApp=false haveWall=true wallEnabled=true haveKeyguard=true
+01-30 09:46:18.169   951   983 I WindowManager: checkBootAnimationComplete: Animation complete!
+01-30 09:46:18.169   951   983 I WindowManager: ******************** ENABLING SCREEN!
+01-30 09:46:18.179   951   983 I SystemServiceManager: Starting phase 1000
+01-30 09:46:18.179   951   983 I WindowManager: enableScreenIfNeededLocked: mDisplayEnabled=true mForceDisplayEnabled=false mShowingBootMessages=false mSystemBooted=true
+01-30 09:46:18.179   951   983 I WindowManager: java.lang.RuntimeException: here
+01-30 09:46:18.179   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.enableScreenIfNeededLocked(WindowManagerService.java:5703)
+01-30 09:46:18.179   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLockedInner(WindowManagerService.java:10236)
+01-30 09:46:18.179   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLockedLoop(WindowManagerService.java:8848)
+01-30 09:46:18.179   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLocked(WindowManagerService.java:8790)
+01-30 09:46:18.179   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.updateRotationUnchecked(WindowManagerService.java:6448)
+01-30 09:46:18.179   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.updateRotation(WindowManagerService.java:6407)
+01-30 09:46:18.179   951   983 I WindowManager: 	at com.android.internal.policy.impl.PhoneWindowManager.updateRotation(PhoneWindowManager.java:6156)
+01-30 09:46:18.179   951   983 I WindowManager: 	at com.android.internal.policy.impl.PhoneWindowManager.enableScreenAfterBoot(PhoneWindowManager.java:6127)
+01-30 09:46:18.179   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performEnableScreen(WindowManagerService.java:5844)
+01-30 09:46:18.179   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService$H.handleMessage(WindowManagerService.java:8186)
+01-30 09:46:18.179   951   983 I WindowManager: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+01-30 09:46:18.179   951   983 I WindowManager: 	at android.os.Looper.loop(Looper.java:135)
+01-30 09:46:18.179   951   983 I WindowManager: 	at android.os.HandlerThread.run(HandlerThread.java:61)
+01-30 09:46:18.179   951   983 I WindowManager: 	at com.android.server.ServiceThread.run(ServiceThread.java:46)
+01-30 09:46:18.189   951   983 I WindowManager: enableScreenIfNeededLocked: mDisplayEnabled=true mForceDisplayEnabled=false mShowingBootMessages=false mSystemBooted=true
+01-30 09:46:18.189   951   983 I WindowManager: java.lang.RuntimeException: here
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.enableScreenIfNeededLocked(WindowManagerService.java:5703)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLockedInner(WindowManagerService.java:10236)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLockedLoop(WindowManagerService.java:8848)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLocked(WindowManagerService.java:8790)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.setNewConfiguration(WindowManagerService.java:3955)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.am.ActivityManagerService.updateConfigurationLocked(ActivityManagerService.java:16849)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.am.ActivityManagerService.updateConfiguration(ActivityManagerService.java:16732)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.sendNewConfiguration(WindowManagerService.java:7087)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.updateRotationUnchecked(WindowManagerService.java:6453)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.updateRotation(WindowManagerService.java:6407)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.internal.policy.impl.PhoneWindowManager.updateRotation(PhoneWindowManager.java:6156)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.internal.policy.impl.PhoneWindowManager.enableScreenAfterBoot(PhoneWindowManager.java:6127)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performEnableScreen(WindowManagerService.java:5844)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService$H.handleMessage(WindowManagerService.java:8186)
+01-30 09:46:18.189   951   983 I WindowManager: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+01-30 09:46:18.189   951   983 I WindowManager: 	at android.os.Looper.loop(Looper.java:135)
+01-30 09:46:18.189   951   983 I WindowManager: 	at android.os.HandlerThread.run(HandlerThread.java:61)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.ServiceThread.run(ServiceThread.java:46)
+01-30 09:46:18.189   951   983 I WindowManager: enableScreenIfNeededLocked: mDisplayEnabled=true mForceDisplayEnabled=false mShowingBootMessages=false mSystemBooted=true
+01-30 09:46:18.189   951   983 I WindowManager: java.lang.RuntimeException: here
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.enableScreenIfNeededLocked(WindowManagerService.java:5703)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLockedInner(WindowManagerService.java:10236)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLockedLoop(WindowManagerService.java:8848)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLocked(WindowManagerService.java:8790)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.updateRotationUnchecked(WindowManagerService.java:6448)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performEnableScreen(WindowManagerService.java:5847)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService$H.handleMessage(WindowManagerService.java:8186)
+01-30 09:46:18.189   951   983 I WindowManager: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+01-30 09:46:18.189   951   983 I WindowManager: 	at android.os.Looper.loop(Looper.java:135)
+01-30 09:46:18.189   951   983 I WindowManager: 	at android.os.HandlerThread.run(HandlerThread.java:61)
+01-30 09:46:18.189   951   983 I WindowManager: 	at com.android.server.ServiceThread.run(ServiceThread.java:46)
+01-30 09:46:18.189   951   951 V ActivityManager: Display changed displayId=1
+01-30 09:46:18.199  1481  1481 I SwitchWidgetView: receiver action = android.intent.action.BOOT_COMPLETED
+01-30 09:46:18.199  1481  1481 I SwitchWidgetView: wifi status : 1,mCurApName : 
+01-30 09:46:18.199  1481  1481 D SwitchWidgetView: SwitchWlan               updateWidgetStatus, tempStatus =0
+01-30 09:46:18.199  1481  1481 D SwitchWidgetView: Test Mult !isTextArrayString && tempStatus == mStatus
+01-30 09:46:18.199   951   983 I WindowManager: enableScreenIfNeededLocked: mDisplayEnabled=true mForceDisplayEnabled=false mShowingBootMessages=false mSystemBooted=true
+01-30 09:46:18.199   951   983 I WindowManager: java.lang.RuntimeException: here
+01-30 09:46:18.199   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.enableScreenIfNeededLocked(WindowManagerService.java:5703)
+01-30 09:46:18.199   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLockedInner(WindowManagerService.java:10236)
+01-30 09:46:18.199   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLockedLoop(WindowManagerService.java:8848)
+01-30 09:46:18.199   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.performLayoutAndPlaceSurfacesLocked(WindowManagerService.java:8790)
+01-30 09:46:18.199   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService.access$400(WindowManagerService.java:163)
+01-30 09:46:18.199   951   983 I WindowManager: 	at com.android.server.wm.WindowManagerService$H.handleMessage(WindowManagerService.java:7756)
+01-30 09:46:18.199   951   983 I WindowManager: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+01-30 09:46:18.199   951   983 I WindowManager: 	at android.os.Looper.loop(Looper.java:135)
+01-30 09:46:18.199   951   983 I WindowManager: 	at android.os.HandlerThread.run(HandlerThread.java:61)
+01-30 09:46:18.199   951   983 I WindowManager: 	at com.android.server.ServiceThread.run(ServiceThread.java:46)
+#+end_src
+
+*** TODO add boot up time to dumpsys display/wms ?
+
+** SystemUI
+*** TODO lauch time 2.8s
+*** TODO draw first frame in UI main thread needed ? (use render thread)
+
+** launcher
+*** TODO no need to do early draw ?
+
+** other apps
+*** TODO not start until homesceen(key guard) shows up ?
+
+** patch
+
+   
+* suspend
+
+* resume
+
+** demologs
+
+#+begin_src dmesg
+<6>[ 2229.199997] qpnp_kpdpwr_irq(), irq=292
+<6>[ 2229.200032] qpnp_pon_input_dispatch(), pon_type=0
+<6>[ 2229.200087] qpnp_pon_input_dispatch(), cfg->key_code=116,1
+<6>[ 2229.322153] mdss_dsi_panel_on:Enter ndx = 0 
+<6>[ 2229.377791] qpnp_kpdpwr_irq(), irq=292
+<6>[ 2229.377796] qpnp_pon_input_dispatch(), pon_type=0
+<6>[ 2229.377817] qpnp_pon_input_dispatch(), cfg->key_code=116,0
+<6>[ 2229.608146] mdss_dsi_panel_bklt_dcs:@@@@@@ brightness level=33 ndx = 0 ***********
+<3>[ 2229.683839] wlan: [1435:E :SME] sme_QosPmcDeviceStateUpdateInd: 7443: nothing to process in PMC state BMPS (6)
+<3>[ 2229.683863] wlan: [1435:E :TL ]  ----> CRegion 0, hRSSI -48, Alpha 5
+<6>[ 2230.127346] mdss_dsi_panel_bklt_dcs:@@@@@@ brightness level=0 ndx = 0 ***********
+<6>[ 2230.187031] mdss_dsi_panel_off:Enter ndx = 0 
+<6>[ 2230.187051] mdss_dsi_panel_off en_gpio disabled
+<6>[ 2230.406137] mdss_dsi_panel_off:Done ndx = 0 
+<6>[ 2230.529275] GTP:GTP enter sleep!
+
+
+wakeup_1.log:2147:05-21 11:12:18.880   892  1320 W KeyHandler: handleKeyEvent--------KeyEvent { action=ACTION_DOWN, keyCode=KEYCODE_POWER, scanCode=116, metaState=0, flags=0x8, repeatCount=0, eventTime=2229191, downTime=2229191, deviceId=3, source=0x101 },isKeySupported:false
+wakeup_1.log:2148:05-21 11:12:18.882   892  1320 I PowerManagerService: Waking up from sleep (uid 1000)...
+wakeup_1.log:2149:05-21 11:12:18.882   892   892 V KeyguardServiceDelegate: onScreenTurnedOn(showListener = com.android.internal.policy.impl.PhoneWindowManager$2@1dcbb0b0)
+wakeup_1.log:2181:05-21 11:12:18.942   892  1891 V KeyguardServiceDelegate: **** SHOWN CALLED ****
+wakeup_1.log:2205:05-21 11:12:19.056   892  1320 W KeyHandler: handleKeyEvent--------KeyEvent { action=ACTION_UP, keyCode=KEYCODE_POWER, scanCode=116, metaState=0, flags=0x8, repeatCount=0, eventTime=2229368, downTime=2229191, deviceId=3, source=0x101 },isKeySupported:false
+wakeup_1.log:2206:05-21 11:12:19.056   892  1320 I PowerManagerService: Going to sleep due to power button (uid 1000)...
+wakeup_1.log:2211:05-21 11:12:19.315   892   923 I PowerManagerService: Sleeping (uid 1000)...
+#+end_src
+
+** WMS
+*** DEBUG_WAKEUP
+
+* IPO
+
+http://blog.csdn.net/loongembedded/article/details/42875759
+
+
+* Appendix
+
+#+begin_src ditaa :file ditaa-seqboxes.png
++------+   +-----+   +-----+   +-----+
+|{io}  |   |{d}  |   |{s}  |   |cBLU |
+| Foo  +---+ Bar +---+ Baz +---+ Moo |
+|      |   |     |   |     |   |     |
++------+   +-----+   +--+--+   +-----+
+                        |
+           /-----\      |      +------+
+           |     |      |      | c1AB |
+           | Goo +------+---=--+ Shoo |
+           \-----/             |      |
+                               +------+
+#+end_src
+
+- http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html
+
+
+
+

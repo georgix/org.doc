@@ -1,0 +1,74 @@
+#+TITLE: Android Performance Profiling Toolset
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+
+
+* perf
+http://en.wikipedia.org/wiki/Perf_(Linux)
+
+http://www.ibm.com/developerworks/cn/linux/l-cn-perf1/index.html
+
+http://www.ibm.com/developerworks/cn/linux/l-cn-perf2/index.html
+
+http://wiki.eclipse.org/Linux_Tools_Project/PERF/User_Guide
+
+* ftrace
+http://www.ibm.com/developerworks/cn/linux/l-cn-ftrace/index.html
+
+** visualize
+- trace-cmd, kenrelshark
+http://tempfile.net/ftrace-70/
+
+- qcom
+https://developer.qualcomm.com/mobile-development/increase-app-performance/snapdragon-performance-visualizer
+
+* utrace
+  http://www.oschina.net/question/12_8862
+
+
+* lttng
+[[file:d:/dev/doc/perf_tool/lttng_systemtap.pdf]]
+
+http://www.eclipse.org/linuxtools/
+
+http://www.dcl.hpi.uni-potsdam.de/teaching/profSem/
+
+
+* oprofile
+http://www.omappedia.org/wiki/Android_Debugging
+
+* systemtap
+http://elinux.org/System_Tap
+
+* kgtp
+http://teawater.github.io/kgtp/kgtpcn.html
+
+http://www.cnblogs.com/ahuo/archive/2012/08/10/2632227.html
+
+* memory
+http://elinux.org/Android_Memory_Usage
+
+* systrace
+  SCHEDULED: <2015-05-06 周三> DEADLINE: <2015-05-06 周三>
+
+[[http://blog.csdn.net/innost/article/details/9008691][Android系统性能调优工具介绍(traceview, systrace, oprofile)]]
+
+* dumpsys
+
+* traceview
+
+* filesystem
+
+[[http://blog.csdn.net/blueice8601/article/details/6802791][bonnie++、dbench、iozone在android上的移植]]
+
+* benchmark
+http://www.phonearena.com/news/10-useful-Android-benchmark-apps_id26876
+
+
+* misc
+
+http://elinux.org/Category:Development_Tools
+
+http://androidperformance.com/page/3/
+
+http://www.pixelbeat.org/programming/profiling/

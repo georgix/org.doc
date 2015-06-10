@@ -1,0 +1,174 @@
+#+TITLE: Android Performance: Touch
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+#+LINK_HOME: http://
+#+LINK_UP: http://
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main-ltr.css" />  <link rel="stylesheet" type="text/css" href="css/shared.css" />  <link rel="stylesheet" type="text/css" href="css/common.css" /> 
+
+
+* state of the art touch performance
+
+  [[file:emacs_img/15_04_21_touchmarks.jpg]]
+
+* k9 touch profiling
+
+** TP hardware
+
+typical delay: < 25ms
+
+** kernel driver
+#+begin_src c
+diff --git a/drivers/input/touchscreen/gt9xx/gt9xx.h b/drivers/input/touchscreen
+index 0a88dba..9cd6324 100644
+--- a/drivers/input/touchscreen/gt9xx/gt9xx.h
++++ b/drivers/input/touchscreen/gt9xx/gt9xx.h
+@@ -69,7 +69,7 @@
+
+ #define GTP_GESTURE_WAKEUP    1    // gesture wakeup
+
+-#define GTP_DEBUG_ON          0
++#define GTP_DEBUG_ON          1
+ #define GTP_DEBUG_INFO_ON          1
+ #define GTP_DEBUG_ARRAY_ON    0
+ #define GTP_DEBUG_FUNC_ON     0
+#+end_src
+
+#+begin_src dmesg
+<4>[    1.386919] GTP:GTP driver installing...
+<4>[    1.387082] GTP:GTP Driver Version: V2.2<2014/01/14>
+<4>[    1.387090] GTP:GTP Driver Version: V2.2<2014/01/14>
+<4>[    1.387098] GTP:GTP Driver Built@14:53:17, May 21 2015
+<4>[    1.387105] GTP:GTP I2C Address: 0x5d
+<6>[    1.387158] Goodix-TS 2-005d: 0 config data read from device tree.
+<4>[    1.387167] GTP:Clock ticks for an esd cycle: 200
+<6>[    1.504577] msm_thermal:do_freq_control Limiting CPU0 max frequency to 1958400. Temp:61
+<6>[    1.504715] msm_thermal:do_freq_control Limiting CPU1 max frequency to 1958400. Temp:61
+<6>[    1.504853] msm_thermal:do_freq_control Limiting CPU2 max frequency to 1958400. Temp:61
+<6>[    1.504996] msm_thermal:do_freq_control Limiting CPU3 max frequency to 1958400. Temp:61
+<4>[    1.505629] GTP:IC Version: 915L_2002
+<4>[    1.505641] GTP:Config Groups' Lengths: 186, 186, 186, 186, 0, 186
+<4>[    1.506482] GTP:Sensor_ID: 2
+<4>[    1.506491] GTP:CTP_CONFIG_GROUP3 used, config length: 186
+<4>[    1.506917] GTP:CFG_GROUP3 Config Version: 71, 0x47; IC Config Version: 65, 0x41
+<4>[    1.513530] GTP:X_MAX: 1080, Y_MAX: 1920, TRIGGER: 0x01
+<4>[    1.524536] GTP:create proc entry gt9xx_config success
+<4>[    1.524547] GTP:Ready to run update thread.
+<4>[    1.524639] GTP:[update_proc]Begin update ......
+<4>[    1.524650] GTP:Update by default firmware array
+<4>[    1.524659] GTP:Firmware actual size: 90112(88K)
+<6>[    1.524750] input: qwerty as /devices/virtual/input/input0
+<4>[    1.524822] GTP:INT trigger type:1
+<4>[    1.524830] GTP:ts->client->irq:347
+<4>[    1.524904] GTP:GTP works in interrupt mode.
+<4>[    1.524917] GTP:Applied memory size:2562.
+<4>[    1.524921] GTP:firmware checksum:0
+<4>[    1.524933] GTP:I2C function: without pre and end cmd!
+<4>[    1.524967] GTP:Create proc entry success!
+<4>[    1.525680] GTP:IC Hardware info:00900600
+<4>[    1.525873] GTP:IC force update flag:0xbe
+<4>[    1.526499] GTP:IC Product id:915L
+<4>[    1.526508] GTP:IC version id:2002
+<4>[    1.526516] GTP:FILE HARDWARE INFO:00016000
+<4>[    1.526524] GTP:FILE PID:915L
+<4>[    1.526531] GTP:FILE VID:2002
+<4>[    1.526538] GTP:IC HARDWARE INFO:00900600
+<4>[    1.526546] GTP:IC PID:915L
+<4>[    1.526552] GTP:IC VID:2002
+<4>[    1.526560] GTP:Firmware length:90112(88K)
+<4>[    1.526568] GTP:Get the same pid.
+<4>[    1.526576] <<-GTP-ERROR->> Don't meet the third condition.
+<4>[    1.526584] <<-GTP-ERROR->> File VID <= Ic VID, update aborted!
+<4>[    1.526594] <<-GTP-ERROR->> [update_proc]Check *.bin file fail.
+
+
+
+<6>[   39.799938] GTP:ID:0, X:401, Y:1553, W:56
+<6>[   39.810448] GTP:ID:0, X:401, Y:1553, W:56
+<6>[   39.821432] GTP:ID:0, X:400, Y:1540, W:56
+<6>[   39.832072] GTP:ID:0, X:399, Y:1515, W:56
+<6>[   39.843527] GTP:ID:0, X:399, Y:1473, W:56
+<6>[   39.853537] GTP:ID:0, X:400, Y:1428, W:56
+<6>[   39.865061] GTP:ID:0, X:404, Y:1381, W:56
+<6>[   39.875050] GTP:ID:0, X:411, Y:1333, W:56
+<6>[   39.885705] GTP:ID:0, X:422, Y:1282, W:56
+<6>[   39.896302] GTP:ID:0, X:438, Y:1224, W:56
+<6>[   39.908766] GTP:ID:0, X:460, Y:1161, W:56
+<6>[   39.921467] GTP:ID:0, X:490, Y:1096, W:56
+<6>[   39.928465] GTP:ID:0, X:529, Y:1028, W:56
+<6>[   39.939258] GTP:ID:0, X:578, Y:953, W:56
+<6>[   39.949158] GTP:ID:0, X:694, Y:781, W:56
+<6>[   39.959747] GTP:Touch Release!
+Sat Jan 24 13:28:18 CST 1970
+#+end_src
+
+sample rate: 100HZ
+
+** user space
+
+gtp irq -> gtp kwork (input_boost) -> framework -> app (deliver input event) -> app draw -> sf composition -> fb show
+
+25ms(HW) + 3ms(irq) + 8ms(deliver input) + 17ms(event deliver to app draw) + 17ms(app draw) + 17ms(sf composition) = 87ms
+
+- systrace:
+[[../fm_perf_work/touch/trace_k9_s105_touch_press_release.html]]
+
+- getevent
+
+getevent -lt
+
+#+begin_src log
+[   41845.195569] /dev/input/event0: EV_KEY       BTN_TOUCH            UP       
+[   41845.195574] /dev/input/event0: EV_ABS       ABS_MT_TOUCH_MAJOR   00000000 
+[   41845.195577] /dev/input/event0: EV_ABS       ABS_MT_WIDTH_MAJOR   00000000 
+[   41845.195579] /dev/input/event0: EV_SYN       SYN_MT_REPORT        00000000 
+[   41845.195582] /dev/input/event0: EV_SYN       SYN_REPORT           00000000 
+[   41873.862888] /dev/input/event3: EV_KEY       KEY_BACK             DOWN     
+[   41873.862949] /dev/input/event3: EV_SYN       SYN_REPORT           00000000 
+[   41873.862974] /dev/input/event3: EV_KEY       KEY_BACK             UP       
+[   41873.862977] /dev/input/event3: EV_SYN       SYN_REPORT           00000000 
+[   41874.713054] /dev/input/event3: EV_KEY       KEY_BACK             DOWN     
+[   41874.713117] /dev/input/event3: EV_SYN       SYN_REPORT           00000000 
+[   41874.713142] /dev/input/event3: EV_KEY       KEY_BACK             UP       
+[   41874.713145] /dev/input/event3: EV_SYN       SYN_REPORT           00000000 
+#+end_src 
+
+** input boost
+kernel/drivers/cpufreq
+
+$ adb shell cat sys/module/cpu_boost/parameters/boost_ms
+20
+
+$ adb shell cat sys/module/cpu_boost/parameters/input_boost_ms
+40
+
+$ adb shell cat sys/module/cpu_boost/parameters/sync_threshold
+1728000
+
+$ adb shell cat sys/module/cpu_boost/parameters/input_boost_freq
+1497600
+
+* Action
+
+** hw sample rate
+
+moto x - 6.8ms
+S5 - 10ms
+
+** fb
+
+moto x - app, sf, fb, fb0_retire
+
+** input_boost
+
+moto x - quad core 1.5g
+s5 - quad core 1.7g
+k9 - dual core 1.5g
+
+** kwork
+
+k9 - 5 console_callback following each touch event
+k9 - goodix_ts_func_work long
+
+
+
+

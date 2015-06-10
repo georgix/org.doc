@@ -1,0 +1,93 @@
+
+
+* introducer
+owner: zhongwei
+
+* Home
+owner: zhanghong5
+
+* modem/camera
+- ignored
+
+* touchpanel
+
+** 放大影响（长时间，关键应用）
+
+** base: 用户感知 - 100ms
+
+** 欧普菲高速相机
+
+** UE (拟物化，摩擦系数曲线）
+
+** measurement
+
+HW：
+TP- Tdown, Tm1 Tup (14项），20ms(100Hz)
+基础性能评测
+
+OS:
+- updown.apk, systrace
+HS-camera -> 80ms
+
+- UE - launcher/contacts
+
+*** high speed camera
+
+*** systrace
+
+** KPI
+
+*** 响应时间
+
+*** 帧率平滑度
+
+*** 精准度
+
+*** 舒适度
+
+** firmware
+owner - Xingfa Tian
+
+* 用户感受
+
+** 
+
+* home
+
+** close to 16ms frame
+
+** inflate xml costs 100ms
+
+* memory (DRAM)
+
+** TODO gc (retest on L)
+dalvik.vm.heapminsize=8
+dalvik.vm.heapmaxsize=32
+
+- gc total count, time, time/per
+
+** TODO LMK
+
+** per app ram usage (heap size)
+- auto test and report
+
+** zram & ksm
+
+* boot up
+
+* suspend/resume
+
+* fs
+
+tlc, f2fs, wrapfs
+
+** profiling
+
+iozone
+
+* database
+
+* animation
+
+* 
+

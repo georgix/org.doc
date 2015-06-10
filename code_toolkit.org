@@ -1,0 +1,6 @@
+
+* git
+
+git log -p <filename>
+
+git blame <filename>

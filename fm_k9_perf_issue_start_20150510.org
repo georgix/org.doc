@@ -1,0 +1,77 @@
+#+TITLE: K9 bootup and wakeup perf optimize
+#+AUTHOR: Zhang Jing
+#+EMAIL:     zhangjing35@lenovo.com
+#+DATE: <2015-05-11 ÖÜÈÕ>
+#+OPTIONS: texht:t ^:nil
+#+startup: beamer
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS:[bigger]
+#+LATEX_HEADER:
+#+LATEX_HEADER_EXTRA:
+#+BEAMER_FRAME_LEVEL: 2
+#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+
+
+* bootup timeline
+
+Measure time passed after press power key until key-guard screen shows up.
+
+bootRom -> LK -> kernel -> init ->(boot animation) -> zygot -> system_server -> com.android.systemui
+
+typical value is *~30s* on k9 (10s before boot animation and 20s after)
+
+* boot chart
+
+  [[./emacs_img/15_05_11_k9_bootup_overall.PNG]]
+
+* bootup - zygot
+[[./emacs_img/15_05_11_k9_bootup_zygot.PNG]]
+
+[[./emacs_img/15_05_11_k9_bootup_zygot_detail1.PNG]]
+
+
+* bootup - system_server
+
+[[./emacs_img/15_05_11_k9_bootup_systemserver.PNG]]
+
+
+
+* bootup - system_server
+
+[[./emacs_img/15_05_11_k9_bootup_systemserver_detail2.PNG]]
+
+[[./emacs_img/15_05_11_k9_bootup_systemserver_detail1.PNG]]
+
+* bootup - systemui
+
+[[./emacs_img/15_05_11_k9_bootup_systemui.PNG]]
+
+* bootup - bootanimation
+[[./emacs_img/15_05_11_k9_bootup_bootanimation.PNG]]
+
+[[./emacs_img/15_05_11_k9_bootup_bootanimation_detail1.PNG]]
+
+[[./emacs_img/15_05_11_k9_bootup_bootanimation_detail2.PNG]]
+
+* boot summary
+- zygot: many times GC
+- system_server: scan all packages required? can postpone ?
+- systemui: xml inflations slow, why ?
+- boot animation: initial 2 seconds use a lot cpu resources (cpu not bottleneck?)
+
+* Wakeup
+  
+[[./emacs_img/15_05_11_k9_wakeup_fingerprint.PNG]]
+
+* wakeup - surface flinger
+
+[[./emacs_img/15_05_11_k9_wakeup_surfaceflinger.PNG]]
+
+
+* wakeup summary
+
+optimize target is *~300ms*
+
+fingerprint irq too much/fingerprint_client cpu usage
+
+   

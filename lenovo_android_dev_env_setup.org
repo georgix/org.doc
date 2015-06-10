@@ -1,0 +1,170 @@
+#+TITLE: Shenqi's short guide on RD env setup
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+
+* windows
+
+** android sdk
+
+use this link http://www.androiddevtools.cn/ since google android dev site is blocked by GFW.
+
+** shenqi adb
+
+shenqi smart phone use customized adb driver and tool.
+
+shenqi adb driver and download (Qualcomm 9088) driver can be get from shenqi smartphone's builtin CRROM.
+You can get it from http://10.100.124.250:8090/pages/viewpage.action?pageId=5408356
+
+[[file:emacs_img/15_04_13_adb_driver.png]]
+
+As shenqi's driver is not signed my Microsoft, restrictions on unsigned driver should be disabled first in Windows 7 x64 OS.
+
+[[file:emacs_img/15_04_19_win7_driver_sign.jpg]]
+
+** 3rd party android device driver
+android-sdk/android-sdk-windows/extras/google/usb_driver/android_winusb.inf
+
+[[file:emacs_img/15_04_22_android_adb_device_id.PNG]]
+
+#+begin_src bat
+;Moto X
+%CompositeAdbInterface%     = USB_Install, USB\VID_22B8&PID_2E76&REV_0232&&MI_01
+%CompositeAdbInterface%     = USB_Install, USB\VID_22B8&PID_2E76&MI_01
+
+;Lenovo K7/k920
+%CompositeAdbInterface%     = USB_Install, USB\VID_17EF&PID_778F&REV_0232&&MI_02
+%CompositeAdbInterface%     = USB_Install, USB\VID_17EF&PID_778F&MI_02
+
+;cube T7
+%CompositeAdbInterface%     = USB_Install, USB\VID_0BB4&PID_0C03&MI_01
+#+end_src
+
+** JIRA: issue tracking system
+http://10.100.124.250:8080/login.jsp
+
+account and password is your ITcode, so is confluence and gerrit.
+
+** Confluence: wiki system
+http://10.100.124.250:8090/dologin.action
+
+** gerrit: code review system
+http://10.100.124.248:8080/
+
+
+* linux terminal server
+
+** GUI connection
+
+Start -> Run "mstsc" -> Rmote Desktop Connection
+
+Input target server ip & accout id/passwd
+
+** shell connection
+
+*** Putty
+
+Down load from http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
+
+*** emacs (Optional, recommend if familiar with emacs operations)
++ shell
+/plink -l zhangjing35 -ssh 10.100.124.240/
+
++ edit file
+Add *tramp* mode to ~/.emacs
+#+begin_src lisp
+;; plink is from putty package, cygwin ssh also works
+(require 'tramp)
+(setq tramp-default-method "plink")
+#+end_src
+With C-x C-f, then input //plink:zhangjing35@10.100.124.240:/home/zhangjing35/.
+
+* git/gerrit setup.
+#+begin_src sh
+dinit
+#+end_src
+copy *~/.ssh/id_rsa.pub* to gerrit ssh public key setting http://10.100.124.241:8080/#/settings/ssh-keys.
+
+[[file:emacs_img/15_04_19_gerrit_sshkey.PNG]]
+
+- widows git can be download from https://github.com/msysgit/msysgit/releases
+
+* sync source code
+
+make sure ~/.ssh/config include the following:
+#+begin_src config
+Host star
+  Hostname 10.100.124.241
+  Port 29418
+  User zhangjing35
+#+end_src
+
+Now, we use repo to sync the full code base.
+#+begin_src sh
+repo init -u star:platform/manifest -b xplatform_qcom8974_l -m xui.xml
+repo sync
+#+end_src
+
+Use this to sync code of daily build
+#+begin_src sh
+ls .repo/manifests/
+repo init -u star:platform/manifest -b xplatform_qcom8974_l -m X90_USER_Q4275706.1_L_S111_XUI_150527.xml
+#+end_src
+
+** XUI app gerrit/git settings
+- Add follow config to ~/.ssh/config:
+#+begin_src config
+Host xui
+  Hostname 10.100.124.248
+  Port 29418
+  User zhangjing35
+#+end_src
+
+- copy *~/.ssh/id_rsa.pub* to gerrit ssh public key setting http://10.100.124.248:8080/#/settings/ssh-keys.
+
+- git clone xui project (not support repo)
+#+begin_src shell
+git clone xui:FMSafe
+#+end_src
+
+Full List of XUI APP is available here http://10.100.124.248:8080/#/admin/projects/
+
+* build system
+#+begin_src sh
+cd integrate/
+source setenv.sh 
+source /opt/android1204_17.conf 
+lunchprod k9-userdebug
+make -j16 all
+#+end_src
+
+More detailed k9 branch and build info, please refer to
+http://10.100.124.250:8090/pages/viewpage.action?pageId=5407684
+  
+
+* File exchange between PC & Linux Server 
+*Filezilla* is recomended for this purpose, and use *sftp* protocol.
+
+* ROM download
+*QPST* is qualcomm's tool for ROM download.
+http://10.100.124.250:8090/pages/viewpage.action?pageId=5408290
+
+* submit code
+
+- use or create a Jira issue for tracking
+
+- use repo & git to submit code
+
+#+begin_src sh
+repo start pcr_8_resume LINUX/android/kernel
+cd LINUX/android/kernel
+<do some changes to file>
+git add -A
+git commit -s
+<write commit message follow the format requiremnt [issue_id1][issue_id2][issue_id3]fixed >
+[addition changes]
+[git commit --amend]
+repo upload
+#+end_src
+[[file:emacs_img/15_04_23_repo_upload.PNG]]
+  
+- add a reviewer in gerrit

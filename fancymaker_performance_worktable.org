@@ -1,0 +1,179 @@
+#+TITLE: Fancymaker Performance Work Plan
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+
+*** TODO move chmod/chown command in init.rc to ueventd.rc
+    DEADLINE: <2015-04-30 周四> SCHEDULED: <2015-04-20 周一>
+
+*** TODO review jcommand.h in init.rc needed ?
+    DEADLINE: <2015-05-08 周五> SCHEDULED: <2015-04-20 周一>
+
+*** TODO high cpu usage by fingerprint process @ Home screen, lock state
+
+ SCHEDULED: <2015-05-06e 周三>
+
+* boot/shutdown
+
+** issue
+- long boot up time
+
+** method
+- break down boot up flow with bootchart & systrace
+
+adb wait-for-device shell "atrace -t 30 -a system_process,com.xui.laucher,fingerprint_client,system_server,com.android.systemui -z gfx input view webview wm am sm audio video camera hal app res dalvik rs bionic power sched irq freq idle disk mmc load sync workq memreclaim > /dev/systrace.trace"
+
+** object
+- boot up time < 30s (bootrom +　lk + kernel + init + zygot + system_server + system.ui + launcher)
+
+** support
+- 
+
+* suspend/resume
+
+** issue
+- long resume time
+- finger_print high cpu usage
+
+** method
+- systrace/ftrace ?
+
+** object
+- ~100ms
+
+
+** support
+
+* shutdown
+
+
+** object
+
+<2015-05-20 周三>
+
+/LINUX/android/frameworks/base/services/core/java/com/android/server/power/ShutdownThread.java
+
+ShutdownThread.run()-->shutdownRadios.thread()-->rebootOrShutdown()->deviceRebootOrShutdown()->com.qti.server.power.ShutdownOem.rebootOrShutdown()
+
+/LINUX/android/vendor/qcom/proprietary/oem-services/java/com/qti/server/power/ShutdownOem.java
+
+rebootOrShutdown()->SubSystemShutdown.shutdown() [modem]
+
+<2015-05-19 周二>
+motoX: 2.9s, flight mode:1.7s
+k9 S082 user: 14.8s, flight mode: 3.5s
+shutdown_s082.txt:6201:01-22 17:42:05.212 1032 5352 I ShutdownThread: Waiting for NFC, Bluetooth and Radio...
+shutdown_s082.txt:6233:01-22 17:42:17.205 1032 5277 W ShutdownThread: Timed out waiting for NFC, Radio and Bluetooth shutdown.
+radio cost 12s !!
+shutdown_s082_flight.txt:6826:01-22 18:14:34.704 1047 12646 I subsystem_control: subsystem_control_shutdown
+shutdown_s082_flight.txt:6998:01-22 18:14:35.718 1047 12646 I subsystem_control: Received subsystem shutdown complete in 1 second(s)
+modem: 1s!
+
+<2015-05-22 周五>
+k9 S091 user: 4.5s - 7s, flight mode: 3.5s
+
+** tasks
+
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+| Flow     | module         | issue description                                                                                  | reporter  | owner       | status   | progress                                                                                                                                                                        | jira link             |
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+| bootup   | zygot          | many times GC in zygot (~300ms)                                                                    | zhangjing | Naibo       | pending  | <2015-05-12 周二> [Naibo] little impact                                                                                                                                         | [[http://10.100.124.250:8080/browse/KNINE-305][KNINE-305]]             |
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+| bootup   | system_server  | uninterrruptible sleep ratio high ~5s/15s, io bottle neck?                                         | zhangjing | xinyi       | abort    |                                                                                                                                                                                 |                       |
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+| bootup   | system_server  | PMS scan all apk at boot time mandatory? (~15s)                                                    | zhangjing | Yanan Tian  | done     | <2015-05-12 周二> [Naibo] preloader partion link use 4s more than data <2015-05-18 周一> PMS scan use only 3s                                                                   | [[http://10.100.124.250:8080/browse/KNINE-305][KNINE-305]]             |
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+| bootup   | system_server  | with pre-odex in user load, patchoat to 3rd party app cost 6s                                      | zhangjing | Naibo       | done     | <2015-05-26 周二> [naibo] skip data link file patchoat, root cause unknown[TODO]  -> S111(150527) boot up in ~23s                                                               |                       |
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+| bootup   | bootanimation  | keyguard ui doesn't shows up after first frame drawed                                              | zhangjing | zhangjing   | done     | <2015-05-28 周四> [jing] reduce bootanim audio play timeout 5s->0, => S114(150528) boot up in ~18s                                                                              | [[http://10.100.124.250:8080/browse/KNINE-305][KNINE-305]]             |
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+| bootup   | systemui       | first inflate opation cost ~1000ms                                                                 | zhangjing | qixin Xing  | on-going | <2015-05-13 周三> [qixin] follow up <2015-05-22 周五> [qixin] no optimize   <2015-05-26 周二> [liulan] follow                                                                   | [[http://10.100.124.250:8080/browse/KNINE-2728][KNINE-2728]]            |
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+| bootup   | bootanimation  | first 6 seconds cpu usage high                                                                     | zhangjing | Naibo       | done     | <2015-05-12 周二> [Naibo] android default animation <2015-05-28 周四> [jing] motox use mp4 file                                                                                 | [[http://10.100.124.250:8080/browse/KNINE-305][KNINE-305]]             |
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+| bootup   | modem          | when modem image is load and execute, affect bootup time?                                          | zhangjing | zhangjing   | abort    | <2015-05-12 周二> [Jinliang Lei] modem image must be load at boot time                                                                                                          |                       |
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+| wakeup   | fingerprint    | f9927000.spi handler=msm_spi_qup_irq interrupt too freqent at resume                               | zhangjing | sunyuan     | pending  |                                                                                                                                                                                 |                       |
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+| wakeup   | display        | hwc_setpowermode() cost ~400ms                                                                     | zhangjing | yupan       | done     | <2015-05-12 周二> [Yupan] power on display module and setup color domaincost a lot time, in-optimizing   <2015-05-25 周一> [yupan] 300ms                                        |                       |
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+| wakeup   | boost          | boost cpu at wakeup time?                                                                          | zhangjing | zhangjing   | on-going |                                                                                                                                                                                 |                       |
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+| shutdown | wifi/broadcast | wifi on and not connected to AP, shutdown broadcast will be delayed for ~4s by wifi scan operation | zhangjing | zhihui yang | on-going | <2015-05-14 周四> [zhihui] phone.needMobileRadioShutdown() timeout, jinbo follow up; <2015-05-20 周三> S082 shutdown ~15s, radio 12s, modem 1s <2015-05-22 周五> s091 4.5s - 7s | [[http://10.100.124.250:8080/browse/KNINE-2508][KNINE-2508]] [[http://10.100.124.250:8080/browse/KNINE-1790][KNINE-1790]] |
+|----------+----------------+----------------------------------------------------------------------------------------------------+-----------+-------------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------|
+
+* memory
+
+** issue
+- boot up memory
+- runtime memory check
+
+** method
+- procrank & dumpsys mem
+
+** object
+- PK to top memory usage app owner
+
+** support
+
+
+** tasks
+
+- <2015-05-19 周二> reference phone memory/storage usage statitics
+
+* touch
+
+** issue
+- touch response time
+
+** method
+- measure with systrace/HS camera
+
+** object
+- touch response time < 100ms (TP hw + irq + input dispatch + triple buffer)
+
+** support
+- TP hw
+
+** tasks
+- <2015-05-25 周一> touch (press) total time in 87ms (TP hw -> irq -> deliver input -> draw -> show)
+
+* fs/database
+
+
+* MISC performance issue
+
+|-------------+----------------------------------------------------------------------------+--------------+-------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------+------------+---|
+| module      | description                                                                | reporter     | owner       | status   | progresss                                                                                                                                     | jira       |   |
+|-------------+----------------------------------------------------------------------------+--------------+-------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------+------------+---|
+| dpmd        | service boot and crash again and again: libcneconn.so misssing             | zhangjing    | xinyi       | done     | <2015-05-14 周四> [xinyi] report to qcom   <2015-05-26 周二> [xinyi] fixxed                                                                   | [[http://10.100.124.250:8080/browse/KNINE-2724][KNINE-2724]] |   |
+|-------------+----------------------------------------------------------------------------+--------------+-------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------+------------+---|
+| log         | dmesgsh.sh & batt_monitor.sh fork many processes(PID>32768 in few minutes) | zhangjing    | xinyi       | pending  | <2015-05-14 周四> [xinyi] priority low                                                                                                        | [[http://10.100.124.250:8080/browse/KNINE-2726][KNINE-2726]] |   |
+|-------------+----------------------------------------------------------------------------+--------------+-------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------+------------+---|
+| alarm       | sleep state: a lot of alarm actions                                        | yangshaoying | naibo       | done     | <2015-05-14 周四> [jing] can see a lot of ioctl from AlarmManager                                                                             |            |   |
+|-------------+----------------------------------------------------------------------------+--------------+-------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------+------------+---|
+| charging    | power-off charging mode, many daemon not mandatory                         | zhangjing    | xinyi       | on-going | <2015-05-13 周三> [jing] qmi (modem) error logs in charging mode                                                                              |            |   |
+|-------------+----------------------------------------------------------------------------+--------------+-------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------+------------+---|
+| le.appstore | high cpu usage even in backgroud                                           |              | huimin Deng | done     | <2015-05-14 周四> [jing] RefreshMenuback thread buzy, call Bitmap.getpixel()/setpixel() cost time; [huiming]Renderscript has good performance |            |   |
+|-------------+----------------------------------------------------------------------------+--------------+-------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------+------------+---|
+| systemui    | fork several logcat process                                                | gulei        | yumina      | done     | <2015-05-19 周二> [gulei] use load several logcat process                                                                                     |            |   |
+|-------------+----------------------------------------------------------------------------+--------------+-------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------+------------+---|
+| kernel      | bootup stage, a log of user data abort in dmesglog                         | gulei        | zhangjing   | pending  |  <2015-05-18 周一>                                                                                                                                             |            |   |
+|-------------+----------------------------------------------------------------------------+--------------+-------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------+------------+---|
+
+* Looong-term plan
+
+|--------+-------------------------------------+-----------------------------------------------------+-----------------------------------------------+---|
+| module | description                         | pros                                                | cons                                          |   |
+|--------+-------------------------------------+-----------------------------------------------------+-----------------------------------------------+---|
+| FS     | moto X use f2fs for /data partition | better performance when little free space available | only support in latest kernel, not stable yet |   |
+|--------+-------------------------------------+-----------------------------------------------------+-----------------------------------------------+---|
+
+* reference phone image
+
+** nexus 5
+https://dl.google.com/dl/android/aosp/hammerhead-lmy47d-factory-6c1ad81e.tgz
+
+** nexu 6
+https://dl.google.com/dl/android/aosp/shamu-lmy47z-factory-33951732.tgz
+
+
