@@ -9,6 +9,7 @@
 * cpufreq
 
 ** cpufreq
+cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
 * hotplug
 
@@ -36,16 +37,105 @@
 
 *** setInteractive
 
+#+begin_src sequence
+title: Flow of setInteractive
+PowerManagerService.java->PowerManagerService.java:onDisplayStateChange
+PowerManagerService.java->PowerManagerService.java: updateSuspendBlockerLocked
+PowerManagerService.java->PowerManagerService.cpp:setHalInteractiveModeLocked
+Note over PowerManagerService.cpp: jni
+Note over gPowerModule: HAL
+Note over power: qcom hal
+PowerManagerService.cpp->gPowerModule: nativeSetInteractive
+gPowerModule-->>power: setInteractive
+power->power:set_interactive
 
-#+BEGIN_SRC 
-
-张三->李四: 嘿，小四儿, 写博客了没?
-Note right of 李四: 李四愣了一下，说：
-李四-->张三: 忙得吐血，哪有时间写。
-
-#+END_SRC
+#+end_src
 
 *** setPowerHint
 
-*** setAutoSuspend
+#+begin_src sequence
+title: Flow of setPowerHint
+Note over PowerHAL.cpp: surfaceflinger/DisplayHardware
+Note over omx_vdec.cpp: hardware/qcom/media/mm-video-v412/vidc/vdec
+PowerHAL.cpp->PowerManagerService.java:vsyncHint
+omx_vdec.cpp->PowerManagerService.java:power_module_register
+PowerManagerService.java->PowerManagerService.java:updateLowPowerModeLocked
+PowerManagerService.java->PowerManagerService.java: userActivityNoUpdateLocked
+PowerManagerService.java->PowerManagerService.cpp:powerHintInternal
+Note over PowerManagerService.cpp: jni
+Note over gPowerModule: HAL
+Note over power.c: device/qcom/common/power/power.c
+PowerManagerService.cpp->gPowerModule: nativeSendPowerHint
+gPowerModule-->>power.c: powerHint
+power.c-->power.c: power_hint_override
 
+#+end_src
+
+*** setAutoSuspend
+#+begin_src sequence
+title: Flow of setAutoSuspend
+PowerManagerService.java->PowerManagerService.java:onDisplayStateChange
+PowerManagerService.java->PowerManagerService.java: updateSuspendBlockerLocked
+PowerManagerService.java->PowerManagerService.cpp:setHalAutoSuspendModeLocked
+Note over PowerManagerService.cpp: jni
+Note over autosuspend.c:system/core/libsuspend
+Note over autosuspend_wakeup_count.c: system/core/libsuspend
+PowerManagerService.cpp->autosuspend.c: autosuspend_enable
+autosuspend.c-->>autosuspend_wakeup_count.c: autosuspend_wakeup_count_enable
+
+#+end_src
+
+* dumpsys deviceidle
+#+BEGIN_SRC 
+$ adb shell dumpsys deviceidle
+  Settings:
+    inactive_to=+30m0s0ms
+    sensing_to=+4m0s0ms
+    locating_to=+30s0ms
+    location_accuracy=20.0m
+    motion_inactive_to=+10m0s0ms
+    idle_after_inactive_to=+30m0s0ms
+    idle_pending_to=+5m0s0ms
+    max_idle_pending_to=+10m0s0ms
+    idle_pending_factor=2.0
+    idle_to=+60m0s0ms
+    max_idle_to=+6h0m0s0ms
+    idle_factor=2.0
+    min_time_to_alarm=+60m0s0ms
+    max_temp_app_whitelist_duration=+5m0s0ms
+    mms_temp_app_whitelist_duration=+60s0ms
+    sms_temp_app_whitelist_duration=+20s0ms
+  Whitelist (except idle) system apps:
+    com.android.providers.downloads
+  Whitelist (except idle) all app ids:
+    10008
+  mEnabled=true
+  mForceIdle=false
+  mSigMotionSensor={Sensor name="Significant Motion Detector", vendor="QTI", version=2, type=17, maxRange=1.0, resolution=1.0, power=0.17999268, minDelay=-1}
+  mCurDisplay=Display id 0: DisplayInfo{"内置屏幕", uniqueId "local:0", app 1080 x 1920, real 1080 x 1920, largest app 1920 x 1848, smallest app 1080 x 1008, mode 1, defaultMode 1, modes [{id=1, width=1080, height=1920, fps=60.000004}], colorTransformId 1, defaultColorTransformId 1, supportedColorTransforms [{id=1, colorTransform=0}], rotation 0, density 480 (160.421 x 159.895) dpi, layerStack 0, appVsyncOff 0, presDeadline 17666666, type BUILT_IN, state OFF, FLAG_SECURE, FLAG_SUPPORTS_PROTECTED_BUFFERS}, DisplayMetrics{density=3.0, width=1080, height=1920, scaledDensity=3.0, xdpi=160.421, ydpi=159.895}, isValid=true
+  mScreenOn=false
+  mCharging=true
+  mSigMotionActive=false
+  mSensing=false mNotMoving=false
+  mLocating=false mHaveGps=true mLocated=false
+  mState=ACTIVE
+  mInactiveTimeout=+30m0s0ms
+
+
+#+END_SRC
+
+#+BEGIN_SRC 
+android/frameworks/base/core/res/res/values/config.xml
+#+END_SRC
+#+BEGIN_SRC xml
+    <!-- Set this to true to enable the platform's auto-power-save modes like doze and
+         app standby.  These are not enabled by default because they require a standard
+         cloud-to-device messaging service for apps to interact correctly with the modes
+         (such as to be able to deliver an instant message to the device even when it is
+         dozing).  This should be enabled if you have such services and expect apps to
+         correctly use them when installed on your device.  Otherwise, keep this disabled
+         so that applications can still use their own mechanisms. -->
+    <bool name="config_enableAutoPowerModes">true</bool>
+
+#+END_SRC
+* 

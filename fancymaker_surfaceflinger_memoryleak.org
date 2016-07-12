@@ -1,0 +1,433 @@
+
+* Memory Leak in surfaceflinger
+#+BEGIN_SRC  adb
+setprop libc.debug.malloc 1
+
+setprop libc.debug.malloc.program surfaceflinger
+
+#+END_SRC
+#+BEGIN_SRC gdb
+
+(gdb) file /home/zhangjing35/WS_xui/symbols_sf2/system/bin/surfaceflinger
+
+(gdb) set solib-search-path /home/zhangjing35/WS_xui/symbols_sf2/system/lib64:/home/zhangjing35/WS_xui/symbols_sf2/system/lib64/hw:/home/zhangjing35/WS_xui/symbols_sf2/system/vendor/lib64/
+
+
+123     static HashEntry* record_backtrace(uintptr_t* backtrace, size_t numEntries, size_t size) {
+124         size_t hash = get_hash(backtrace, numEntries);
+125         size_t slot = hash % HASHTABLE_SIZE;
+126
+
+138         HashEntry* entry = find_entry(g_hash_table, slot, backtrace, numEntries, size);
+139         if (entry != NULL) {
+140             entry->allocations++;
+   0x0000007fabb7bdb4 <+312>:   ldr     x13, [x19,#40]
+   0x0000007fabb7bdb8 <+316>:   mov     x20, x19
+   0x0000007fabb7bdbc <+320>:   add     x14, x13, #0x1
+   0x0000007fabb7bdc0 <+324>:   str     x14, [x19,#40]
+
+141         } else {
+142             // create a new entry
+
+(gdb) break *leak_malloc+324 if $x14>10000
+
+(gdb) p g_hash_table->slots[slot].allocations
+
+#+END_SRC
+
+* Memory leak in "Lost RAM"
+
+#+BEGIN_SRC dumpsys meminfo
+Total RAM: 3708152 kB (status critical)
+ Free RAM: 249432 kB (0 cached pss + 114276 cached kernel + 135156 free)
+ Used RAM: 517462 kB (327486 used pss + 189976 kernel)
+ Lost RAM: 2941258 kB
+     ZRAM: 77604 kB physical used for 355840 kB in swap (524284 kB total swap)
+   Tuning: 256 (large 512), oom 322560 kB, restore limit 107520 kB (high-end-gfx)
+
+#+END_SRC 
+
+#+BEGIN_SRC proc/meminfo
+$ adb shell cat proc/meminfo
+MemTotal:        3708152 kB
+MemFree:          192084 kB
+MemAvailable:     278920 kB
+Buffers:            3272 kB
+Cached:           135332 kB
+SwapCached:        10736 kB
+Active:           208096 kB
+Inactive:          97772 kB
+Active(anon):     123376 kB
+Inactive(anon):    46592 kB
+Active(file):      84720 kB
+Inactive(file):    51180 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:        524284 kB
+SwapFree:         168396 kB
+Dirty:                48 kB
+Writeback:             0 kB
+AnonPages:        164268 kB
+Mapped:            63232 kB
+Shmem:              2544 kB
+Slab:             121912 kB
+SReclaimable:      34896 kB
+SUnreclaim:        87016 kB
+KernelStack:       21568 kB
+PageTables:        16900 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     2378360 kB
+Committed_AS:   28631224 kB
+VmallocTotal:   244318144 kB
+VmallocUsed:      167180 kB
+VmallocChunk:   243974228 kB
+
+#+END_SRC
+
+#+BEGIN_SRC proc/zoneinfo
+
+#+END_SRC
+
+#+BEGIN_SRC proc/vmstat
+
+#+END_SRC
+
+#+BEGIN_SRC d/page_owner
+Page allocated via order 0, mask 0x242d2
+PFN 532065 Block 519 type 0          Flags
+ [<ffffffc0008d0188>] ion_page_pool_alloc+0x50/0xe8
+ [<ffffffc0008d0b98>] ion_system_heap_allocate+0x140/0x49c
+ [<ffffffc0008cde34>] ion_alloc+0x1b0/0x7f8
+ [<ffffffc0008ce90c>] ion_ioctl+0x1c4/0x3e8
+ [<ffffffc0008d3e60>] compat_ion_ioctl+0x334/0x778
+ [<ffffffc0001e8c90>] compat_SyS_ioctl+0x10c/0x14c0
+ [<ffffffc0000854ac>] el0_svc_naked+0x20/0x28
+ [<ffffffffffffffff>] 0xffffffffffffffff
+
+Page allocated via order 0, mask 0x242d2
+PFN 532066 Block 519 type 0          Flags
+ [<ffffffc0008d0188>] ion_page_pool_alloc+0x50/0xe8
+ [<ffffffc0008d0b98>] ion_system_heap_allocate+0x140/0x49c
+ [<ffffffc0008cde34>] ion_alloc+0x1b0/0x7f8
+ [<ffffffc0008ce90c>] ion_ioctl+0x1c4/0x3e8
+ [<ffffffc0008d3e60>] compat_ion_ioctl+0x334/0x778
+ [<ffffffc0001e8c90>] compat_SyS_ioctl+0x10c/0x14c0
+ [<ffffffc0000854ac>] el0_svc_naked+0x20/0x28
+ [<ffffffffffffffff>] 0xffffffffffffffff
+
+#+END_SRC
+
+#+BEGIN_SRC d/ion/heaps/system
+          client              pid             size
+----------------------------------------------------
+     mediaserver              519             4096
+     mediaserver              519             4096
+     mediaserver              519             4096
+     mediaserver              519             4096
+     mediaserver              519             4096
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519             4096
+     mediaserver              519            16384
+     mediaserver              519             4096
+     mediaserver              519            16384
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519            61440
+     mediaserver              519           471040
+     mediaserver              519            61440
+     mediaserver              519           245760
+     mediaserver              519           704512
+     mediaserver              519             4096
+     mediaserver              519             4096
+     mediaserver              519             4096
+     mediaserver              519             4096
+     mediaserver              519             4096
+     mediaserver              519             4096
+     mediaserver              519             4096
+     mediaserver              519             8192
+     mediaserver              519             4096
+       DTS_EAGLE               55           131072
+     voip_client              268             4096
+         voc_cal              268             4096
+     voip_client              268             8192
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519          3141632
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+     mediaserver              519           704512
+----------------------------------------------------
+orphaned allocations (info is from last known client):
+     mediaserver              519          9625600 0 1
+     mediaserver              519          9625600 0 1
+
+     mediaserver              519          9625600 0 1
+     mediaserver              519          9625600 0 1
+     mediaserver              519          3149824 0 1
+     mediaserver              519          9625600 0 1
+     mediaserver              519          3149824 0 1
+     mediaserver              519          9625600 0 1
+     mediaserver              519          9625600 0 1
+     mediaserver              519          9625600 0 1
+     mediaserver              519          9625600 0 1
+     mediaserver              519          9625600 0 1
+     mediaserver              519          9625600 0 1
+     mediaserver              519          9625600 0 1
+     mediaserver              519          9625600 0 1
+     mediaserver              519          3149824 0 1
+     mediaserver              519          3149824 0 1
+     mediaserver              519          9625600 0 1
+     mediaserver              519          9625600 0 1
+----------------------------------------------------
+  total orphaned       2833674240
+          total        2872659968
+   deferred free                0
+
+#+END_SRC
+
+#+BEGIN_SRC gdb
+
+Dump of assembler code for function omx_vdec::alloc_map_ion_memory(unsigned int, unsigned int, ion_allocation_data*, ion_fd_data*, int):
+
+9233        rc = ioctl(fd,ION_IOC_ALLOC,alloc_data);
+   0xee798d94 <+148>:   mov.w   r1, #18688      ; 0x4900
+   0xee798d9c <+156>:   mov     r0, r8
+   0xee798d9e <+158>:   movt    r1, #49172      ; 0xc014
+   0xee798da2 <+162>:   mov     r2, r5
+---Type <return> to continue, or q <return> to quit---
+   0xee798da4 <+164>:   blx     0xee7906f4
+
+
+9242        rc = ioctl(fd,ION_IOC_MAP,fd_data);
+   0xee798db2 <+178>:   movw    r1, #18690      ; 0x4902
+   0xee798db8 <+184>:   movt    r1, #49160      ; 0xc008
+   0xee798dbc <+188>:   mov     r0, r8
+   0xee798dbe <+190>:   mov     r2, r6
+   0xee798dc0 <+192>:   blx     0xee7906f4
+
+#0  ioctl (fd=127, request=-1073198846) at bionic/libc/bionic/ioctl.c:33
+#1  0xee798dc4 in omx_vdec::alloc_map_ion_memory (this=0xef647000, buffer_size=7094272, alignment=<optimized out>, alloc_data=0xef452e8c, fd_data=0xef452e84, flag=1)
+    at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:9242
+#2  0xee79ab7c in omx_vdec::allocate_input_buffer (this=this@entry=0xef647000, hComp=hComp@entry=0xef647004, bufferHdr=bufferHdr@entry=0xec6c1660, port=port@entry=0,
+    appData=appData@entry=0xef53c030, bytes=bytes@entry=7094272) at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:6120
+#3  0xee7a363c in omx_vdec::allocate_buffer (this=0xef647000, hComp=0xef647004, bufferHdr=0xec6c1660, port=0, appData=0xef53c030, bytes=7094272)
+    at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:6590
+#4  0xf033a986 in qc_omx_component_allocate_buffer (hComp=0xef647004, bufferHdr=0xec6c1660, port=0, appData=0xef53c030, bytes=7094272)
+    at hardware/qcom/media/mm-core/src/common/omx_core_cmp.cpp:289
+#5  0xf6446410 in android::OMXNodeInstance::allocateBuffer (this=0xef671b00, portIndex=0, size=7094272, buffer=0xec6c170c, buffer_data=0xef53c030)
+    at frameworks/av/media/libstagefright/omx/OMXNodeInstance.cpp:984
+#6  0xf643e838 in android::OMX::allocateBuffer (this=<optimized out>, node=<optimized out>, port_index=3221768450, size=4014288516, buffer=<optimized out>, buffer_data=<optimized out>)
+    at frameworks/av/media/libstagefright/omx/OMX.cpp:413
+#7  0xf67ad178 in android::ACodec::allocateBuffer (this=<optimized out>, portIndex=4014288516, bufSize=7094272, info=...) at frameworks/av/media/libstagefright/ACodec.cpp:6544
+#8  0xf67a3518 in android::ACodec::allocateBuffersOnPort (this=<optimized out>, portIndex=<optimized out>) at frameworks/av/media/libstagefright/ACodec.cpp:892
+#9  0xf67ac5a0 in android::ACodec::LoadedToIdleState::allocateBuffers (this=0xecbe3890) at frameworks/av/media/libstagefright/ACodec.cpp:6069
+#10 0xf67ac520 in android::ACodec::LoadedToIdleState::stateEntered (this=0xecbe3890) at frameworks/av/media/libstagefright/ACodec.cpp:6057
+#11 0xf6544726 in android::AHierarchicalStateMachine::changeState (this=<optimized out>, state=...) at frameworks/av/media/libstagefright/foundation/AHierarchicalStateMachine.cpp:114
+#12 0xf67abbfe in android::ACodec::LoadedState::onStart (this=<optimized out>) at frameworks/av/media/libstagefright/ACodec.cpp:6043
+#13 0xf67abfc0 in android::ACodec::LoadedState::onMessageReceived (this=0xecbe3870, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:5797
+#14 0xf6544512 in android::AHierarchicalStateMachine::handleMessage (this=0xef3b3880, msg=...) at frameworks/av/media/libstagefright/foundation/AHierarchicalStateMachine.cpp:58
+#15 0xf6544376 in android::AHandler::deliverMessage (this=0xef3b3888, msg=...) at frameworks/av/media/libstagefright/foundation/AHandler.cpp:27
+#16 0xf6546396 in android::AMessage::deliver (this=0xeaf7aa00) at frameworks/av/media/libstagefright/foundation/AMessage.cpp:354
+#17 0xf6544d9c in android::ALooper::loop (this=0xf1ad1118) at frameworks/av/media/libstagefright/foundation/ALooper.cpp:220
+#18 0xf6c23116 in android::Thread::_threadLoop (user=0xf1ad1188) at system/core/libutils/Threads.cpp:758
+#19 0xf6ae8a34 in __pthread_start (arg=0xec6c1930, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:199
+#20 0xf6ac2fc6 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#21 0x00000000 in ?? ()
+
+
+#0  ioctl (fd=124, request=-1073198846) at bionic/libc/bionic/ioctl.c:33
+#1  0xee798dc4 in omx_vdec::alloc_map_ion_memory (this=0xef647000, buffer_size=360448, alignment=<optimized out>, alloc_data=0xef6471f4, fd_data=0xef6471ec, flag=0)
+    at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:9242
+#2  0xee798f08 in omx_vdec::allocate_extradata (this=this@entry=0xef647000) at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:5377
+#3  0xee79ee9e in omx_vdec::use_output_buffer (this=0xef647000, hComp=<optimized out>, bufferHdr=0xec6c15fc, port=<optimized out>, appData=appData@entry=0xef5359a0, bytes=bytes@entry=8,
+    buffer=buffer@entry=0xf0235000 "") at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:5445
+#4  0xee79f4e6 in omx_vdec::use_buffer (this=0xef647000, hComp=<optimized out>, bufferHdr=0xec6c15fc, port=1, appData=0xef5359a0, bytes=8, buffer=0xf0235000 "")
+    at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:5802
+#5  0xf033a936 in qc_omx_component_use_buffer (hComp=0xef647004, bufferHdr=0xec6c15fc, port=1, appData=0xef5359a0, bytes=8, buffer=0xf0235000 "")
+    at hardware/qcom/media/mm-core/src/common/omx_core_cmp.cpp:268
+#6  0xf6444d1e in android::OMXNodeInstance::useBuffer (this=0xef671b00, portIndex=1, params=..., buffer=0xec6c1684, allottedSize=8)
+    at frameworks/av/media/libstagefright/omx/OMXNodeInstance.cpp:671
+#7  0xf643e78c in android::OMX::useBuffer (this=<optimized out>, node=<optimized out>, port_index=3221768450, params=..., buffer=<optimized out>, allottedSize=<optimized out>)
+    at frameworks/av/media/libstagefright/omx/OMX.cpp:367
+#8  0xf67a3832 in android::ACodec::allocateOutputMetadataBuffers (this=0xef3b3880) at frameworks/av/media/libstagefright/ACodec.cpp:1211
+#9  0xf67a33e4 in android::ACodec::allocateBuffersOnPort (this=0xef3b3880, portIndex=1) at frameworks/av/media/libstagefright/ACodec.cpp:825
+#10 0xf67ac520 in android::ACodec::LoadedToIdleState::stateEntered (this=0xecbe3890) at frameworks/av/media/libstagefright/ACodec.cpp:6057
+#11 0xf6544726 in android::AHierarchicalStateMachine::changeState (this=<optimized out>, state=...) at frameworks/av/media/libstagefright/foundation/AHierarchicalStateMachine.cpp:114
+#12 0xf67abbfe in android::ACodec::LoadedState::onStart (this=<optimized out>) at frameworks/av/media/libstagefright/ACodec.cpp:6043
+#13 0xf67abfc0 in android::ACodec::LoadedState::onMessageReceived (this=0xecbe3870, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:5797
+#14 0xf6544512 in android::AHierarchicalStateMachine::handleMessage (this=0xef3b3880, msg=...) at frameworks/av/media/libstagefright/foundation/AHierarchicalStateMachine.cpp:58
+#15 0xf6544376 in android::AHandler::deliverMessage (this=0xef3b3888, msg=...) at frameworks/av/media/libstagefright/foundation/AHandler.cpp:27
+#16 0xf6546396 in android::AMessage::deliver (this=0xeaf7aa00) at frameworks/av/media/libstagefright/foundation/AMessage.cpp:354
+#17 0xf6544d9c in android::ALooper::loop (this=0xf1ad1118) at frameworks/av/media/libstagefright/foundation/ALooper.cpp:220
+#18 0xf6c23116 in android::Thread::_threadLoop (user=0xf1ad1188) at system/core/libutils/Threads.cpp:758
+#19 0xf6ae8a34 in __pthread_start (arg=0xec6c1930, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:199
+#20 0xf6ac2fc6 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#21 0x00000000 in ?? ()
+
+
+(gdb) break omx_vdec::alloc_map_ion_memory(unsigned int, unsigned int, ion_allocation_data*, ion_fd_data*, int) if buffer_size==3149824
+Breakpoint 4 at 0xee798d00: file hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp, line 9200.
+(gdb) cont
+Continuing.
+[New Thread 3807]
+[New Thread 3903]
+[Switching to Thread 3903]
+
+Breakpoint 4, omx_vdec::alloc_map_ion_memory (this=0xee7d2000, buffer_size=3149824, alignment=4096, alloc_data=0xee7de3a4, fd_data=0xee7de39c, flag=1)
+    at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:9200
+9200    {
+(gdb) bt
+#0  omx_vdec::alloc_map_ion_memory (this=0xee7d2000, buffer_size=3149824, alignment=4096, alloc_data=0xee7de3a4, fd_data=0xee7de39c, flag=1)
+    at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:9200
+#1  0xee7a33b8 in omx_vdec::allocate_color_convert_buf::allocate_buffers_color_convert (this=this@entry=0xee7dc660, hComp=hComp@entry=0xee7d2004, bufferHdr=bufferHdr@entry=0xe9054568,
+    port=port@entry=1, appData=appData@entry=0xeaf65610, bytes=bytes@entry=3133440) at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:11297
+#2  0xee7a37c2 in omx_vdec::allocate_buffer (this=0xee7d2000, hComp=0xee7d2004, bufferHdr=0xe9054568, port=1, appData=0xeaf65610, bytes=3133440)
+    at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:6594
+#3  0xf033a986 in qc_omx_component_allocate_buffer (hComp=0xee7d2004, bufferHdr=0xe9054568, port=1, appData=0xeaf65610, bytes=3133440)
+    at hardware/qcom/media/mm-core/src/common/omx_core_cmp.cpp:289
+#4  0xf6446410 in android::OMXNodeInstance::allocateBuffer (this=0xecbe5440, portIndex=1, size=3133440, buffer=0xe9054614, buffer_data=0xeaf65610)
+    at frameworks/av/media/libstagefright/omx/OMXNodeInstance.cpp:984
+#5  0xf643e838 in android::OMX::allocateBuffer (this=<optimized out>, node=<optimized out>, port_index=3149824, size=4096, buffer=<optimized out>, buffer_data=<optimized out>)
+    at frameworks/av/media/libstagefright/omx/OMX.cpp:413
+#6  0xf67ad178 in android::ACodec::allocateBuffer (this=<optimized out>, portIndex=4096, bufSize=3133440, info=...) at frameworks/av/media/libstagefright/ACodec.cpp:6544
+#7  0xf67a3518 in android::ACodec::allocateBuffersOnPort (this=<optimized out>, portIndex=<optimized out>) at frameworks/av/media/libstagefright/ACodec.cpp:892
+#8  0xf67ad6f2 in android::ACodec::OutputPortSettingsChangedState::onOMXEvent (this=0xef535e10, event=<optimized out>, data1=<optimized out>, data2=<optimized out>)
+    at frameworks/av/media/libstagefright/ACodec.cpp:6713
+#9  0xf67a9eba in android::ACodec::BaseState::onOMXMessage (this=0xef535e10, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:4831
+#10 0xf67a9a62 in android::ACodec::BaseState::onMessageReceived (this=0xef535e10, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:4703
+#11 0xf67ad520 in android::ACodec::OutputPortSettingsChangedState::onMessageReceived (this=0xef535e10, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:6662
+#12 0xf6544512 in android::AHierarchicalStateMachine::handleMessage (this=0xef3b1600, msg=...) at frameworks/av/media/libstagefright/foundation/AHierarchicalStateMachine.cpp:58
+#13 0xf67a9c28 in android::ACodec::BaseState::onOMXMessageList (this=0xef535e10, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:4793
+#14 0xf67a9976 in android::ACodec::BaseState::onMessageReceived (this=0xef535e10, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:4697
+#15 0xf67ad520 in android::ACodec::OutputPortSettingsChangedState::onMessageReceived (this=0xef535e10, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:6662
+#16 0xf6544512 in android::AHierarchicalStateMachine::handleMessage (this=0xef3b1600, msg=...) at frameworks/av/media/libstagefright/foundation/AHierarchicalStateMachine.cpp:58
+#17 0xf6544376 in android::AHandler::deliverMessage (this=0xef3b1608, msg=...) at frameworks/av/media/libstagefright/foundation/AHandler.cpp:27
+#18 0xf6546396 in android::AMessage::deliver (this=0xeaf7d200) at frameworks/av/media/libstagefright/foundation/AMessage.cpp:354
+#19 0xf6544d9c in android::ALooper::loop (this=0xf1ad12a0) at frameworks/av/media/libstagefright/foundation/ALooper.cpp:220
+#20 0xf6c23116 in android::Thread::_threadLoop (user=0xf1ad1230) at system/core/libutils/Threads.cpp:758
+#21 0xf6ae8a34 in __pthread_start (arg=0xe9054930, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:199
+#22 0xf6ac2fc6 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#23 0x00000000 in ?? ()
+
+
+Breakpoint 4, omx_vdec::alloc_map_ion_memory (this=0xeaf66000, buffer_size=3149824, alignment=4096, alloc_data=0xeaf723a4, fd_data=0xeaf7239c, flag=1)
+    at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:9200
+9200    {
+(gdb) bt
+#0  omx_vdec::alloc_map_ion_memory (this=0xeaf66000, buffer_size=3149824, alignment=4096, alloc_data=0xeaf723a4, fd_data=0xeaf7239c, flag=1)
+    at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:9200
+#1  0xee7a33b8 in omx_vdec::allocate_color_convert_buf::allocate_buffers_color_convert (this=this@entry=0xeaf70660, hComp=hComp@entry=0xeaf66004, bufferHdr=bufferHdr@entry=0xeca80568,
+    port=port@entry=1, appData=appData@entry=0xeaf65950, bytes=bytes@entry=3133440) at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:11297
+#2  0xee7a37c2 in omx_vdec::allocate_buffer (this=0xeaf66000, hComp=0xeaf66004, bufferHdr=0xeca80568, port=1, appData=0xeaf65950, bytes=3133440)
+    at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:6594
+#3  0xf033a986 in qc_omx_component_allocate_buffer (hComp=0xeaf66004, bufferHdr=0xeca80568, port=1, appData=0xeaf65950, bytes=3133440)
+    at hardware/qcom/media/mm-core/src/common/omx_core_cmp.cpp:289
+#4  0xf6446410 in android::OMXNodeInstance::allocateBuffer (this=0xecbe4480, portIndex=1, size=3133440, buffer=0xeca80614, buffer_data=0xeaf65950)
+    at frameworks/av/media/libstagefright/omx/OMXNodeInstance.cpp:984
+#5  0xf643e838 in android::OMX::allocateBuffer (this=<optimized out>, node=<optimized out>, port_index=3149824, size=4096, buffer=<optimized out>, buffer_data=<optimized out>)
+    at frameworks/av/media/libstagefright/omx/OMX.cpp:413
+#6  0xf67ad178 in android::ACodec::allocateBuffer (this=<optimized out>, portIndex=4096, bufSize=3133440, info=...) at frameworks/av/media/libstagefright/ACodec.cpp:6544
+#7  0xf67a3518 in android::ACodec::allocateBuffersOnPort (this=<optimized out>, portIndex=<optimized out>) at frameworks/av/media/libstagefright/ACodec.cpp:892
+#8  0xf67ad6f2 in android::ACodec::OutputPortSettingsChangedState::onOMXEvent (this=0xeaf655d0, event=<optimized out>, data1=<optimized out>, data2=<optimized out>)
+    at frameworks/av/media/libstagefright/ACodec.cpp:6713
+#9  0xf67a9eba in android::ACodec::BaseState::onOMXMessage (this=0xeaf655d0, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:4831
+#10 0xf67a9a62 in android::ACodec::BaseState::onMessageReceived (this=0xeaf655d0, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:4703
+#11 0xf67ad520 in android::ACodec::OutputPortSettingsChangedState::onMessageReceived (this=0xeaf655d0, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:6662
+#12 0xf6544512 in android::AHierarchicalStateMachine::handleMessage (this=0xef36ce00, msg=...) at frameworks/av/media/libstagefright/foundation/AHierarchicalStateMachine.cpp:58
+#13 0xf67a9c28 in android::ACodec::BaseState::onOMXMessageList (this=0xeaf655d0, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:4793
+#14 0xf67a9976 in android::ACodec::BaseState::onMessageReceived (this=0xeaf655d0, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:4697
+#15 0xf67ad520 in android::ACodec::OutputPortSettingsChangedState::onMessageReceived (this=0xeaf655d0, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:6662
+#16 0xf6544512 in android::AHierarchicalStateMachine::handleMessage (this=0xef36ce00, msg=...) at frameworks/av/media/libstagefright/foundation/AHierarchicalStateMachine.cpp:58
+#17 0xf6544376 in android::AHandler::deliverMessage (this=0xef36ce08, msg=...) at frameworks/av/media/libstagefright/foundation/AHandler.cpp:27
+#18 0xf6546396 in android::AMessage::deliver (this=0xeb785200) at frameworks/av/media/libstagefright/foundation/AMessage.cpp:354
+#19 0xf6544d9c in android::ALooper::loop (this=0xf1ad15e8) at frameworks/av/media/libstagefright/foundation/ALooper.cpp:220
+#20 0xf6c23116 in android::Thread::_threadLoop (user=0xf1ad1038) at system/core/libutils/Threads.cpp:758
+#21 0xf6ae8a34 in __pthread_start (arg=0xeca80930, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:199
+#22 0xf6ac2fc6 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#23 0x00000000 in ?? ()
+
+(gdb) cont
+Continuing.
+[New Thread 5592]
+[Switching to Thread 5592]
+
+Breakpoint 4, omx_vdec::alloc_map_ion_memory (this=0xeaf66000, buffer_size=3149824, alignment=4096, alloc_data=0xeaf723a4, fd_data=0xeaf7239c, flag=1)
+    at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:9200
+9200    {
+(gdb) bt
+#0  omx_vdec::alloc_map_ion_memory (this=0xeaf66000, buffer_size=3149824, alignment=4096, alloc_data=0xeaf723a4, fd_data=0xeaf7239c, flag=1)
+    at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:9200
+#1  0xee7a33b8 in omx_vdec::allocate_color_convert_buf::allocate_buffers_color_convert (this=this@entry=0xeaf70660, hComp=hComp@entry=0xeaf66004, bufferHdr=bufferHdr@entry=0xeca80568,
+    port=port@entry=1, appData=appData@entry=0xeaf65790, bytes=bytes@entry=3133440) at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:11297
+#2  0xee7a37c2 in omx_vdec::allocate_buffer (this=0xeaf66000, hComp=0xeaf66004, bufferHdr=0xeca80568, port=1, appData=0xeaf65790, bytes=3133440)
+    at hardware/qcom/media/mm-video-v4l2/vidc/vdec/src/omx_vdec_v4l2.cpp:6594
+#3  0xf033a986 in qc_omx_component_allocate_buffer (hComp=0xeaf66004, bufferHdr=0xeca80568, port=1, appData=0xeaf65790, bytes=3133440)
+    at hardware/qcom/media/mm-core/src/common/omx_core_cmp.cpp:289
+#4  0xf6446410 in android::OMXNodeInstance::allocateBuffer (this=0xecbe4480, portIndex=1, size=3133440, buffer=0xeca80614, buffer_data=0xeaf65790)
+    at frameworks/av/media/libstagefright/omx/OMXNodeInstance.cpp:984
+#5  0xf643e838 in android::OMX::allocateBuffer (this=<optimized out>, node=<optimized out>, port_index=3149824, size=4096, buffer=<optimized out>, buffer_data=<optimized out>)
+    at frameworks/av/media/libstagefright/omx/OMX.cpp:413
+#6  0xf67ad178 in android::ACodec::allocateBuffer (this=<optimized out>, portIndex=4096, bufSize=3133440, info=...) at frameworks/av/media/libstagefright/ACodec.cpp:6544
+#7  0xf67a3518 in android::ACodec::allocateBuffersOnPort (this=<optimized out>, portIndex=<optimized out>) at frameworks/av/media/libstagefright/ACodec.cpp:892
+#8  0xf67ad6f2 in android::ACodec::OutputPortSettingsChangedState::onOMXEvent (this=0xef5355a0, event=<optimized out>, data1=<optimized out>, data2=<optimized out>)
+    at frameworks/av/media/libstagefright/ACodec.cpp:6713
+#9  0xf67a9eba in android::ACodec::BaseState::onOMXMessage (this=0xef5355a0, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:4831
+#10 0xf67a9a62 in android::ACodec::BaseState::onMessageReceived (this=0xef5355a0, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:4703
+#11 0xf67ad520 in android::ACodec::OutputPortSettingsChangedState::onMessageReceived (this=0xef5355a0, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:6662
+#12 0xf6544512 in android::AHierarchicalStateMachine::handleMessage (this=0xef3b3a00, msg=...) at frameworks/av/media/libstagefright/foundation/AHierarchicalStateMachine.cpp:58
+#13 0xf67a9c28 in android::ACodec::BaseState::onOMXMessageList (this=0xef5355a0, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:4793
+#14 0xf67a9976 in android::ACodec::BaseState::onMessageReceived (this=0xef5355a0, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:4697
+#15 0xf67ad520 in android::ACodec::OutputPortSettingsChangedState::onMessageReceived (this=0xef5355a0, msg=...) at frameworks/av/media/libstagefright/ACodec.cpp:6662
+#16 0xf6544512 in android::AHierarchicalStateMachine::handleMessage (this=0xef3b3a00, msg=...) at frameworks/av/media/libstagefright/foundation/AHierarchicalStateMachine.cpp:58
+#17 0xf6544376 in android::AHandler::deliverMessage (this=0xef3b3a08, msg=...) at frameworks/av/media/libstagefright/foundation/AHandler.cpp:27
+#18 0xf6546396 in android::AMessage::deliver (this=0xecbc2a00) at frameworks/av/media/libstagefright/foundation/AMessage.cpp:354
+#19 0xf6544d9c in android::ALooper::loop (this=0xf6067020) at frameworks/av/media/libstagefright/foundation/ALooper.cpp:220
+#20 0xf6c23116 in android::Thread::_threadLoop (user=0xf6067058) at system/core/libutils/Threads.cpp:758
+#21 0xf6ae8a34 in __pthread_start (arg=0xeca80930, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:199
+#22 0xf6ac2fc6 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#23 0x00000000 in ?? ()
+
+#+END_SRC

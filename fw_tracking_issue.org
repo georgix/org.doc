@@ -1,0 +1,2324 @@
+#+TITLE: Fancyworks Issue Tracking List
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+#+LINK_HOME: http://
+#+LINK_UP: http://
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main-ltr.css" />  <link rel="stylesheet" type="text/css" href="css/shared.css" />  <link rel="stylesheet" type="text/css" href="css/common.css" /> 
+
+* TODO avc denied
+  DEADLINE: <2015-06-19 周五> SCHEDULED: <2015-06-12 周五>
+
+#+BEGIN_SRC dmesg
+
+<36>[   32.504306] type=1400 audit(1279427.766:23): avc: denied { unlink } for pid=3611 comm="Thread-138" name="alarm_svc" dev="mmcblk0p22" ino=538622 scontext=u:r:system_server:s0 tcontext=u:object_r:location_data_file:s0 tclass=sock_file
+<4>[   33.263958] IRQ40 no longer affine to CPU3
+<36>[   33.505680] type=1400 audit(1279428.776:24): avc: denied { unlink } for pid=3611 comm="Thread-138" name="alarm_svc" dev="mmcblk0p22" ino=538622 scontext=u:r:system_server:s0 tcontext=u:object_r:location_data_file:s0 tclass=sock_file
+<36>[   34.508595] type=1400 audit(1279429.766:25): avc: denied { unlink } for pid=3611 comm="Thread-138" name="alarm_svc" dev="mmcblk0p22" ino=538622 scontext=u:r:system_server:s0 tcontext=u:object_r:location_data_file:s0 tclass=sock_file
+<3>[   34.613897] init: untracked pid 4074 killed by signal 9
+<36>[   35.508486] type=1400 audit(1279430.766:26): avc: denied { unlink } for pid=3611 comm="Thread-138" name="alarm_svc" dev="mmcblk0p22" ino=538622 scontext=u:r:system_server:s0 tcontext=u:object_r:location_data_file:s0 tclass=sock_file
+<36>[   36.509491] type=1400 audit(1279431.766:27): avc: denied { unlink } for pid=3611 comm="Thread-138" name="alarm_svc" dev="mmcblk0p22" ino=538622 scontext=u:r:system_server:s0 tcontext=u:object_r:location_data_file:s0 tclass=sock_file
+
+#+END_SRC
+
+* TODO 140ms pass since pwr key before panel on 
+  SCHEDULED: <2015-06-12 周五>
+
+#+BEGIN_SRC dmesg
+
+<6>[   71.638109] qpnp_kpdpwr_irq(), irq=292
+<6>[   71.638151] qpnp_pon_input_dispatch(), pon_type=0
+<6>[   71.638217] qpnp_pon_input_dispatch(), cfg->key_code=116,1
+<6>[   71.748776] fb_notifier_callback: event is 16
+<6>[   71.771463] [<c010cd38>] (unwind_backtrace+0x0/0xec) from [<c0989084>] (dump_stack+0x20/0x24)
+<6>[   71.771479] [<c0989084>] (dump_stack+0x20/0x24) from [<c0434250>] (mdss_dsi_panel_on+0x1c/0x90)
+<6>[   71.771489] [<c0434250>] (mdss_dsi_panel_on+0x1c/0x90) from [<c042d4b4>] (mdss_dsi_unblank+0x50/0xc4)
+<6>[   71.771499] [<c042d4b4>] (mdss_dsi_unblank+0x50/0xc4) from [<c042e220>] (mdss_dsi_event_handler+0xec/0x6f8)
+<6>[   71.771509] [<c042e220>] (mdss_dsi_event_handler+0xec/0x6f8) from [<c040d1e4>] (mdss_mdp_ctl_intf_event+0x50/0x78)
+<6>[   71.771522] [<c040d1e4>] (mdss_mdp_ctl_intf_event+0x50/0x78) from [<c041ee88>] (mdss_mdp_video_display+0x100/0x2fc)
+<6>[   71.771532] [<c041ee88>] (mdss_mdp_video_display+0x100/0x2fc) from [<c040eebc>] (mdss_mdp_display_commit+0x934/0xa28)
+<6>[   71.771541] [<c040eebc>] (mdss_mdp_display_commit+0x934/0xa28) from [<c0426d5c>] (mdss_mdp_overlay_kickoff+0x464/0x9ac)
+<6>[   71.771550] [<c0426d5c>] (mdss_mdp_overlay_kickoff+0x464/0x9ac) from [<c0427cd0>] (mdss_mdp_overlay_on+0xc4/0x124)
+<6>[   71.771563] [<c0427cd0>] (mdss_mdp_overlay_on+0xc4/0x124) from [<c0449c14>] (mdss_fb_blank_sub+0x104/0x344)
+<6>[   71.771573] [<c0449c14>] (mdss_fb_blank_sub+0x104/0x344) from [<c044b530>] (mdss_fb_blank+0x54/0xa8)
+<6>[   71.771584] [<c044b530>] (mdss_fb_blank+0x54/0xa8) from [<c03fe308>] (fb_blank+0x64/0x8c)
+<6>[   71.771594] [<c03fe308>] (fb_blank+0x64/0x8c) from [<c03fedd0>] (do_fb_ioctl+0x528/0x5a4)
+<6>[   71.771602] [<c03fedd0>] (do_fb_ioctl+0x528/0x5a4) from [<c03fee80>] (fb_ioctl+0x34/0x40)
+<6>[   71.771614] [<c03fee80>] (fb_ioctl+0x34/0x40) from [<c0281750>] (vfs_ioctl+0x38/0x4c)
+<6>[   71.771624] [<c0281750>] (vfs_ioctl+0x38/0x4c) from [<c0282220>] (do_vfs_ioctl+0x498/0x588)
+<6>[   71.771633] [<c0282220>] (do_vfs_ioctl+0x498/0x588) from [<c028236c>] (sys_ioctl+0x5c/0x88)
+<6>[   71.771646] [<c028236c>] (sys_ioctl+0x5c/0x88) from [<c0105e00>] (ret_fast_syscall+0x0/0x30)
+<6>[   71.771653] mdss_dsi_panel_on:Enter ndx = 0
+<6>[   71.913433] mdss_dsi_panel_on:parameter updated
+<6>[   71.914730] fb_notifier_callback: event is 9
+<6>[   71.914734] fb_notifier_callback: blank is 0
+
+#+END_SRC
+
+* TODO fpc error logs
+  SCHEDULED: <2015-06-12 周五>
+
+#+BEGIN_SRC dmesg
+
+<6>[   71.955508] qpnp_kpdpwr_irq(), irq=292
+<6>[   71.955516] qpnp_pon_input_dispatch(), pon_type=0
+<6>[   71.955537] qpnp_pon_input_dispatch(), cfg->key_code=116,0
+<4>[   71.957757] QSEECOM: qseecom_load_app: App with id 3 (fingerpr) now loaded
+<6>[   71.958519] fpc1020_store_attr_setup:Switch to TEE
+<6>[   71.964965] mdss_dsi_panel_bklt_dcs:@@@@@@ brightness level=52 ndx = 0 ***********
+<6>[   71.971442] fpc1020_store_attr_setup: TEE. Done
+<6>[   71.981495] fpc1020_reg_access: prepare switch to TEE, disable spi command
+<3>[   71.981758] fpc1020 spi4.0: fpc1020_input_task TERMINATED (-4)
+<6>[   72.498738] fpc1020_store_attr_setup:Switch to REE
+<6>[   72.498760] Entering fpc1020_reenable_from_tz
+<7>[   72.498768] fpc1020 spi4.0: fpc1020_reset
+<6>[   72.501132] fpc1020_gpio_reset OK !
+<7>[   72.501929] fpc1020 spi4.0: fpc1020_wake_up OK
+<7>[   72.501949] fpc1020 spi4.0: fpc1020_reset
+<6>[   72.504311] fpc1020_gpio_reset OK !
+<6>[   72.504339] fpc1020_store_attr_setup: REE. Done
+<6>[   72.510133] fpc1020_store_attr_setup:Switch to TEE
+<7>[   72.512443] fpc1020 spi4.0: fpc1020_wake_up OK
+<7>[   72.512461] fpc1020 spi4.0: fpc1020_write_sensor_1150_setup 3
+<6>[   72.513103] fpc1020_reg_access: prepare switch to TEE, disable spi command
+<3>[   72.513114] fpc1020 spi4.0: fpc1020_input_task FAILED (-13)
+<6>[   72.531479] fpc1020_store_attr_setup: TEE. Done
+
+#+END_SRC
+
+* DONE dsi panel on/off
+  CLOSED: [2015-06-15 周一 15:54] SCHEDULED: <2015-06-12 周五>
+
+#+BEGIN_SRC dmesg
+
+<6>[   73.701436] fb_notifier_callback: event is 16
+<6>[   73.715574] [<c010cd38>] (unwind_backtrace+0x0/0xec) from [<c0989084>] (dump_stack+0x20/0x24)
+<6>[   73.715608] [<c0989084>] (dump_stack+0x20/0x24) from [<c0434184>] (mdss_dsi_panel_off+0x1c/0xcc)
+<6>[   73.715634] [<c0434184>] (mdss_dsi_panel_off+0x1c/0xcc) from [<c042dc98>] (mdss_dsi_blank+0x174/0x1c0)
+<6>[   73.715656] [<c042dc98>] (mdss_dsi_blank+0x174/0x1c0) from [<c042e238>] (mdss_dsi_event_handler+0x104/0x6f8)
+<6>[   73.715683] [<c042e238>] (mdss_dsi_event_handler+0x104/0x6f8) from [<c040d1e4>] (mdss_mdp_ctl_intf_event+0x50/0x78)
+<6>[   73.715724] [<c040d1e4>] (mdss_mdp_ctl_intf_event+0x50/0x78) from [<c041f430>] (mdss_mdp_video_stop+0x70/0x2b0)
+<6>[   73.715746] [<c041f430>] (mdss_mdp_video_stop+0x70/0x2b0) from [<c040d748>] (mdss_mdp_ctl_stop+0x88/0x29c)
+<6>[   73.715765] [<c040d748>] (mdss_mdp_ctl_stop+0x88/0x29c) from [<c0427b48>] (mdss_mdp_overlay_off+0x190/0x254)
+<6>[   73.715795] [<c0427b48>] (mdss_mdp_overlay_off+0x190/0x254) from [<c0449d38>] (mdss_fb_blank_sub+0x228/0x344)
+<6>[   73.715821] [<c0449d38>] (mdss_fb_blank_sub+0x228/0x344) from [<c044b530>] (mdss_fb_blank+0x54/0xa8)
+<6>[   73.715843] [<c044b530>] (mdss_fb_blank+0x54/0xa8) from [<c03fe308>] (fb_blank+0x64/0x8c)
+<6>[   73.715861] [<c03fe308>] (fb_blank+0x64/0x8c) from [<c03fedd0>] (do_fb_ioctl+0x528/0x5a4)
+<6>[   73.715880] [<c03fedd0>] (do_fb_ioctl+0x528/0x5a4) from [<c03fee80>] (fb_ioctl+0x34/0x40)
+<6>[   73.715903] [<c03fee80>] (fb_ioctl+0x34/0x40) from [<c0281750>] (vfs_ioctl+0x38/0x4c)
+<6>[   73.715925] [<c0281750>] (vfs_ioctl+0x38/0x4c) from [<c0282220>] (do_vfs_ioctl+0x498/0x588)
+<6>[   73.715945] [<c0282220>] (do_vfs_ioctl+0x498/0x588) from [<c028236c>] (sys_ioctl+0x5c/0x88)
+<6>[   73.715968] [<c028236c>] (sys_ioctl+0x5c/0x88) from [<c0105e00>] (ret_fast_syscall+0x0/0x30)
+<6>[   73.715981] mdss_dsi_panel_off:Enter ndx = 0
+<6>[   73.716003] mdss_dsi_panel_off en_gpio disabled
+<6>[   73.934754] mdss_dsi_panel_off:Done ndx = 0
+
+<6>[   71.748776] fb_notifier_callback: event is 16
+<6>[   71.771463] [<c010cd38>] (unwind_backtrace+0x0/0xec) from [<c0989084>] (dump_stack+0x20/0x24)
+<6>[   71.771479] [<c0989084>] (dump_stack+0x20/0x24) from [<c0434250>] (mdss_dsi_panel_on+0x1c/0x90)
+<6>[   71.771489] [<c0434250>] (mdss_dsi_panel_on+0x1c/0x90) from [<c042d4b4>] (mdss_dsi_unblank+0x50/0xc4)
+<6>[   71.771499] [<c042d4b4>] (mdss_dsi_unblank+0x50/0xc4) from [<c042e220>] (mdss_dsi_event_handler+0xec/0x6f8)
+<6>[   71.771509] [<c042e220>] (mdss_dsi_event_handler+0xec/0x6f8) from [<c040d1e4>] (mdss_mdp_ctl_intf_event+0x50/0x78)
+<6>[   71.771522] [<c040d1e4>] (mdss_mdp_ctl_intf_event+0x50/0x78) from [<c041ee88>] (mdss_mdp_video_display+0x100/0x2fc)
+<6>[   71.771532] [<c041ee88>] (mdss_mdp_video_display+0x100/0x2fc) from [<c040eebc>] (mdss_mdp_display_commit+0x934/0xa28)
+<6>[   71.771541] [<c040eebc>] (mdss_mdp_display_commit+0x934/0xa28) from [<c0426d5c>] (mdss_mdp_overlay_kickoff+0x464/0x9ac)
+<6>[   71.771550] [<c0426d5c>] (mdss_mdp_overlay_kickoff+0x464/0x9ac) from [<c0427cd0>] (mdss_mdp_overlay_on+0xc4/0x124)
+<6>[   71.771563] [<c0427cd0>] (mdss_mdp_overlay_on+0xc4/0x124) from [<c0449c14>] (mdss_fb_blank_sub+0x104/0x344)
+<6>[   71.771573] [<c0449c14>] (mdss_fb_blank_sub+0x104/0x344) from [<c044b530>] (mdss_fb_blank+0x54/0xa8)
+<6>[   71.771584] [<c044b530>] (mdss_fb_blank+0x54/0xa8) from [<c03fe308>] (fb_blank+0x64/0x8c)
+<6>[   71.771594] [<c03fe308>] (fb_blank+0x64/0x8c) from [<c03fedd0>] (do_fb_ioctl+0x528/0x5a4)
+<6>[   71.771602] [<c03fedd0>] (do_fb_ioctl+0x528/0x5a4) from [<c03fee80>] (fb_ioctl+0x34/0x40)
+<6>[   71.771614] [<c03fee80>] (fb_ioctl+0x34/0x40) from [<c0281750>] (vfs_ioctl+0x38/0x4c)
+<6>[   71.771624] [<c0281750>] (vfs_ioctl+0x38/0x4c) from [<c0282220>] (do_vfs_ioctl+0x498/0x588)
+<6>[   71.771633] [<c0282220>] (do_vfs_ioctl+0x498/0x588) from [<c028236c>] (sys_ioctl+0x5c/0x88)
+<6>[   71.771646] [<c028236c>] (sys_ioctl+0x5c/0x88) from [<c0105e00>] (ret_fast_syscall+0x0/0x30)
+<6>[   71.771653] mdss_dsi_panel_on:Enter ndx = 0
+<6>[   71.913433] mdss_dsi_panel_on:parameter updated
+<6>[   71.914730] fb_notifier_callback: event is 9
+<6>[   71.914734] fb_notifier_callback: blank is 0
+<6>[   71.914739] bq27531_config_charging_current: chrg_type=4, level=0, float_charger=0, vbus_ovp=0
+<6>[   71.931244] mdss_dsi_panel_bklt_dcs:@@@@@@ brightness level=50 ndx = 0 ***********
+
+#+END_SRC
+
+* TODO fingerprint_client cpu usage high
+* TODO systemui ANR (delayed screen off)
+  SCHEDULED: <2015-06-15 周一>
+
+#+BEGIN_SRC 
+DALVIK THREADS (33):
+"main" prio=5 tid=1 Native
+  | group="main" sCount=1 dsCount=0 obj=0x731c4000 self=0xb4827800
+  | sysTid=24178 nice=0 cgrp=default sched=0/0 handle=0xb6f64bec
+  | state=S schedstat=( 4441476750 4738166376 18656 ) utm=319 stm=125 core=1 HZ=100
+  | stack=0xbe1c4000-0xbe1c6000 stackSize=8MB
+  | held mutexes=
+  native: #00 pc 00010488  /system/lib/libc.so (syscall+28)
+  native: #01 pc 00013db1  /system/lib/libc.so (__pthread_cond_timedwait_relative(pthread_cond_t*, pthread_mutex_t*, timespec const*)+56)
+  native: #02 pc 0003c29b  /system/lib/libhwui.so (android::uirenderer::renderthread::RenderProxy::postAndWait(android::uirenderer::renderthread::MethodInvokeRenderTask*)+74)
+  native: #03 pc 00017c0d  /data/dalvik-cache/arm/system@framework@boot.oat (Java_android_view_ThreadedRenderer_nFence__J+88)
+  at android.view.ThreadedRenderer.nFence(Native method)
+  at android.view.ThreadedRenderer.fence(ThreadedRenderer.java:391)
+  at android.view.ViewRootImpl.performDraw(ViewRootImpl.java:2371)
+  at android.view.ViewRootImpl.performTraversals(ViewRootImpl.java:1982)
+  at android.view.ViewRootImpl.doTraversal(ViewRootImpl.java:1061)
+  at android.view.ViewRootImpl$TraversalRunnable.run(ViewRootImpl.java:5891)
+  at android.view.Choreographer$CallbackRecord.run(Choreographer.java:767)
+  at android.view.Choreographer.doCallbacks(Choreographer.java:580)
+  at android.view.Choreographer.doFrame(Choreographer.java:550)
+  at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:753)
+  at android.os.Handler.handleCallback(Handler.java:739)
+  at android.os.Handler.dispatchMessage(Handler.java:95)
+  at android.os.Looper.loop(Looper.java:135)
+  at android.app.ActivityThread.main(ActivityThread.java:5254)
+  at java.lang.reflect.Method.invoke!(Native method)
+  at java.lang.reflect.Method.invoke(Method.java:372)
+  at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:904)
+  at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:699)
+
+"RenderThread" prio=5 tid=26 Native
+  | group="main" sCount=1 dsCount=0 obj=0x12e180a0 self=0xaec44400
+  | sysTid=24303 nice=-4 cgrp=default sched=0/0 handle=0xb4927800
+  | state=S schedstat=( 2218672611 1226658040 8448 ) utm=164 stm=57 core=0 HZ=100
+  | stack=0xa0b04000-0xa0b06000 stackSize=1012KB
+  | held mutexes=
+  native: #00 pc 00037998  /system/lib/libc.so (__ioctl+8)
+  native: #01 pc 0004f5d5  /system/lib/libc.so (ioctl+14)
+  native: #02 pc 0001cb37  /system/lib/libbinder.so (android::IPCThreadState::talkWithDriver(bool)+138)
+  native: #03 pc 0001d143  /system/lib/libbinder.so (android::IPCThreadState::waitForResponse(android::Parcel*, int*)+42)
+  native: #04 pc 0001d2e5  /system/lib/libbinder.so (android::IPCThreadState::transact(int, unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+124)
+  native: #05 pc 000185c3  /system/lib/libbinder.so (android::BpBinder::transact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+30)
+  native: #06 pc 00030153  /system/lib/libgui.so (???)
+  native: #07 pc 000371f9  /system/lib/libgui.so (android::Surface::queueBuffer(ANativeWindowBuffer*, int)+332)
+  native: #08 pc 0003640b  /system/lib/libgui.so (android::Surface::hook_queueBuffer(ANativeWindow*, ANativeWindowBuffer*, int)+10)
+  native: #09 pc 00003323  /system/vendor/lib/egl/eglsubAndroid.so (???)
+  native: #10 pc 00013e14  /system/vendor/lib/egl/libEGL_adreno.so (qeglDrvAPI_eglSwapBuffers+1672)
+  native: #11 pc 0000791c  /system/vendor/lib/egl/libEGL_adreno.so (eglSwapBuffers+16)
+  native: #12 pc 000120d7  /system/lib/libEGL.so (eglSwapBuffers+290)
+  native: #13 pc 0003bce1  /system/lib/libhwui.so (???)
+  native: #14 pc 0003a77d  /system/lib/libhwui.so (???)
+  native: #15 pc 0003a92d  /system/lib/libhwui.so (???)
+  native: #16 pc 0003b559  /system/lib/libhwui.so (???)
+  native: #17 pc 0003d15f  /system/lib/libhwui.so (android::uirenderer::renderthread::RenderThread::threadLoop()+66)
+  native: #18 pc 0000ef11  /system/lib/libutils.so (android::Thread::_threadLoop(void*)+112)
+  native: #19 pc 0005ba91  /system/lib/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell(void*)+72)
+  native: #20 pc 0000ea81  /system/lib/libutils.so (???)
+  native: #21 pc 00013edf  /system/lib/libc.so (__pthread_start(void*)+30)
+  native: #22 pc 00011f13  /system/lib/libc.so (__start_thread+6)
+  (no managed stack frames)
+
+#+END_SRC
+
+* DONE lcd backlight flicker even brightness=0 (delayed screen off)
+  CLOSED: [2015-06-25 周四 20:08] SCHEDULED: <2015-06-15 周一> 
+
+#+BEGIN_SRC dmesg
+<6>[19692.311819] [<c010bfc4>] (unwind_backtrace+0x0/0x11c) from [<c0402ee8>] (mdss_dsi_panel_off+0xc/0xbc)
+<6>[19692.311842] [<c0402ee8>] (mdss_dsi_panel_off+0xc/0xbc) from [<c03fc288>] (mdss_dsi_blank+0x188/0x204)
+<6>[19692.311860] [<c03fc288>] (mdss_dsi_blank+0x188/0x204) from [<c03fc914>] (mdss_dsi_event_handler+0x130/0x858)
+<6>[19692.311882] [<c03fc914>] (mdss_dsi_event_handler+0x130/0x858) from [<c03d996c>] (mdss_mdp_ctl_intf_event+0x6c/0xa4)
+<6>[19692.311899] [<c03d996c>] (mdss_mdp_ctl_intf_event+0x6c/0xa4) from [<c03ec904>] (mdss_mdp_video_stop+0x80/0x2fc)
+<6>[19692.311914] [<c03ec904>] (mdss_mdp_video_stop+0x80/0x2fc) from [<c03d9f58>] (mdss_mdp_ctl_stop+0xd0/0x300)
+<6>[19692.311929] [<c03d9f58>] (mdss_mdp_ctl_stop+0xd0/0x300) from [<c03f590c>] (mdss_mdp_overlay_off+0x1a8/0x274)
+<6>[19692.311945] [<c03f590c>] (mdss_mdp_overlay_off+0x1a8/0x274) from [<c041cc20>] (mdss_fb_blank_sub+0x218/0x334)
+<6>[19692.311960] [<c041cc20>] (mdss_fb_blank_sub+0x218/0x334) from [<c041dd10>] (mdss_fb_suspend_sub+0xa4/0xf8)
+<6>[19692.311981] [<c041dd10>] (mdss_fb_suspend_sub+0xa4/0xf8) from [<c04a0a80>] (platform_pm_suspend+0x2c/0x54)
+<6>[19692.312005] [<c04a0a80>] (platform_pm_suspend+0x2c/0x54) from [<c04a47ac>] (dpm_run_callback+0x44/0x7c)
+<6>[19692.312021] [<c04a47ac>] (dpm_run_callback+0x44/0x7c) from [<c04a5628>] (__device_suspend+0x214/0x2ec)
+<6>[19692.312036] [<c04a5628>] (__device_suspend+0x214/0x2ec) from [<c04a5fe0>] (dpm_suspend+0xa4/0x200)
+<6>[19692.312052] [<c04a5fe0>] (dpm_suspend+0xa4/0x200) from [<c01d2c08>] (suspend_devices_and_enter+0xbc/0x338)
+<6>[19692.312067] [<c01d2c08>] (suspend_devices_and_enter+0xbc/0x338) from [<c01d2f84>] (pm_suspend+0x100/0x230)
+<6>[19692.312079] [<c01d2f84>] (pm_suspend+0x100/0x230) from [<c01d2148>] (state_store+0x40/0x68)
+<6>[19692.312094] [<c01d2148>] (state_store+0x40/0x68) from [<c03aa5fc>] (kobj_attr_store+0x14/0x20)
+<6>[19692.312113] [<c03aa5fc>] (kobj_attr_store+0x14/0x20) from [<c02a7100>] (sysfs_write_file+0x104/0x148)
+<6>[19692.312134] [<c02a7100>] (sysfs_write_file+0x104/0x148) from [<c02583bc>] (vfs_write+0xa8/0x138)
+<6>[19692.312150] [<c02583bc>] (vfs_write+0xa8/0x138) from [<c0258670>] (sys_write+0x34/0x68)
+<6>[19692.312168] [<c0258670>] (sys_write+0x34/0x68) from [<c0105fc0>] (ret_fast_syscall+0x0/0x30)
+<6>[19692.312178] mdss_dsi_panel_off:Enter ndx = 0 
+<6>[19692.312198] mdss_dsi_panel_off en_gpio disabled
+<6>[19692.540034] mdss_dsi_panel_off:Done ndx = 0 
+<6>[19692.653286] fb_notifier_callback: event is 2
+
+<6>[19692.768794] [<c010bfc4>] (unwind_backtrace+0x0/0x11c) from [<c0402fa4>] (mdss_dsi_panel_on+0xc/0x80)
+<6>[19692.768870] [<c0402fa4>] (mdss_dsi_panel_on+0xc/0x80) from [<c03fb970>] (mdss_dsi_unblank+0x68/0x10c)
+<6>[19692.768933] [<c03fb970>] (mdss_dsi_unblank+0x68/0x10c) from [<c03fc8fc>] (mdss_dsi_event_handler+0x118/0x858)
+<6>[19692.769006] [<c03fc8fc>] (mdss_dsi_event_handler+0x118/0x858) from [<c03d996c>] (mdss_mdp_ctl_intf_event+0x6c/0xa4)
+<6>[19692.769066] [<c03d996c>] (mdss_mdp_ctl_intf_event+0x6c/0xa4) from [<c03ec2c0>] (mdss_mdp_video_display+0x110/0x33c)
+<6>[19692.769129] [<c03ec2c0>] (mdss_mdp_video_display+0x110/0x33c) from [<c03db7a8>] (mdss_mdp_display_commit+0x938/0xa38)
+<6>[19692.769189] [<c03db7a8>] (mdss_mdp_display_commit+0x938/0xa38) from [<c03f4ae0>] (mdss_mdp_overlay_kickoff+0x468/0x99c)
+<6>[19692.769247] [<c03f4ae0>] (mdss_mdp_overlay_kickoff+0x468/0x99c) from [<c03f5a8c>] (mdss_mdp_overlay_on+0xb4/0x114)
+<6>[19692.769303] [<c03f5a8c>] (mdss_mdp_overlay_on+0xb4/0x114) from [<c041cafc>] (mdss_fb_blank_sub+0xf4/0x334)
+<6>[19692.769354] [<c041cafc>] (mdss_fb_blank_sub+0xf4/0x334) from [<c041dc08>] (mdss_fb_pm_resume+0xd0/0x134)
+<6>[19692.769419] [<c041dc08>] (mdss_fb_pm_resume+0xd0/0x134) from [<c04a04a4>] (platform_pm_resume+0x40/0x4c)
+<6>[19692.769490] [<c04a04a4>] (platform_pm_resume+0x40/0x4c) from [<c04a47ac>] (dpm_run_callback+0x44/0x7c)
+<6>[19692.769549] [<c04a47ac>] (dpm_run_callback+0x44/0x7c) from [<c04a4e00>] (device_resume+0x140/0x184)
+<6>[19692.769607] [<c04a4e00>] (device_resume+0x140/0x184) from [<c04a5c58>] (dpm_resume+0x104/0x220)
+<6>[19692.769663] [<c04a5c58>] (dpm_resume+0x104/0x220) from [<c04a5f30>] (dpm_resume_end+0xc/0x18)
+<6>[19692.769720] [<c04a5f30>] (dpm_resume_end+0xc/0x18) from [<c01d2dc0>] (suspend_devices_and_enter+0x274/0x338)
+<6>[19692.769773] [<c01d2dc0>] (suspend_devices_and_enter+0x274/0x338) from [<c01d2f84>] (pm_suspend+0x100/0x230)
+<6>[19692.769821] [<c01d2f84>] (pm_suspend+0x100/0x230) from [<c01d2148>] (state_store+0x40/0x68)
+<6>[19692.769873] [<c01d2148>] (state_store+0x40/0x68) from [<c03aa5fc>] (kobj_attr_store+0x14/0x20)
+<6>[19692.769933] [<c03aa5fc>] (kobj_attr_store+0x14/0x20) from [<c02a7100>] (sysfs_write_file+0x104/0x148)
+<6>[19692.770001] [<c02a7100>] (sysfs_write_file+0x104/0x148) from [<c02583bc>] (vfs_write+0xa8/0x138)
+<6>[19692.770062] [<c02583bc>] (vfs_write+0xa8/0x138) from [<c0258670>] (sys_write+0x34/0x68)
+<6>[19692.770125] [<c0258670>] (sys_write+0x34/0x68) from [<c0105fc0>] (ret_fast_syscall+0x0/0x30)
+
+<6>[19692.770159] mdss_dsi_panel_on:Enter ndx = 0 
+<6>[19692.916456] mdss_dsi_panel_on:parameter updated
+
+#+END_SRC
+
+** solution:
+new version fix suspend fail issue.
+
+* DONE [#A] inputmethod miss the touch on backspace and changeline key (lower-right corner)
+  CLOSED: [2015-06-17 周三 07:58] SCHEDULED: <2015-06-16 周二>
+
+#+NAME: normal touch event
+#+BEGIN_SRC 
+01-20 04:35:40.893 12442 12442 D TouchpadSquareTestView: onTouchEvent exit
+01-20 04:35:40.893 12442 12442 V PhoneWindow: handleTouchEventforCc---hongnb--mInterceptTouchEvent:false
+01-20 04:35:40.893 12442 12442 D TouchpadSquareTestView: onTouchEvent
+#+END_SRC
+
+#+NAME: missed touch event
+#+BEGIN_SRC 
+01-20 04:35:41.383 12442 12442 D PhoneWindow: yShift:0.0 xShift/yShift:NaN
+01-20 04:35:41.403 12442 12442 D PhoneWindow: yShift:0.0 xShift/yShift:NaN
+01-20 04:35:41.423 12442 12442 D PhoneWindow: yShift:0.0 xShift/yShift:NaN
+01-20 04:35:41.433 12442 12442 D PhoneWindow: yShift:0.0 xShift/yShift:NaN
+01-20 04:35:41.453 12442 12442 D PhoneWindow: yShift:0.0 xShift/yShift:NaN
+01-20 04:35:41.473 12442 12442 D PhoneWindow: yShift:-0.5 xShift/yShift:-0.99951171875
+01-20 04:35:41.483 12442 12442 D PhoneWindow: yShift:-0.99951171875 xShift/yShift:-0.9995725451880801
+01-20 04:35:41.483 12442 12442 V PhoneWindow: handleTouchEventforCc---hongnb--mInterceptTouchEvent:true
+
+#+END_SRC
+
+** cause
+zui control center intercept the touch events.
+
+#+PLOT: title:"Citas" ind:1 deps:(3) type:2d with:histograms set:"yrange [0:]"
+     | Sede      | Max cites | H-index |
+     |-----------+-----------+---------|
+     | Chile     |    257.72 |   21.39 |
+     | Leeds     |    165.77 |   19.68 |
+     | Sao Paolo |     71.00 |   11.50 |
+     | Stockholm |    134.19 |   14.33 |
+     | Morelia   |    257.56 |   17.67 |
+
+** Solution
+ZUK's control center capture the keyevent.(Jira:KNINE-7936)
+
+* TODO p149 alarm ioctrl frequent
+  SCHEDULED: <2015-06-16 周二>
+
+#+BEGIN_SRC strace
+system    1512  1054  1700896 143916 00000000 b6e0499c R AlarmManager
+
+[pid  1512] 03:42:09.572036 gettimeofday({1626129, 572085}, NULL) = 0
+[pid  1512] 03:42:09.572223 ioctl(18</dev/alarm>, 0x40086134, 0xa0b78ac0) = 0
+[pid  1512] 03:42:09.572442 ioctl(18</dev/alarm>, 0x40086134, 0xa0b789f0) = 0
+[pid  1512] 03:42:09.572646 ioctl(18</dev/alarm>, 0x40086134, 0xa0b789f0) = 0
+[pid  1512] 03:42:09.572849 ioctl(18</dev/alarm>, 0x40086134, 0xa0b789f0) = 0
+[pid  1512] 03:42:09.573052 ioctl(18</dev/alarm>, 0x40086134, 0xa0b789f0) = 0
+[pid  1512] 03:42:09.573256 ioctl(18</dev/alarm>, 0x40086134, 0xa0b789f0) = 0
+[pid  1512] 03:42:09.573458 ioctl(18</dev/alarm>, 0x40086134, 0xa0b789f0) = 0
+[pid  1512] 03:42:09.573662 ioctl(18</dev/alarm>, 0x40086134, 0xa0b789f0) = 0
+[pid  1512] 03:42:09.573865 ioctl(18</dev/alarm>, 0x40086134, 0xa0b789f0) = 0
+[pid  1512] 03:42:09.574068 ioctl(18</dev/alarm>, 0x40086134, 0xa0b789f0) = 0
+[pid  1512] 03:42:09.574273 ioctl(96</dev/alarm>, 0x40086122, 0xa0b789d0) = 0
+[pid  1512] 03:42:09.574481 ioctl(96</dev/alarm>, IDT77105_GETSTAT, 0xa0b789d0) = 0
+[pid  1512] 03:42:09.574686 ioctl(96</dev/alarm>, ANDROID_ALARM_WAIT, 0xb4aad440) = 8
+
+
+#+END_SRC
+
+* DONE [p177] wakeup is much slower when fingerprint enabled
+  CLOSED: [2015-06-25 周四 20:07] SCHEDULED: <2015-06-18 周四>
+
+* DONE boot slow after entering power off charging mode
+  CLOSED: [2015-06-25 周四 09:11] SCHEDULED: <2015-06-24 周三>
+
+#+BEGIN_SRC logcat
+06-24 11:47:24.066   297   297 V appproc : copy_preload_apps linked = 1
+06-24 11:47:24.066   297   297 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+06-24 11:47:24.086   297   297 D AndroidRuntime: CheckJNI is OFF
+06-24 11:47:24.096   297   297 I art     : Runtime::Init -verbose:startup enabled
+06-24 11:47:24.096   297   297 I art     : Heap() entering
+06-24 11:47:24.096   297   297 W art     : Incomplete boot detected. Pruning dalvik cache
+06-24 11:47:24.156   297   297 I art     : Creating boot start marker: /data/dalvik-cache/arm/.booting
+
+06-24 11:47:24.636   699   699 W BootAnimation: CMDLINE: androidboot.bootreason=unknown
+06-24 11:47:24.636   699   699 W BootAnimation: ro.boot.mode: warmReset_0x02
+06-24 11:47:24.796   297   297 I art     : Using image file /data/dalvik-cache/arm/system@framework@boot.art for image location /system/framework/boot.art
+06-24 11:47:24.796   297   297 I art     : ImageSpace::Init entering image_filename=/data/dalvik-cache/arm/system@framework@boot.art
+06-24 11:47:24.796   297   297 W art     : Invalid image header in '/data/dalvik-cache/arm/system@framework@boot.art'
+06-24 11:47:24.796   297   297 I art     : Pruning dalvik-cache since we are generating an image and will need to recompile
+06-24 11:47:24.806   297   297 I art     : Using an offset of 0xff22a000 from default art base address of 0x70000000
+06-24 11:47:24.806   297   297 I art     : GenerateImage: /system/bin/dex2oat --image=/data/dalvik-cache/arm/system@framework@boot.art --dex-file=/system/framework/core-libart.jar --dex-file=/system/framework/conscrypt.jar --dex-file=/system/framework/okhttp.jar --dex-file=/system/framework/core-junit.jar --dex-file=/system/framework/bouncycastle.jar --dex-file=/system/framework/ext.jar --dex-file=/system/framework/framework.jar --dex-file=/system/framework/telephony-common.jar --dex-file=/system/framework/voip-common.jar --dex-file=/system/framework/ims-common.jar --dex-file=/system/framework/mms-common.jar --dex-file=/system/framework/android.policy.jar --dex-file=/system/framework/apache-xml.jar --dex-file=/system/framework/qcmediaplayer.jar --dex-file=/system/framework/WfdCommon.jar --dex-file=/system/framework/oem-services.jar --dex-file=/system/framework/org.codeaurora.Performance.jar --dex-file=/system/framework/qcom.fmradio.jar --dex-file=/system/framework/security-bridge.jar --dex-file=/system/framework/qsb-port.jar --dex-file=/system/framew
+06-24 11:47:24.846   737   737 I dex2oat : /system/bin/dex2oat --image=/data/dalvik-cache/arm/system@framework@boot.art --dex-file=/system/framework/core-libart.jar --dex-file=/system/framework/conscrypt.jar --dex-file=/system/framework/okhttp.jar --dex-file=/system/framework/core-junit.jar --dex-file=/system/framework/bouncycastle.jar --dex-file=/system/framework/ext.jar --dex-file=/system/framework/framework.jar --dex-file=/system/framework/telephony-common.jar --dex-file=/system/framework/voip-common.jar --dex-file=/system/framework/ims-common.jar --dex-file=/system/framework/mms-common.jar --dex-file=/system/framework/android.policy.jar --dex-file=/system/framework/apache-xml.jar --dex-file=/system/framework/qcmediaplayer.jar --dex-file=/system/framework/WfdCommon.jar --dex-file=/system/framework/oem-services.jar --dex-file=/system/framework/org.codeaurora.Performance.jar --dex-file=/system/framework/qcom.fmradio.jar --dex-file=/system/framework/security-bridge.jar --dex-file=/system/framework/qsb-port.jar --dex-file=/system/framework/vcard.jar -
+
+#+END_SRC
+
+#+BEGIN_SRC cpp
+static void MarkZygoteStart(const InstructionSet isa) {                                    
+  const std::string isa_subdir = GetDalvikCacheOrDie(GetInstructionSetString(isa), false); 
+  const std::string boot_marker = isa_subdir + "/.booting";                                
+                                                                                           
+  if (OS::FileExists(boot_marker.c_str())) {                                               
+    LOG(WARNING) << "Incomplete boot detected. Pruning dalvik cache";                      
+    RealPruneDalvikCache(isa_subdir);                                                      
+  }                                                                                        
+                                                                                           
+  VLOG(startup) << "Creating boot start marker: " << boot_marker;                          
+  std::unique_ptr<File> f(OS::CreateEmptyFile(boot_marker.c_str()));                       
+  if (f.get() != nullptr) {                                                                
+    if (f->FlushCloseOrErase() != 0) {                                                     
+      PLOG(WARNING) << "Failed to write boot marker.";                                     
+    }                                                                                      
+  }                                                                                        
+} 
+
+int mark_boot_complete(const char* instruction_set)
+{
+  char boot_marker_path[PKG_PATH_MAX];
+  sprintf(boot_marker_path,"%s%s/.booting", DALVIK_CACHE_PREFIX, instruction_set);
+                                                                                  
+  ALOGV("mark_boot_complete : %s", boot_marker_path);                             
+  if (unlink(boot_marker_path) != 0) {                                            
+      ALOGE("Unable to unlink boot marker at %s, error=%s", boot_marker_path,     
+            strerror(errno));                                                     
+      return -1;                                                                  
+  }                                                                               
+                                                                                  
+  return 0;                                                                       
+}  
+
+#+END_SRC
+
+* DONE gpu freq
+  CLOSED: [2015-06-25 周四 09:21] SCHEDULED: <2015-06-24 周三>
+
+#+BEGIN_SRC sh
+#!/system/bin/sh
+FILE_GPU_CURFREQ="/sys/class/kgsl/kgsl-3d0/devfreq/cur_freq"
+
+while [ 1 ]
+do
+    cat $FILE_GPU_CURFREQ
+    sleep 1
+done
+
+#+END_SRC
+
+~ LINUX/android/vendor/qcom/proprietary/thermal-engine/inc/thermal.h ~
+
+* DONE user space page fault
+  CLOSED: [2015-06-25 周四 16:07] SCHEDULED: <2015-06-24 周三>
+
+#+BEGIN_SRC dmesg
+<7>[  124.842938] com.tencent.mm: unhandled page fault (11) at 0x0000000c, code 0x005
+<1>[  124.842945] pgd = e2b54000
+<1>[  124.842954] [0000000c] *pgd=00000000
+<6>[  124.842963] 
+<6>[  124.842968] Pid: 6428, comm:       com.tencent.mm
+<6>[  124.842975] CPU: 0    Tainted: G           O  (3.4.0-perf-g47acff9-dirty #9)
+<6>[  124.842982] PC is at 0x71831848
+<6>[  124.842987] LR is at 0xb5105f79
+<6>[  124.842992] pc : [<71831848>]    lr : [<b5105f79>]    psr: 400d0030
+<6>[  124.842994] sp : be953830  ip : 13020ca0  fp : be953898
+<6>[  124.842999] r10: 00000001  r9 : b4827800  r8 : be9538c8
+<6>[  124.843004] r7 : 00000000  r6 : 6fdd0272  r5 : 6f31d1b8  r4 : 00000060
+<6>[  124.843009] r3 : b4827884  r2 : 00000000  r1 : 00000000  r0 : 6f31d1b8
+<6>[  124.843015] Flags: nZcv  IRQs on  FIQs on  Mode USER_32  ISA Thumb  Segment user
+<6>[  124.843021] Control: 10c5787d  Table: 22b5406a  DAC: 00000015
+<6>[  124.843052] [<c010bea4>] (unwind_backtrace+0x0/0x11c) from [<c0111adc>] (__do_user_fault+0xfc/0x148)
+<6>[  124.843065] [<c0111adc>] (__do_user_fault+0xfc/0x148) from [<c0971464>] (do_page_fault+0x34c/0x3e0)
+<6>[  124.843076] [<c0971464>] (do_page_fault+0x34c/0x3e0) from [<c010038c>] (do_DataAbort+0x134/0x240)
+<6>[  124.843089] [<c010038c>] (do_DataAbort+0x134/0x240) from [<c096fcf4>] (__dabt_usr+0x34/0x40)
+<6>[  124.843095] Exception stack(0xe2b53fb0 to 0xe2b53ff8)
+<6>[  124.843101] 3fa0:                                     6f31d1b8 00000000 00000000 b4827884
+<6>[  124.843108] 3fc0: 00000060 6f31d1b8 6fdd0272 00000000 be9538c8 b4827800 00000001 be953898
+<6>[  124.843114] 3fe0: 13020ca0 be953830 b5105f79 71831848 400d0030 ffffffff
+
+#+END_SRC
+
+#+BEGIN_SRC gdb
+(gdb) x /20i 0x71834a50
+   0x71834a50 <oatexec+449104>:	ldrdgt	pc, [r0], -r12
+   0x71834a54 <oatexec+449108>:	stclmi	9, cr14, [r0, #180]!	; 0xb4
+   0x71834a58 <oatexec+449112>:	stcne	0, cr11, [r5], {145}	; 0x91
+   0x71834a5c <oatexec+449116>:	stcne	0, cr9, [pc], {-0}
+   0x71834a60 <oatexec+449120>:	beq	0x718b0ba4 <oatexec+957348>
+>   0x71834a64 <oatexec+449124>:	ldrdlt	pc, [r12], -r7
+   0x71834a68 <oatexec+449128>:	svceq	0x0000f1bb
+   0x71834a6c <oatexec+449132>:			; <UNDEFINED> instruction: 0xf8dfd10a
+   0x71834a70 <oatexec+449136>:			; <UNDEFINED> instruction: 0xf8dfe1ec
+   0x71834a74 <oatexec+449140>:	ldfnes	f0, [r9], #-992	; 0xfffffc20
+   0x71834a78 <oatexec+449144>:			; <UNDEFINED> instruction: 0xf8d947f0
+   0x71834a7c <oatexec+449148>:			; <UNDEFINED> instruction: 0x4682e234
+   0x71834a80 <oatexec+449152>:	ubfxmi	r4, r0, #12, #17
+   0x71834a84 <oatexec+449156>:	ldrdgt	pc, [r12], -r7
+   0x71834a88 <oatexec+449160>:	ldmdbvs	r10!, {r0, r1, r3, r4, r5, r7, r11, sp, lr}^
+   0x71834a8c <oatexec+449164>:	strbmi	r2, [r6, #-1536]!	; 0x600
+   0x71834a90 <oatexec+449168>:	adcshi	pc, r1, r0, lsl #1
+   0x71834a94 <oatexec+449172>:	andcc	r3, r0, #12, 6	; 0x30000000
+   0x71834a98 <oatexec+449176>:	andshi	pc, r2, r3, lsr r8	; <UNPREDICTABLE>
+   0x71834a9c <oatexec+449180>:	andls	r2, lr, sp, lsr #32
+
+(gdb) x /20i 0x71831830
+   0x71831830 <oatexec+436272>:	ldrdgt	pc, [r0], -r12
+   0x71831834 <oatexec+436276>:	stclmi	9, cr14, [r0, #180]!	; 0xb4
+   0x71831838 <oatexec+436280>:	stcne	0, cr11, [r5], {145}	; 0x91
+   0x7183183c <oatexec+436284>:	stcne	0, cr9, [pc], {-0}
+   0x71831840 <oatexec+436288>:	beq	0x718ad984 <oatexec+944516>
+   0x71831844 <oatexec+436292>:	andls	r2, lr, #0, 4
+>   0x71831848 <oatexec+436296>:	ldrdlt	pc, [r12], -r7
+   0x7183184c <oatexec+436300>:	svceq	0x0000f1bb
+   0x71831850 <oatexec+436304>:			; <UNDEFINED> instruction: 0xf8dfd10a
+   0x71831854 <oatexec+436308>:			; <UNDEFINED> instruction: 0xf8dfe1e0
+   0x71831858 <oatexec+436312>:	ldfnes	f0, [r9], #-944	; 0xfffffc50
+   0x7183185c <oatexec+436316>:			; <UNDEFINED> instruction: 0xf8d947f0
+   0x71831860 <oatexec+436320>:			; <UNDEFINED> instruction: 0x4682e234
+   0x71831864 <oatexec+436324>:	ubfxmi	r4, r0, #12, #17
+   0x71831868 <oatexec+436328>:			; <UNDEFINED> instruction: 0xf8d768f8
+   0x7183186c <oatexec+436332>:	ldmdbvs	r11!, {r3, lr, pc}^
+   0x71831870 <oatexec+436336>:	addmi	r2, r6, #0, 12
+   0x71831874 <oatexec+436340>:	adchi	pc, r12, r0, lsl #1
+   0x71831878 <oatexec+436344>:	stfeqd	f7, [r12], {28}
+   0x7183187c <oatexec+436348>:			; <UNDEFINED> instruction: 0xf83c3300
+
+(gdb) disassemble 0xa0f78                                        
+Dump of assembler code for function art_quick_invoke_stub:       
+   0x000a0f40 <+0>:     stmdb   sp!, {r0, r4, r5, r9, r11, lr}   
+   0x000a0f44 <+4>:     mov     r11, sp                             
+   0x000a0f46 <+6>:     mov     r9, r3                             
+   0x000a0f48 <+8>:     mov.w   r4, #96 ; 0x60                     
+   0x000a0f4c <+12>:    add.w   r5, r2, #4                         
+   0x000a0f50 <+16>:    sub.w   r5, sp, r5                         
+   0x000a0f54 <+20>:    bic.w   r5, r5, #15                        
+   0x000a0f58 <+24>:    mov     sp, r5                             
+   0x000a0f5a <+26>:    add     r0, sp, #4                         
+   0x000a0f5c <+28>:    blx     0x67ff4                            
+   0x000a0f60 <+32>:    ldr.w   r0, [r11]                          
+   0x000a0f64 <+36>:    ldr     r1, [sp, #4]                       
+   0x000a0f66 <+38>:    ldr     r2, [sp, #8]                       
+   0x000a0f68 <+40>:    ldr     r3, [sp, #12]                      
+   0x000a0f6a <+42>:    mov.w   r12, #0                            
+   0x000a0f6e <+46>:    str.w   r12, [sp]                          
+   0x000a0f72 <+50>:    ldr.w   r12, [r0, #44]  ; 0x2c             
+   0x000a0f76 <+54>:    blx     r12                                
+>   0x000a0f78 <+56>:    mov     sp, r11                            
+   0x000a0f7a <+58>:    ldr.w   r12, [sp, #24]                     
+   0x000a0f7e <+62>:    strd    r0, r1, [r12]                      
+   0x000a0f82 <+66>:    ldmia.w sp!, {r0, r4, r5, r9, r11, lr}     
+   0x000a0f86 <+70>:    bx      lr                                 
+End of assembler dump. 
+#+END_SRC
+
+#+BEGIN_SRC logcat
+06-24 20:19:09.855  8152  8152 D ART     : #00 pc 0000ba41  /system/lib/libutils.so (android::CallStack::update(int, int)+52)
+06-24 20:19:09.855  8152  8152 D ART     : #01 pc 0000bb57  /system/lib/libutils.so (android::CallStack::CallStack(char const*, int)+38)
+06-24 20:19:09.855  8152  8152 D ART     : #02 pc 001da62b  /system/lib/libart.so (art::mirror::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+138)
+06-24 20:19:09.855  8152  8152 D ART     : #03 pc 002148e5  /system/lib/libart.so (art::InvokeVirtualOrInterfaceWithVarArgs(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jmethodID*, std::__va_list)+248)
+06-24 20:19:09.855  8152  8152 D ART     : #04 pc 001a138b  /system/lib/libart.so (art::JNI::CallLongMethodV(_JNIEnv*, _jobject*, _jmethodID*, std::__va_list)+290)
+06-24 20:19:09.855  8152  8152 D ART     : #05 pc 0005efbb  /system/lib/libandroid_runtime.so
+06-24 20:19:09.855  8152  8152 D ART     : #06 pc 0008ad71  /system/lib/libandroid_runtime.so (GraphicsJNI::allocateJavaPixelRef(_JNIEnv*, SkBitmap*, SkColorTable*)+112)
+06-24 20:19:09.855  8152  8152 D ART     : #07 pc 00088765  /system/lib/libandroid_runtime.so
+06-24 20:19:09.855  8152  8152 D ART     : #08 pc 007cd9db  /data/dalvik-cache/arm/system@framework@boot.oat
+
+06-24 20:19:09.865 23121 24308 D ART     : #00 pc 0000ba41  /system/lib/libutils.so (android::CallStack::update(int, int)+52)
+06-24 20:19:09.865 23121 24308 D ART     : #01 pc 0000bb57  /system/lib/libutils.so (android::CallStack::CallStack(char const*, int)+38)
+06-24 20:19:09.865 23121 24308 D ART     : #02 pc 001da62b  /system/lib/libart.so (art::mirror::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+138)
+06-24 20:19:09.865 23121 24308 D ART     : #03 pc 002146b9  /system/lib/libart.so (art::InvokeWithVarArgs(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jmethodID*, std::__va_list)+244)
+06-24 20:19:09.865 23121 24308 D ART     : #04 pc 001ce4cd  /system/lib/libart.so (art::JNI::NewObjectV(_JNIEnv*, _jclass*, _jmethodID*, std::__va_list)+644)
+06-24 20:19:09.865 23121 24308 D ART     : #05 pc 0000ead9  /system/lib/libjavacore.so
+06-24 20:19:09.865 23121 24308 D ART     : #06 pc 0001dab9  /system/lib/libjavacore.so
+06-24 20:19:09.865 23121 24308 D ART     : #07 pc 0001db63  /system/lib/libjavacore.so
+06-24 20:19:09.865 23121 24308 D ART     : #08 pc 0001fc45  /system/lib/libjavacore.so
+06-24 20:19:09.865 23121 24308 D ART     : #09 pc 0009a35f  /data/dalvik-cache/arm/system@framework@boot.oat
+
+06-24 20:19:09.875  8152  8152 D ART     : #00 pc 0000ba41  /system/lib/libutils.so (android::CallStack::update(int, int)+52)
+06-24 20:19:09.875  8152  8152 D ART     : #01 pc 0000bb57  /system/lib/libutils.so (android::CallStack::CallStack(char const*, int)+38)
+06-24 20:19:09.875  8152  8152 D ART     : #02 pc 001da62b  /system/lib/libart.so (art::mirror::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+138)
+06-24 20:19:09.875  8152  8152 D ART     : #03 pc 002146b9  /system/lib/libart.so (art::InvokeWithVarArgs(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jmethodID*, std::__va_list)+244)
+06-24 20:19:09.875  8152  8152 D ART     : #04 pc 001ce4cd  /system/lib/libart.so (art::JNI::NewObjectV(_JNIEnv*, _jclass*, _jmethodID*, std::__va_list)+644)
+06-24 20:19:09.875  8152  8152 D ART     : #05 pc 0005d7ad  /system/lib/libandroid_runtime.so
+06-24 20:19:09.875  8152  8152 D ART     : #06 pc 0008ab79  /system/lib/libandroid_runtime.so (GraphicsJNI::createBitmap(_JNIEnv*, SkBitmap*, _jbyteArray*, int, _jbyteArray*, _jobject*, int)+64)
+06-24 20:19:09.875  8152  8152 D ART     : #07 pc 000887b7  /system/lib/libandroid_runtime.so
+06-24 20:19:09.875  8152  8152 D ART     : #08 pc 007cd9db  /data/dalvik-cache/arm/system@framework@boot.oat
+
+06-24 20:19:09.895  8375  8375 D ART     : #00 pc 0000ba41  /system/lib/libutils.so (android::CallStack::update(int, int)+52)
+06-24 20:19:09.895  8375  8375 D ART     : #01 pc 0000bb57  /system/lib/libutils.so (android::CallStack::CallStack(char const*, int)+38)
+06-24 20:19:09.895  8375  8375 D ART     : #02 pc 001da62b  /system/lib/libart.so (art::mirror::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+138)
+06-24 20:19:09.895  8375  8375 D ART     : #03 pc 002636e5  /system/lib/libart.so (artInterpreterToCompiledCodeBridge+76)
+06-24 20:19:09.895  8375  8375 D ART     : #04 pc 0016c86f  /system/lib/libart.so (bool art::interpreter::DoCall<false, false>(art::mirror::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*)+326)
+06-24 20:19:09.895  8375  8375 D ART     : #05 pc 0009a533  /system/lib/libart.so (art::JValue art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+27898)
+06-24 20:19:09.895  8375  8375 D ART     : #06 pc 0015f9c9  /system/lib/libart.so (artInterpreterToInterpreterBridge+152)
+06-24 20:19:09.895  8375  8375 D ART     : #07 pc 0016c86f  /system/lib/libart.so (bool art::interpreter::DoCall<false, false>(art::mirror::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*)+326)
+06-24 20:19:09.895  8375  8375 D ART     : #08 pc 0009a71b  /system/lib/libart.so (art::JValue art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+28386)
+06-24 20:19:09.895  8375  8375 D ART     : #09 pc 0015f9c9  /system/lib/libart.so (artInterpreterToInterpreterBridge+152)
+06-24 20:19:09.895  8375  8375 D ART     : #10 pc 0016c86f  /system/lib/libart.so (bool art::interpreter::DoCall<false, false>(art::mirror::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*)+326)
+06-24 20:19:09.895  8375  8375 D ART     : #11 pc 0009a71b  /system/lib/libart.so (art::JValue art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+28386)
+06-24 20:19:09.895  8375  8375 D ART     : #12 pc 0015f9c9  /system/lib/libart.so (artInterpreterToInterpreterBridge+152)
+06-24 20:19:09.895  8375  8375 D ART     : #13 pc 0016c86f  /system/lib/libart.so (bool art::interpreter::DoCall<false, false>(art::mirror::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*)+326)
+06-24 20:19:09.895  8375  8375 D ART     : #14 pc 0009c15f  /system/lib/libart.so (art::JValue art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+35110)
+06-24 20:19:09.895  8375  8375 D ART     : #15 pc 0015f9c9  /system/lib/libart.so (artInterpreterToInterpreterBridge+152)
+06-24 20:19:09.895  8375  8375 D ART     : #16 pc 0016c86f  /system/lib/libart.so (bool art::interpreter::DoCall<false, false>(art::mirror::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*)+326)
+06-24 20:19:09.895  8375  8375 D ART     : #17 pc 0009a533  /system/lib/libart.so (art::JValue art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+27898)
+06-24 20:19:09.895  8375  8375 D ART     : #18 pc 0015f9c9  /system/lib/libart.so (artInterpreterToInterpreterBridge+152)
+06-24 20:19:09.895  8375  8375 D ART     : #19 pc 0016c86f  /system/lib/libart.so (bool art::interpreter::DoCall<false, false>(art::mirror::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*)+326)
+06-24 20:19:09.895  8375  8375 D ART     : #20 pc 0009a533  /system/lib/libart.so (art::JValue art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+27898)
+06-24 20:19:09.895  8375  8375 D ART     : #21 pc 0015f9c9  /system/lib/libart.so (artInterpreterToInterpreterBridge+152)
+06-24 20:19:09.895  8375  8375 D ART     : #22 pc 0016c86f  /system/lib/libart.so (bool art::interpreter::DoCall<false, false>(art::mirror::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*)+326)
+06-24 20:19:09.895  8375  8375 D ART     : #23 pc 0009a71b  /system/lib/libart.so (art::JValue art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+28386)
+06-24 20:19:09.895  8375  8375 D ART     : #24 pc 0015f2e7  /system/lib/libart.so (art::interpreter::EnterInterpreterFromStub(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&)+122)
+06-24 20:19:09.895  8375  8375 D ART     : #25 pc 0027fd19  /system/lib/libart.so (artQuickToInterpreterBridge+472)
+06-24 20:19:09.895  8375  8375 D ART     : #26 pc 000a23ab  /system/lib/libart.so (art_quick_to_interpreter_bridge+10)
+06-24 20:19:09.895  8375  8375 D ART     : #27 pc 1436bb2b  /dev/ashmem/dalvik-main space (deleted)
+
+#+END_SRC
+
+#+BEGIN_SRC 
+06-25 13:38:49.365  1058  2310 I art     : Handling fault
+06-25 13:38:49.365  1058  2310 I art     : Checking for generated code
+06-25 13:38:49.365  1058  2310 I art     : sp: 2601773232
+06-25 13:38:49.365  1058  2310 I art     : pc: 0xa383fb8c
+06-25 13:38:49.365  1058  2310 I art     : potential method: 0x73ff04a8
+06-25 13:38:49.365  1058  2310 I art     : looking for dex pc for return pc a383fb8f
+06-25 13:38:49.365  1058  2310 I art     : pc offset: 42
+06-25 13:38:49.365  1058  2310 I art     : dexpc: 3
+06-25 13:38:49.365  1058  2310 I art     : in generated code, looking for handler
+06-25 13:38:49.365  1058  2310 I art     : invoking Action on handler 0xb4803110
+06-25 13:38:49.365  1058  2310 I art     : stack overflow handler with sp at 0x9b040c20
+06-25 13:38:49.365  1058  2310 I art     : sigcontext: 0x9b040d24
+06-25 13:38:49.365  1058  2310 I art     : sp: 9b13e8b0
+06-25 13:38:49.365  1058  2310 I art     : fault_addr: 0
+06-25 13:38:49.365  1058  2310 I art     : checking for stack overflow, sp: 9b13e8b0, fault_addr: 0
+06-25 13:38:49.365  1058  2310 I art     : Not a stack overflow
+06-25 13:38:49.365  1058  2310 I art     : invoking Action on handler 0xb4803108
+06-25 13:38:49.375  1058  2310 I art     : before signal action
+06-25 13:38:49.375  1058  2310 I art     : #00 pc 0001ab8c  /data/dalvik-cache/arm/system@framework@services.jar@classes.dex
+06-25 13:38:49.375  1058  2310 I art     : #01 pc 010f0d13  /data/dalvik-cache/arm/system@framework@boot.oat
+06-25 13:38:49.375  1058  2310 I art     : Generating null pointer exception
+06-25 13:38:49.375  1058  2310 I art     : after signal action
+06-25 13:38:49.375  1058  2310 I art     : #00 pc 000a0da1  /system/lib/libart.so (art_quick_throw_null_pointer_exception)
+06-25 13:38:49.375  1058  2310 I art     : #01 pc 0001ab8d  /data/dalvik-cache/arm/system@framework@services.jar@classes.dex
+06-25 13:38:49.395  1058  2310 D ART     : #00 pc 0000ba41  /system/lib/libutils.so (android::CallStack::update(int, int)+52)
+06-25 13:38:49.395  1058  2310 D ART     : #01 pc 0000bb57  /system/lib/libutils.so (android::CallStack::CallStack(char const*, int)+38)
+06-25 13:38:49.395  1058  2310 D ART     : #02 pc 0028405b  /system/lib/libart.so (art::NullPointerHandler::Action(int, siginfo*, void*)+222)
+06-25 13:38:49.395  1058  2310 D ART     : #03 pc 0023efb3  /system/lib/libart.so (art::FaultManager::HandleFault(int, siginfo*, void*)+110)
+06-25 13:38:49.395  1058  2310 D ART     : #04 pc 0001030c  /system/lib/libc.so
+
+#+END_SRC
+
+#+BEGIN_SRC 
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art Handling fault
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art Checking for generated code
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art sp: 3203763840
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art pc: 0xaf39f05e
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art potential method: 0x73fdc7a0
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art looking for dex pc for return pc af39f061
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art pc offset: 36c
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art dexpc: 145
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art in generated code, looking for handler
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art invoking Action on handler 0xb4803110
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art stack overflow handler with sp at 0xb6f32c20
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art sigcontext: 0xb6f32d24
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art sp: bef58e80
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art fault_addr: c
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art checking for stack overflow, sp: bef58e80, fault_addr: c
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art Not a stack overflow
+06-25 15:46:53.925    5280-5280/com.lenovo.fisstapp I/art invoking Action on handler 0xb4803108
+06-25 15:46:53.935    5280-5280/com.lenovo.fisstapp I/art Generating null pointer exception
+06-25 15:46:53.935    5280-5280/com.lenovo.fisstapp I/art after signal action
+06-25 15:46:53.935    5280-5280/com.lenovo.fisstapp I/art #00 pc 000a0da1  /system/lib/libart.so (art_quick_throw_null_pointer_exception)
+06-25 15:46:53.935    5280-5280/com.lenovo.fisstapp I/art #01 pc 000b005f  /data/dalvik-cache/arm/data@app@com.lenovo.fisstapp-1@base.apk@classes.dex
+06-25 15:46:53.945    5280-5280/com.lenovo.fisstapp D/ART #00 pc 0000ba41  /system/lib/libutils.so (android::CallStack::update(int, int)+52)
+06-25 15:46:53.945    5280-5280/com.lenovo.fisstapp D/ART #01 pc 0000bb57  /system/lib/libutils.so (android::CallStack::CallStack(char const*, int)+38)
+06-25 15:46:53.945    5280-5280/com.lenovo.fisstapp D/ART #02 pc 00284043  /system/lib/libart.so (art::NullPointerHandler::Action(int, siginfo*, void*)+198)
+06-25 15:46:53.945    5280-5280/com.lenovo.fisstapp D/ART #03 pc 0023efb3  /system/lib/libart.so (art::FaultManager::HandleFault(int, siginfo*, void*)+110)
+06-25 15:46:53.945    5280-5280/com.lenovo.fisstapp D/ART #04 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.945    5280-5280/com.lenovo.fisstapp D/ART #05 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.945    5280-5280/com.lenovo.fisstapp D/ART #06 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.945    5280-5280/com.lenovo.fisstapp D/ART #07 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.945    5280-5280/com.lenovo.fisstapp D/ART #08 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.945    5280-5280/com.lenovo.fisstapp D/ART #09 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.945    5280-5280/com.lenovo.fisstapp D/ART #10 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #11 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #12 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #13 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #14 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #15 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #16 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #17 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #18 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #19 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #20 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #21 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #22 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #23 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #24 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #25 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #26 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #27 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #28 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #29 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #30 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #31 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #32 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #33 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #34 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #35 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #36 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #37 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #38 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #39 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #40 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #41 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #42 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #43 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #44 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #45 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #46 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #47 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #48 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #49 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #50 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #51 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #52 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #53 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #54 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #55 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #56 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #57 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #58 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #59 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #60 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #61 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #62 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp D/ART #63 pc 0001030c  /system/lib/libc.so
+06-25 15:46:53.955    5280-5292/com.lenovo.fisstapp W/art Suspending all threads took: 21.326ms
+06-25 15:46:53.955    5280-5280/com.lenovo.fisstapp W/System.err java.lang.NullPointerException: Attempt to invoke virtual method 'int java.lang.String.length()' on a null object reference
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at com.lenovo.fisstapp.MainActivity$2.onTouch(MainActivity.java:63)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.View.dispatchTouchEvent(View.java:8474)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:2406)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2107)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:2406)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2107)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:2406)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2107)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:2406)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2107)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:2406)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2107)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:2406)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2107)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at com.android.internal.policy.impl.PhoneWindow$DecorView.superDispatchTouchEvent(PhoneWindow.java:2459)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at com.android.internal.policy.impl.PhoneWindow.superDispatchTouchEvent(PhoneWindow.java:1736)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.app.Activity.dispatchTouchEvent(Activity.java:2742)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at com.android.internal.policy.impl.PhoneWindow$DecorView.dispatchTouchEvent(PhoneWindow.java:2420)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.View.dispatchPointerEvent(View.java:8675)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$ViewPostImeInputStage.processPointerEvent(ViewRootImpl.java:4129)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$ViewPostImeInputStage.onProcess(ViewRootImpl.java:3995)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$InputStage.deliver(ViewRootImpl.java:3550)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$InputStage.onDeliverToNext(ViewRootImpl.java:3603)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$InputStage.forward(ViewRootImpl.java:3569)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$AsyncInputStage.forward(ViewRootImpl.java:3686)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$InputStage.apply(ViewRootImpl.java:3577)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$AsyncInputStage.apply(ViewRootImpl.java:3743)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$InputStage.deliver(ViewRootImpl.java:3550)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$InputStage.onDeliverToNext(ViewRootImpl.java:3603)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$InputStage.forward(ViewRootImpl.java:3569)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$InputStage.apply(ViewRootImpl.java:3577)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$InputStage.deliver(ViewRootImpl.java:3550)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl.deliverInputEvent(ViewRootImpl.java:5813)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl.doProcessInputEvents(ViewRootImpl.java:5787)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl.enqueueInputEvent(ViewRootImpl.java:5758)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.ViewRootImpl$WindowInputEventReceiver.onInputEvent(ViewRootImpl.java:5903)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.view.InputEventReceiver.dispatchInputEvent(InputEventReceiver.java:185)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.os.MessageQueue.nativePollOnce(Native Method)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.os.MessageQueue.next(MessageQueue.java:143)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.os.Looper.loop(Looper.java:122)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at android.app.ActivityThread.main(ActivityThread.java:5254)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at java.lang.reflect.Method.invoke(Native Method)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at java.lang.reflect.Method.invoke(Method.java:372)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:904)
+06-25 15:46:53.965    5280-5280/com.lenovo.fisstapp W/System.err at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:699)
+
+#+END_SRC
+
+** cause
+Java exception mechnism (to throw a java exception)
+
+** solution
+KNINE-3475: disable CONFIG_DEBUG_USER
+
+* DONE 0.8.202 perf status
+  CLOSED: [2015-06-25 周四 14:59] SCHEDULED: <2015-06-25 周四>
+
+** first boot up
+02:24:00
+
+** normal boot up
+36:54 - 42:77
+
+#+BEGIN_SRC 
+<3>[   23.956487] cclogic_get_chip-->check chip:ti,tusb320
+<3>[   23.956506] cclogic:[tusb320_reset_chip][234]
+<3>[   23.956523] cclogic:[tusb320_write_i2c][108]
+<3>[   23.956729] qup_i2c f9964000.i2c: QUP: I2C status flags :0x1383c8, irq:134
+<3>[   23.956785] qup_i2c f9964000.i2c: I2C slave addr:0x60 not connected
+<3>[   23.956827] cclogic 8-0001: cclogic:tusb320_write_i2c-->i2c_transfer error
+<3>[   23.956850] cclogic 8-0001: cclogic:tusb320_reset_chip: i2c write error
+<3>[   23.956871] cclogic_get_chip select chip: nothing
+<3>[   23.959289] init: property 'persist.sys.ssr.enable_debug' doesn't exist while expanding '${persist.sys.ssr.enable_debug}'
+<3>[   23.959427] init: cannot expand '${persist.sys.ssr.enable_debug}' while writing to '/sys/module/subsystem_restart/parameters/enable_debug'
+
+#+END_SRC
+
+** shutdown
+05:00
+
+** wakeup
+
+340ms
+
+#+BEGIN_SRC 
+
+logcat_wakeup.txt:3535:03-13 05:04:41.439  1062  1512 W KeyHandler: handleKeyEvent--------KeyEvent { action=ACTION_DOWN, keyCode=KEYCODE_POWER, scanCode=116, metaState=0, flags=0x8, repeatCount=0, eventTime=282215, downTime=282215, deviceId=3, source=0x101 },isKeySupported:false
+logcat_wakeup.txt:3566:03-13 05:04:41.449  1062  1092 I DisplayManagerService: Display device changed: DisplayDeviceInfo{"鍐呯疆灞忓箷": uniqueId="local:0", 1080 x 1920, 60.0 fps, supportedRefreshRates [60.0], density 480, 160.421 x 159.895 dpi, appVsyncOff 0, presDeadline 17666667, touch INTERNAL, rotation 0, type BUILT_IN, state ON, FLAG_DEFAULT_DISPLAY, FLAG_ROTATES_WITH_CONTENT, FLAG_SECURE, FLAG_SUPPORTS_PROTECTED_BUFFERS}
+logcat_wakeup.txt:3591:03-13 05:04:41.459  1062  1062 V ActivityManager: Display changed displayId=0
+logcat_wakeup.txt:3606:03-13 05:04:41.649  1062  1512 W KeyHandler: handleKeyEvent--------KeyEvent { action=ACTION_UP, keyCode=KEYCODE_POWER, scanCode=116, metaState=0, flags=0x8, repeatCount=0, eventTime=282427, downTime=282215, deviceId=3, source=0x101 },isKeySupported:false
+logcat_wakeup.txt:3625:03-13 05:04:41.779  1062  1094 D DisplayPowerController: Display ready!
+logcat_wakeup.txt:3821:03-13 05:04:42.399  1062  1512 W KeyHandler: handleKeyEvent--------KeyEvent { action=ACTION_DOWN, keyCode=KEYCODE_POWER, scanCode=116, metaState=0, flags=0x8, repeatCount=0, eventTime=283172, downTime=283172, deviceId=3, source=0x101 },isKeySupported:false
+logcat_wakeup.txt:3864:03-13 05:04:42.579  1062  1512 W KeyHandler: handleKeyEvent--------KeyEvent { action=ACTION_UP, keyCode=KEYCODE_POWER, scanCode=116, metaState=0, flags=0x8, repeatCount=0, eventTime=283355, downTime=283172, deviceId=3, source=0x101 },isKeySupported:false
+logcat_wakeup.txt:4162:03-13 05:04:42.619  1062  1092 I DisplayManagerService: Display device changed: DisplayDeviceInfo{"鍐呯疆灞忓箷": uniqueId="local:0", 1080 x 1920, 60.0 fps, supportedRefreshRates [60.0], density 480, 160.421 x 159.895 dpi, appVsyncOff 0, presDeadline 17666667, touch INTERNAL, rotation 0, type BUILT_IN, state OFF, FLAG_DEFAULT_DISPLAY, FLAG_ROTATES_WITH_CONTENT, FLAG_SECURE, FLAG_SUPPORTS_PROTECTED_BUFFERS}
+logcat_wakeup.txt:4163:03-13 05:04:42.619  1062  1062 V ActivityManager: Display changed displayId=0
+logcat_wakeup.txt:4235:03-13 05:04:43.089  1062  1094 D DisplayPowerController: Display ready!
+
+#+END_SRC
+* DONE zui.filemanager launch asynctask slow
+  CLOSED: [2015-06-26 周五 16:39] SCHEDULED: <2015-06-26 周五>
+
+#+BEGIN_SRC strace
+[pid 20367] 14:48:01.656118 clone(Process 22284 attached
+child_stack=0xa2011db0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0xb48bc588, tls=0xa2011db0, child_tidptr=0xb48bc588) = 22284
+
+[pid 22284] 14:48:01.670836 ioctl(21</dev/binder>, BINDER_WRITE_READ <unfinished ...>
+[pid 22284] 14:48:01.996553 <... ioctl resumed> , 0xa2010b40) = 0
+
+[pid 22284] 14:48:04.208032 ioctl(21</dev/binder>, BINDER_WRITE_READ, 0xa2010b10) = 0
+[pid 22284] 14:48:04.708609 ioctl(42</dev/ashmem>, ASHMEM_GET_SIZE, 0) = 2097152
+
+[pid 22284] 14:48:05.183204 <... statfs64 resumed> {f_type=0x65735546, f_bsize=4096, f_blocks=1936437, f_bfree=1148754, f_bavail=1148754, f_files=0, f_ffree=0, f_fsid={0, 0}, f_namelen=1530, f_frsize=4096, f_flags=4142}) = 0
+[pid 22284] 14:48:05.183347 statfs64("/storage/sdcard1", 88, {f_type=0x65735546, f_bsize=4096, f_blocks=1936437, f_bfree=1148754, f_bavail=1148754, f_files=0, f_ffree=0, f_fsid={0, 0}, f_namelen=1530, f_frsize=4096, f_flags=4142}) = 0
+[pid 22284] 14:48:05.183982 ioctl(21</dev/binder>, BINDER_WRITE_READ, 0xa2010a20) = 0
+[pid 22284] 14:48:05.184238 ioctl(21</dev/binder>, BINDER_WRITE_READ, 0xa2010a20) = 0
+[pid 22284] 14:48:05.184625 ioctl(21</dev/binder>, BINDER_WRITE_READ <unfinished ...>
+[pid 22284] 14:48:05.193873 <... ioctl resumed> , 0xa2010a70) = 0
+[pid 22284] 14:48:05.194569 statfs64("/storage/emulated/0", 88, {f_type=0x65735546, f_bsize=4096, f_blocks=14341866, f_bfree=13098812, f_bavail=13098812, f_files=3631200, f_ffree=3612855, f_fsid={0, 0}, f_namelen=255, f_frsize=4096, f_flags=4142}) = 0
+[pid 22284] 14:48:05.195123 statfs64("/storage/emulated/0", 88, {f_type=0x65735546, f_bsize=4096, f_blocks=14341866, f_bfree=13098812, f_bavail=13098812, f_files=3631200, f_ffree=3612855, f_fsid={0, 0}, f_namelen=255, f_frsize=4096, f_flags=4142}) = 0
+
+#+END_SRC
+
+** cause
+get category details(pictures,musics,videos,docs,apks,zips) from content provider cost the time
+
+* DONE double click to wake up slow (KNINE-9156)
+  CLOSED: [2015-07-13 周一 15:45] SCHEDULED: <2015-06-29 周一>
+
+#+BEGIN_SRC 
+[ 20886.341699] /dev/input/event3: EV_KEY 02e8 DOWN 
+[ 20886.341785] /dev/input/event3: EV_SYN SYN_REPORT 00000000 
+[ 20886.341811] /dev/input/event3: EV_KEY 02e8 UP 
+[ 20886.341816] /dev/input/event3: EV_SYN SYN_REPORT 00000000 
+[ 20887.212313] /dev/input/event0: EV_KEY 021e DOWN 
+[ 20887.212537] /dev/input/event0: EV_SYN SYN_REPORT 00000000 
+[ 20887.213595] /dev/input/event0: EV_KEY 021e UP 
+[ 20887.213611] /dev/input/event0: EV_SYN SYN_REPORT 00000000
+
+#+END_SRC
+
+* TODO kernel crash analysis (from jianhua)
+  SCHEDULED: <2015-06-30 周二>
+
+* TODO trace32 used in crash analysis
+  SCHEDULED: <2015-06-30 周二>
+
+* DONE PR_GET_DUMPABLE = 0 affect tombstone & coredump (KNINE-9868)
+  CLOSED: [2015-07-13 周一 15:44] SCHEDULED: <2015-07-01 周三>
+
+#+BEGIN_SRC 
+static void send_debuggerd_packet(siginfo_t* info) {
+  if (prctl(PR_GET_DUMPABLE, 0, 0, 0, 0) == 0) {
+    // process has disabled core dumps and PTRACE_ATTACH, and does not want to be dumped.
+    // Honor that intention by not connecting to debuggerd and asking it
+    // to dump our internal state.
+    __libc_format_log(ANDROID_LOG_INFO, "libc",
+                      "Suppressing debuggerd output because prctl(PR_GET_DUMPABLE)==0");
+    return;
+  }
+#+END_SRC
+
+** solution
+- android:debuggable=true
+- ro.debuggable=1
+- echo 1 > proc/sys/kernel/fs/suid_dumpable
+
+* DONE too many open files in com.android.phone (KNINE-9367, KNINE-9661, KNINE-9672)
+  CLOSED: [2015-07-03 周五 13:58] SCHEDULED: <2015-07-01 周三>
+
+** solution
+provide to dump opened fd log
+
+#+BEGIN_SRC fd
+lrwx------ radio    radio             2015-07-06 14:20 1000 -> anon_inode:[eventpoll]
+lrwx------ radio    radio             2015-07-06 14:20 1001 -> anon_inode:[eventpoll]
+lr-x------ radio    radio             2015-07-06 14:21 1002 -> pipe:[759799]
+l-wx------ radio    radio             2015-07-06 14:21 1003 -> pipe:[759799]
+lrwx------ radio    radio             2015-07-06 14:21 1004 -> anon_inode:[eventpoll]
+l-wx------ radio    radio             2015-07-06 14:21 1005 -> pipe:[757586]
+lrwx------ radio    radio             2015-07-06 14:21 1006 -> anon_inode:[eventpoll]
+lr-x------ radio    radio             2015-07-06 14:21 1007 -> pipe:[757644]
+lr-x------ radio    radio             2015-07-06 14:21 1008 -> pipe:[761859]
+l-wx------ radio    radio             2015-07-06 14:21 1009 -> pipe:[761859]
+l-wx------ radio    radio             2015-07-06 10:32 101 -> pipe:[98206]
+lr-x------ radio    radio             2015-07-06 14:21 1010 -> /system/priv-app/XuiMms/XuiMms.apk
+lr-x------ radio    radio             2015-07-06 14:21 1011 -> pipe:[761088]
+l-wx------ radio    radio             2015-07-06 14:21 1012 -> pipe:[761088]
+lrwx------ radio    radio             2015-07-06 14:21 1013 -> anon_inode:[eventpoll]
+l-wx------ radio    radio             2015-07-06 14:21 1014 -> pipe:[757644]
+lrwx------ radio    radio             2015-07-06 14:21 1015 -> anon_inode:[eventpoll]
+lrwx------ radio    radio             2015-07-06 14:21 1016 -> anon_inode:[eventpoll]
+lr-x------ radio    radio             2015-07-06 14:21 1017 -> pipe:[763012]
+l-wx------ radio    radio             2015-07-06 14:21 1018 -> pipe:[763012]
+lrwx------ radio    radio             2015-07-06 14:21 1019 -> anon_inode:[eventpoll]
+
+#+END_SRC
+
+#+BEGIN_SRC tombstone
+pid: 2833, tid: 32710, name: Thread-709  >>> com.android.phone <<<
+pid: 2833, tid: 2833, name: m.android.phone  >>> com.android.phone <<<
+pid: 2833, tid: 2845, name: Heap thread poo  >>> com.android.phone <<<
+pid: 2833, tid: 2846, name: Heap thread poo  >>> com.android.phone <<<
+pid: 2833, tid: 2847, name: Heap thread poo  >>> com.android.phone <<<
+pid: 2833, tid: 2850, name: Signal Catcher  >>> com.android.phone <<<
+pid: 2833, tid: 2853, name: JDWP  >>> com.android.phone <<<
+pid: 2833, tid: 2855, name: ReferenceQueueD  >>> com.android.phone <<<
+pid: 2833, tid: 2859, name: FinalizerDaemon  >>> com.android.phone <<<
+pid: 2833, tid: 2860, name: FinalizerWatchd  >>> com.android.phone <<<
+pid: 2833, tid: 2870, name: HeapTrimmerDaem  >>> com.android.phone <<<
+pid: 2833, tid: 2873, name: GCDaemon  >>> com.android.phone <<<
+pid: 2833, tid: 2876, name: Binder_1  >>> com.android.phone <<<
+pid: 2833, tid: 2887, name: Binder_2  >>> com.android.phone <<<
+pid: 2833, tid: 4023, name: Binder_3  >>> com.android.phone <<<
+pid: 2833, tid: 4024, name: Binder_4  >>> com.android.phone <<<
+pid: 2833, tid: 4431, name: RILSender0  >>> com.android.phone <<<
+pid: 2833, tid: 4432, name: RILReceiver0  >>> com.android.phone <<<
+pid: 2833, tid: 4433, name: RILSender1  >>> com.android.phone <<<
+pid: 2833, tid: 4435, name: RILReceiver1  >>> com.android.phone <<<
+pid: 2833, tid: 4437, name: DdsScheduler  >>> com.android.phone <<<
+pid: 2833, tid: 4445, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 4453, name: GsmInboundSmsHa  >>> com.android.phone <<<
+pid: 2833, tid: 4454, name: CellBroadcastHa  >>> com.android.phone <<<
+pid: 2833, tid: 4455, name: CdmaInboundSmsH  >>> com.android.phone <<<
+pid: 2833, tid: 4456, name: CdmaServiceCate  >>> com.android.phone <<<
+pid: 2833, tid: 4458, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 4460, name: GsmInboundSmsHa  >>> com.android.phone <<<
+pid: 2833, tid: 4461, name: CellBroadcastHa  >>> com.android.phone <<<
+pid: 2833, tid: 4462, name: CdmaInboundSmsH  >>> com.android.phone <<<
+pid: 2833, tid: 4463, name: CdmaServiceCate  >>> com.android.phone <<<
+pid: 2833, tid: 4465, name: DctControllerTh  >>> com.android.phone <<<
+pid: 2833, tid: 4466, name: DcSwitchStateMa  >>> com.android.phone <<<
+pid: 2833, tid: 4467, name: SyncHandler-0  >>> com.android.phone <<<
+pid: 2833, tid: 4468, name: DcSwitchStateMa  >>> com.android.phone <<<
+pid: 2833, tid: 4469, name: DdsSwitchSerial  >>> com.android.phone <<<
+pid: 2833, tid: 4471, name: AsyncTask #1  >>> com.android.phone <<<
+pid: 2833, tid: 4547, name: ervice.Executor  >>> com.android.phone <<<
+pid: 2833, tid: 4548, name: WifiManager  >>> com.android.phone <<<
+pid: 2833, tid: 4560, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 4593, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 4651, name: AudioTrack  >>> com.android.phone <<<
+pid: 2833, tid: 4790, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 4839, name: Binder_5  >>> com.android.phone <<<
+pid: 2833, tid: 5267, name: Thread-128  >>> com.android.phone <<<
+pid: 2833, tid: 5270, name: Thread-129  >>> com.android.phone <<<
+pid: 2833, tid: 5516, name: Thread-132  >>> com.android.phone <<<
+pid: 2833, tid: 5519, name: Thread-133  >>> com.android.phone <<<
+pid: 2833, tid: 5713, name: Thread-134  >>> com.android.phone <<<
+pid: 2833, tid: 5821, name: Thread-135  >>> com.android.phone <<<
+pid: 2833, tid: 6110, name: Binder_6  >>> com.android.phone <<<
+pid: 2833, tid: 6507, name: Binder_7  >>> com.android.phone <<<
+pid: 2833, tid: 6652, name: Binder_8  >>> com.android.phone <<<
+pid: 2833, tid: 6653, name: Binder_9  >>> com.android.phone <<<
+pid: 2833, tid: 15199, name: Binder_A  >>> com.android.phone <<<
+pid: 2833, tid: 25270, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 26428, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 26449, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 26477, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 26827, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 26847, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 26890, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 26921, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 26932, name: GsmCellBroadcas  >>> com.android.phone <<<
+pid: 2833, tid: 27090, name: Thread-170  >>> com.android.phone <<<
+pid: 2833, tid: 27093, name: Thread-171  >>> com.android.phone <<<
+pid: 2833, tid: 27099, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 27171, name: ServiceHandler0  >>> com.android.phone <<<
+pid: 2833, tid: 27172, name: ServiceHandler1  >>> com.android.phone <<<
+pid: 2833, tid: 28852, name: Thread-176  >>> com.android.phone <<<
+pid: 2833, tid: 28854, name: Thread-177  >>> com.android.phone <<<
+pid: 2833, tid: 29736, name: Binder_B  >>> com.android.phone <<<
+pid: 2833, tid: 30317, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 32084, name: pool-2-thread-1  >>> com.android.phone <<<
+pid: 2833, tid: 32085, name: RenderThread  >>> com.android.phone <<<
+pid: 2833, tid: 2196, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 2317, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 2343, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 2526, name: Thread-196  >>> com.android.phone <<<
+pid: 2833, tid: 2531, name: Thread-197  >>> com.android.phone <<<
+pid: 2833, tid: 3023, name: Thread-198  >>> com.android.phone <<<
+pid: 2833, tid: 3038, name: Thread-199  >>> com.android.phone <<<
+pid: 2833, tid: 3215, name: Thread-200  >>> com.android.phone <<<
+pid: 2833, tid: 3352, name: Thread-201  >>> com.android.phone <<<
+pid: 2833, tid: 4205, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 4224, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 4319, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 4492, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 4494, name: Thread-213  >>> com.android.phone <<<
+pid: 2833, tid: 4496, name: Thread-214  >>> com.android.phone <<<
+pid: 2833, tid: 5121, name: Thread-217  >>> com.android.phone <<<
+pid: 2833, tid: 5131, name: Thread-218  >>> com.android.phone <<<
+pid: 2833, tid: 6798, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 6818, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 6821, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 6868, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 7027, name: Thread-235  >>> com.android.phone <<<
+pid: 2833, tid: 7029, name: Thread-236  >>> com.android.phone <<<
+pid: 2833, tid: 11253, name: Thread-237  >>> com.android.phone <<<
+pid: 2833, tid: 11255, name: Thread-238  >>> com.android.phone <<<
+pid: 2833, tid: 11375, name: Thread-239  >>> com.android.phone <<<
+pid: 2833, tid: 11403, name: Thread-240  >>> com.android.phone <<<
+pid: 2833, tid: 15499, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 15536, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 15656, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 15815, name: Thread-251  >>> com.android.phone <<<
+pid: 2833, tid: 15817, name: Thread-252  >>> com.android.phone <<<
+pid: 2833, tid: 15830, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 16160, name: Thread-255  >>> com.android.phone <<<
+pid: 2833, tid: 16189, name: Thread-256  >>> com.android.phone <<<
+pid: 2833, tid: 16511, name: Binder_C  >>> com.android.phone <<<
+pid: 2833, tid: 17370, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 17392, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 17406, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 17429, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 17582, name: Thread-270  >>> com.android.phone <<<
+pid: 2833, tid: 17583, name: Thread-271  >>> com.android.phone <<<
+pid: 2833, tid: 24376, name: Thread-272  >>> com.android.phone <<<
+pid: 2833, tid: 24396, name: Thread-273  >>> com.android.phone <<<
+pid: 2833, tid: 24486, name: Thread-274  >>> com.android.phone <<<
+pid: 2833, tid: 24585, name: Thread-275  >>> com.android.phone <<<
+pid: 2833, tid: 24954, name: SyncHandler-1  >>> com.android.phone <<<
+pid: 2833, tid: 26605, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 26633, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 26735, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 26903, name: Thread-287  >>> com.android.phone <<<
+pid: 2833, tid: 26905, name: Thread-288  >>> com.android.phone <<<
+pid: 2833, tid: 26919, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 27347, name: Thread-291  >>> com.android.phone <<<
+pid: 2833, tid: 27349, name: Thread-292  >>> com.android.phone <<<
+pid: 2833, tid: 9334, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 9404, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 9406, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 9479, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 9591, name: Thread-306  >>> com.android.phone <<<
+pid: 2833, tid: 9593, name: Thread-307  >>> com.android.phone <<<
+pid: 2833, tid: 9726, name: Thread-308  >>> com.android.phone <<<
+pid: 2833, tid: 9735, name: Thread-309  >>> com.android.phone <<<
+pid: 2833, tid: 9890, name: Thread-310  >>> com.android.phone <<<
+pid: 2833, tid: 9924, name: Thread-311  >>> com.android.phone <<<
+pid: 2833, tid: 12520, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 12529, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 12578, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 12728, name: Thread-322  >>> com.android.phone <<<
+pid: 2833, tid: 12730, name: Thread-323  >>> com.android.phone <<<
+pid: 2833, tid: 12751, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 13246, name: Thread-326  >>> com.android.phone <<<
+pid: 2833, tid: 13261, name: Thread-327  >>> com.android.phone <<<
+pid: 2833, tid: 31037, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 31081, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 31132, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 31166, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 31317, name: Thread-340  >>> com.android.phone <<<
+pid: 2833, tid: 31318, name: Thread-341  >>> com.android.phone <<<
+pid: 2833, tid: 31431, name: Thread-342  >>> com.android.phone <<<
+pid: 2833, tid: 31443, name: Thread-343  >>> com.android.phone <<<
+pid: 2833, tid: 31545, name: Thread-344  >>> com.android.phone <<<
+pid: 2833, tid: 31627, name: Thread-345  >>> com.android.phone <<<
+pid: 2833, tid: 31830, name: Binder_D  >>> com.android.phone <<<
+pid: 2833, tid: 670, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 699, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 785, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 968, name: Thread-357  >>> com.android.phone <<<
+pid: 2833, tid: 970, name: Thread-358  >>> com.android.phone <<<
+pid: 2833, tid: 1006, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 1182, name: Thread-361  >>> com.android.phone <<<
+pid: 2833, tid: 1197, name: Thread-362  >>> com.android.phone <<<
+pid: 2833, tid: 28722, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 28758, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 28764, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 28855, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 28970, name: Thread-375  >>> com.android.phone <<<
+pid: 2833, tid: 28972, name: Thread-376  >>> com.android.phone <<<
+pid: 2833, tid: 29703, name: Thread-377  >>> com.android.phone <<<
+pid: 2833, tid: 29718, name: Thread-378  >>> com.android.phone <<<
+pid: 2833, tid: 29798, name: Thread-379  >>> com.android.phone <<<
+pid: 2833, tid: 29816, name: Thread-380  >>> com.android.phone <<<
+pid: 2833, tid: 3884, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 3900, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 3990, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 4174, name: Thread-391  >>> com.android.phone <<<
+pid: 2833, tid: 4176, name: Thread-392  >>> com.android.phone <<<
+pid: 2833, tid: 4207, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 4357, name: Thread-395  >>> com.android.phone <<<
+pid: 2833, tid: 4395, name: Thread-396  >>> com.android.phone <<<
+pid: 2833, tid: 4777, name: Binder_E  >>> com.android.phone <<<
+pid: 2833, tid: 7479, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 7557, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 7579, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 7624, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 7779, name: Thread-410  >>> com.android.phone <<<
+pid: 2833, tid: 7781, name: Thread-411  >>> com.android.phone <<<
+pid: 2833, tid: 7903, name: Thread-412  >>> com.android.phone <<<
+pid: 2833, tid: 7922, name: Thread-413  >>> com.android.phone <<<
+pid: 2833, tid: 8002, name: Thread-414  >>> com.android.phone <<<
+pid: 2833, tid: 8082, name: Thread-415  >>> com.android.phone <<<
+pid: 2833, tid: 9522, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 9560, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 9652, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 9822, name: Thread-426  >>> com.android.phone <<<
+pid: 2833, tid: 9824, name: Thread-427  >>> com.android.phone <<<
+pid: 2833, tid: 9837, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 9972, name: Thread-430  >>> com.android.phone <<<
+pid: 2833, tid: 9974, name: Thread-431  >>> com.android.phone <<<
+pid: 2833, tid: 10934, name: Binder_F  >>> com.android.phone <<<
+pid: 2833, tid: 11793, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 11835, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 11993, name: Thread-441  >>> com.android.phone <<<
+pid: 2833, tid: 11995, name: Thread-442  >>> com.android.phone <<<
+pid: 2833, tid: 12461, name: Thread-443  >>> com.android.phone <<<
+pid: 2833, tid: 12470, name: Thread-444  >>> com.android.phone <<<
+pid: 2833, tid: 12612, name: Thread-445  >>> com.android.phone <<<
+pid: 2833, tid: 12654, name: Thread-446  >>> com.android.phone <<<
+pid: 2833, tid: 14150, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 14189, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 14275, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 14433, name: Thread-457  >>> com.android.phone <<<
+pid: 2833, tid: 14434, name: Thread-458  >>> com.android.phone <<<
+pid: 2833, tid: 14457, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 14556, name: Thread-461  >>> com.android.phone <<<
+pid: 2833, tid: 14559, name: Thread-462  >>> com.android.phone <<<
+pid: 2833, tid: 18101, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 18183, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 18285, name: Thread-471  >>> com.android.phone <<<
+pid: 2833, tid: 18287, name: Thread-472  >>> com.android.phone <<<
+pid: 2833, tid: 25002, name: Thread-473  >>> com.android.phone <<<
+pid: 2833, tid: 25016, name: Thread-474  >>> com.android.phone <<<
+pid: 2833, tid: 25119, name: Thread-475  >>> com.android.phone <<<
+pid: 2833, tid: 25191, name: Thread-476  >>> com.android.phone <<<
+pid: 2833, tid: 27034, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 27116, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 27209, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 27350, name: Thread-487  >>> com.android.phone <<<
+pid: 2833, tid: 27352, name: Thread-488  >>> com.android.phone <<<
+pid: 2833, tid: 27388, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 27474, name: Thread-491  >>> com.android.phone <<<
+pid: 2833, tid: 27479, name: Thread-492  >>> com.android.phone <<<
+pid: 2833, tid: 29506, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 29617, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 29734, name: Thread-501  >>> com.android.phone <<<
+pid: 2833, tid: 29743, name: Thread-502  >>> com.android.phone <<<
+pid: 2833, tid: 29879, name: Thread-503  >>> com.android.phone <<<
+pid: 2833, tid: 29884, name: Thread-504  >>> com.android.phone <<<
+pid: 2833, tid: 29937, name: Thread-505  >>> com.android.phone <<<
+pid: 2833, tid: 29956, name: Thread-506  >>> com.android.phone <<<
+pid: 2833, tid: 31101, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 31148, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 31235, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 31400, name: Thread-517  >>> com.android.phone <<<
+pid: 2833, tid: 31402, name: Thread-518  >>> com.android.phone <<<
+pid: 2833, tid: 31473, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 31510, name: Thread-521  >>> com.android.phone <<<
+pid: 2833, tid: 31515, name: Thread-522  >>> com.android.phone <<<
+pid: 2833, tid: 1294, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 1428, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 1432, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 1508, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 1630, name: Thread-535  >>> com.android.phone <<<
+pid: 2833, tid: 1632, name: Thread-536  >>> com.android.phone <<<
+pid: 2833, tid: 1772, name: Thread-537  >>> com.android.phone <<<
+pid: 2833, tid: 1786, name: Thread-538  >>> com.android.phone <<<
+pid: 2833, tid: 1850, name: Thread-539  >>> com.android.phone <<<
+pid: 2833, tid: 1854, name: Thread-540  >>> com.android.phone <<<
+pid: 2833, tid: 3337, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 3388, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 3522, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 3695, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 3700, name: Thread-552  >>> com.android.phone <<<
+pid: 2833, tid: 3703, name: Thread-553  >>> com.android.phone <<<
+pid: 2833, tid: 3829, name: Thread-555  >>> com.android.phone <<<
+pid: 2833, tid: 3844, name: Thread-556  >>> com.android.phone <<<
+pid: 2833, tid: 7152, name: Binder_10  >>> com.android.phone <<<
+pid: 2833, tid: 18856, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 18901, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 18931, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 18972, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 19101, name: Thread-570  >>> com.android.phone <<<
+pid: 2833, tid: 19105, name: Thread-571  >>> com.android.phone <<<
+pid: 2833, tid: 19473, name: Thread-572  >>> com.android.phone <<<
+pid: 2833, tid: 19476, name: Thread-573  >>> com.android.phone <<<
+pid: 2833, tid: 19599, name: Thread-574  >>> com.android.phone <<<
+pid: 2833, tid: 19631, name: Thread-575  >>> com.android.phone <<<
+pid: 2833, tid: 20944, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 20960, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 21057, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 21167, name: Thread-586  >>> com.android.phone <<<
+pid: 2833, tid: 21169, name: Thread-587  >>> com.android.phone <<<
+pid: 2833, tid: 21214, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 21396, name: Thread-590  >>> com.android.phone <<<
+pid: 2833, tid: 21400, name: Thread-591  >>> com.android.phone <<<
+pid: 2833, tid: 6955, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 7037, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 7041, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 7063, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 7218, name: Thread-604  >>> com.android.phone <<<
+pid: 2833, tid: 7220, name: Thread-605  >>> com.android.phone <<<
+pid: 2833, tid: 7451, name: Thread-606  >>> com.android.phone <<<
+pid: 2833, tid: 7453, name: Thread-607  >>> com.android.phone <<<
+pid: 2833, tid: 7537, name: Thread-608  >>> com.android.phone <<<
+pid: 2833, tid: 7545, name: Thread-609  >>> com.android.phone <<<
+pid: 2833, tid: 11251, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 11275, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 11406, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 11577, name: Thread-620  >>> com.android.phone <<<
+pid: 2833, tid: 11587, name: Thread-621  >>> com.android.phone <<<
+pid: 2833, tid: 11591, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 11681, name: Thread-624  >>> com.android.phone <<<
+pid: 2833, tid: 11685, name: Thread-625  >>> com.android.phone <<<
+pid: 2833, tid: 13519, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 13607, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 13609, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 13681, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 13784, name: Thread-638  >>> com.android.phone <<<
+pid: 2833, tid: 13786, name: Thread-639  >>> com.android.phone <<<
+pid: 2833, tid: 16260, name: Thread-640  >>> com.android.phone <<<
+pid: 2833, tid: 16263, name: Thread-641  >>> com.android.phone <<<
+pid: 2833, tid: 16327, name: Thread-642  >>> com.android.phone <<<
+pid: 2833, tid: 16329, name: Thread-643  >>> com.android.phone <<<
+pid: 2833, tid: 19775, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 19784, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 19895, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 20051, name: Thread-654  >>> com.android.phone <<<
+pid: 2833, tid: 20056, name: Thread-655  >>> com.android.phone <<<
+pid: 2833, tid: 20059, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 20147, name: Thread-658  >>> com.android.phone <<<
+pid: 2833, tid: 20150, name: Thread-659  >>> com.android.phone <<<
+pid: 2833, tid: 22762, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 22851, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 22952, name: Thread-668  >>> com.android.phone <<<
+pid: 2833, tid: 22954, name: Thread-669  >>> com.android.phone <<<
+pid: 2833, tid: 22965, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 23245, name: Thread-672  >>> com.android.phone <<<
+pid: 2833, tid: 23267, name: Thread-673  >>> com.android.phone <<<
+pid: 2833, tid: 23336, name: Thread-674  >>> com.android.phone <<<
+pid: 2833, tid: 23388, name: Thread-675  >>> com.android.phone <<<
+pid: 2833, tid: 23591, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 27490, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 27511, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 27569, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 27738, name: Thread-688  >>> com.android.phone <<<
+pid: 2833, tid: 27740, name: Thread-689  >>> com.android.phone <<<
+pid: 2833, tid: 27742, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 27870, name: Thread-692  >>> com.android.phone <<<
+pid: 2833, tid: 27872, name: Thread-693  >>> com.android.phone <<<
+pid: 2833, tid: 29900, name: Cat Telephony s  >>> com.android.phone <<<
+pid: 2833, tid: 29901, name: RilMessageDecod  >>> com.android.phone <<<
+pid: 2833, tid: 29902, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 29932, name: Cat Telephony s  >>> com.android.phone <<<
+pid: 2833, tid: 29933, name: RilMessageDecod  >>> com.android.phone <<<
+pid: 2833, tid: 29934, name: Cat Icon Loader  >>> com.android.phone <<<
+pid: 2833, tid: 29936, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 29940, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 29995, name: DcHandlerThread  >>> com.android.phone <<<
+pid: 2833, tid: 30012, name: GsmCellBroadcas  >>> com.android.phone <<<
+pid: 2833, tid: 30127, name: Thread-706  >>> com.android.phone <<<
+pid: 2833, tid: 30129, name: Thread-707  >>> com.android.phone <<<
+pid: 2833, tid: 32698, name: Thread-708  >>> com.android.phone <<<
+
+#+END_SRC
+
+
+* DONE generate core dump when app crash
+  CLOSED: [2015-07-03 周五 17:07] SCHEDULED: <2015-07-01 周三>
+
+- android/art/runtime/native/dalvik_system_ZygoteHooks.cc
+- persist.debug.trace
+
+http://man7.org/linux/man-pages/man5/core.5.html
+
+** solution
+ setprop persist.debug.trace 1
+
+* DONE cursor leak (KNINE-9783)
+  CLOSED: [2015-07-13 周一 15:41] SCHEDULED: <2015-07-06 周一>
+#+BEGIN_SRC 
+07-03 15:07:37.083  2261  2312 W CursorWrapperInner: Cursor finalized without prior close()
+07-03 15:07:37.083  2261  2261 I art     : Explicit concurrent mark sweep GC freed 4433(327KB) AllocSpace objects, 0(0B) LOS objects, 25% free, 39MB/52MB, paused 522us total 60.828ms
+07-03 15:07:37.083  2261  2312 W CursorWrapperInner: Cursor finalized without prior close()
+07-03 15:07:37.083  2261  2312 W CursorWrapperInner: Cursor finalized without prior close()
+07-03 15:07:37.083  2261  2312 W CursorWrapperInner: Cursor finalized without prior close()
+07-03 15:07:37.083  2261  2312 W CursorWrapperInner: Cursor finalized without prior close()
+07-03 15:07:37.083  2261  2312 W CursorWrapperInner: Cursor finalized without prior close()
+07-03 15:07:37.083  2261  2312 W CursorWrapperInner: Cursor finalized without prior close()
+
+07-03 15:10:03.683  2060  2425 D cell strength: ===== cell singal strength changed : -72
+07-03 15:10:03.693  1065  1080 E JavaBinder: *** Uncaught remote exception!  (Exceptions are not yet supported across processes.)
+07-03 15:10:03.693  1065  1080 E JavaBinder: java.lang.ArrayIndexOutOfBoundsException: length=5; index=5
+07-03 15:10:03.693  1065  1080 E JavaBinder: 	at com.android.internal.os.BatteryStatsImpl.updateAllPhoneStateLocked(BatteryStatsImpl.java:3321)
+07-03 15:10:03.693  1065  1080 E JavaBinder: 	at com.android.internal.os.BatteryStatsImpl.notePhoneSignalStrengthLocked(BatteryStatsImpl.java:3351)
+07-03 15:10:03.693  1065  1080 E JavaBinder: 	at com.android.server.am.BatteryStatsService.notePhoneSignalStrength(BatteryStatsService.java:395)
+07-03 15:10:03.693  1065  1080 E JavaBinder: 	at com.android.server.TelephonyRegistry.broadcastSignalStrengthChanged(TelephonyRegistry.java:1349)
+07-03 15:10:03.693  1065  1080 E JavaBinder: 	at com.android.server.TelephonyRegistry.notifySignalStrengthForSubscriber(TelephonyRegistry.java:825)
+07-03 15:10:03.693  1065  1080 E JavaBinder: 	at com.android.internal.telephony.ITelephonyRegistry$Stub.onTransact(ITelephonyRegistry.java:181)
+07-03 15:10:03.693  1065  1080 E JavaBinder: 	at android.os.Binder.execTransact(Binder.java:446)
+07-03 15:10:03.693  1806  1806 D TelephonyIcons: updateDataType sub=0, type=13, inetCondition=0 showAtLeast3G=false show4GforLte=true hspaDistinguishable=true
+07-03 15:10:03.693  1806  1806 D MSimNetworkControllerImpl: onSignalStrengthsChanged received on phoneId=0, signalStrength=SignalStrength: 99 0 -72 -70 -120 -1 -1 27 -86 -8 234 2147483647 2147483647 gsm|lte, level=5
+07-03 15:10:03.693  1806  1806 D TelephonyIcons: updateDataType mSelectedDataTypeIcon[0]=2130838398, mSelectedDataActivityIndex=5
+07-03 15:10:03.693  1806  1806 D MSimNetworkControllerImpl: updateIconSet: phoneId=0, voiceNetworkType=7/CDMA - 1xRTT, dataNetworkType=13/LTE, chosenNetworkType=13
+07-03 15:10:03.693  1806  1806 D TelephonyIcons: getSignalStrengthIcon: sub=0, inetCondition=0, level=5 isRoaming=false
+07-03 15:10:03.693  1806  1806 D MSimNetworkControllerImpl: updateTelephonySignalStrength: phoneId=0
+07-03 15:10:03.693  1806  1806 D MSimNetworkControllerImpl: CT UIM Card: iconLevel=5, set to cdmaLevel=5 instead of level=5
+07-03 15:10:03.693  1806  1806 D MSimNetworkControllerImpl: updateTelephonySignalStrength, sub=0, level=5, mInetCondition=0, mMSimPhoneSignalIconId[0]=2130838459/com.android.systemui:drawable/stat_sys_signal_5_fully
+07-03 15:10:03.693  1806  1806 D MSimNetworkControllerImpl: refreshViews: Data not connected!! Set no data type icon/Roaming for phoneId: 0
+07-03 15:10:03.693  1806  1806 D MSimNetworkControllerImpl: refreshViews connected={ } level=5 mMSimcombinedSignalIconId=2130838459/com.android.systemui:drawable/stat_sys_signal_5_fully mMSimcombinedActivityIconId=0 mAirplaneMode=false mMSimDataActivity=0 mMSimPhoneSignalIconId=2130838459/com.android.systemui:drawable/stat_sys_signal_5_fully mMSimDataDirectionIconId=0 mMSimDataSignalIconId=2130838459 mMSimDataTypeIconId=0/(null) mNoMSimIconId=2130838434/com.android.systemui:drawable/stat_sys_no_sim1_new mMSimMobileActivityIconId=0/(null) mWifiIconId=0/(null) mIsMobileRoaming=false mBluetoothTetherIconId=17303432
+07-03 15:10:03.933  2261  2261 D Mms/IconLayout: IconLayout processChange query finish
+
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: FATAL EXCEPTION: main
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: Process: com.android.phone, PID: 2179
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: android.database.CursorWindowAllocationException: Cursor window allocation of 2048 kb failed. # Open Cursors=765 (# cursors opened by pid 2261=765)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at android.database.CursorWindow.<init>(CursorWindow.java:108)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at android.database.AbstractWindowedCursor.clearOrCreateWindow(AbstractWindowedCursor.java:198)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at android.database.sqlite.SQLiteCursor.fillWindow(SQLiteCursor.java:139)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at android.database.sqlite.SQLiteCursor.getCount(SQLiteCursor.java:133)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at android.content.ContentResolver.query(ContentResolver.java:497)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at android.content.ContentResolver.query(ContentResolver.java:422)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at com.android.internal.telephony.HbpcdUtils.getIddByMcc(HbpcdUtils.java:142)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at com.android.internal.telephony.cdma.CdmaServiceStateTracker.setOperatorIdd(CdmaServiceStateTracker.java:1438)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at com.android.internal.telephony.cdma.CdmaLteServiceStateTracker.pollStateDone(CdmaLteServiceStateTracker.java:543)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at com.android.internal.telephony.cdma.CdmaServiceStateTracker.handlePollStateResult(CdmaServiceStateTracker.java:959)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at com.android.internal.telephony.cdma.CdmaServiceStateTracker.handleMessage(CdmaServiceStateTracker.java:423)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at com.android.internal.telephony.cdma.CdmaLteServiceStateTracker.handleMessage(CdmaLteServiceStateTracker.java:146)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:135)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:5254)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Method.java:372)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:904)
+07-03 15:10:05.593  2179  2179 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:699)
+
+07-03 15:10:24.663  1065  1897 W ActivityManager: Scheduling restart of crashed service com.android.phone/.TelephonyDebugService in 0ms
+07-03 15:10:24.663  1065  1897 I ActivityManager: Killing 2261:com.zui.launcher/u0a27 (adj -12): depends on provider com.android.providers.telephony/.SmsProvider in dying proc com.android.phone
+
+#+END_SRC
+
+* TODO bugreport tool
+  SCHEDULED: <2015-07-06 周一>
+
+LINUX/android/packages/experimental/BugReportSender/
+LINUX/android/packages/experimental/StrictModeTest/
+
+LINUX/android/frameworks/base/core/java/com/android/internal/util/MemInfoReader.java
+
+* DONE libc.debug.malloc=1
+  CLOSED: [2015-07-16 周四 09:51] SCHEDULED: <2015-07-09 周四>
+
+** zygote crash when enable malloc debug1
+
+#+BEGIN_SRC 
+(gdb) bt
+#0  trace_function (context=<optimized out>, arg=0xbecbe490) at bionic/libc/bionic/debug_stacktrace.cpp:116
+#1  0xb533ee66 in _Unwind_Backtrace (callback=0xb533c5cd <trace_function(__unwind_context*, void*)>, ref=0xbecbe490) at external/libcxxabi/src/Unwind/UnwindLevel1-gcc-ext.c:159
+#2  0xb533c6d2 in get_backtrace (frames=frames@entry=0xbecbe4c0, max_depth=max_depth@entry=32) at bionic/libc/bionic/debug_stacktrace.cpp:132
+#3  0xb533d10a in leak_malloc (bytes=20) at bionic/libc/bionic/malloc_debug_leak.cpp:315
+#4  0xb6e45db8 in malloc (bytes=<optimized out>) at bionic/libc/bionic/malloc_debug_common.cpp:259
+#5  0xb5dcc6dc in operator new (size=<optimized out>) at external/libcxxabi/src/cxa_new_delete.cpp:44
+#6  0xb5149f4c in allocate (this=<optimized out>, __n=1) at external/libcxx/include/memory:1634
+#7  allocate (__a=..., __n=1) at external/libcxx/include/memory:1439
+#8  __construct_node<art::gc::allocator::RosAlloc::FreePageRun* const&> (this=0xb48ecc58) at external/libcxx/include/__tree:1730
+#9  std::__1::__tree<art::gc::allocator::RosAlloc::FreePageRun*, std::__1::less<art::gc::allocator::RosAlloc::FreePageRun*>, std::__1::allocator<art::gc::allocator::RosAlloc::FreePageRun*> >::__insert_unique (this=this@entry=0xb48ecc58, __v=@0xbecbe5c4: 0x12ede000) at external/libcxx/include/__tree:1872
+#10 0xb514aab8 in insert (__v=@0xbecbe5c4: 0x12ede000, this=0xb48ecc58) at external/libcxx/include/set:598
+#11 art::gc::allocator::RosAlloc::AllocPages (this=this@entry=0xb48ec808, self=self@entry=0xb4827408, num_pages=1, page_map_type=page_map_type@entry=2 '\002')
+    at art/runtime/gc/allocator/rosalloc.cc:138
+#12 0xb514ad8a in AllocRun (idx=1, self=0xb4827408, this=0xb48ec808) at art/runtime/gc/allocator/rosalloc.cc:539
+#13 art::gc::allocator::RosAlloc::RefillRun (this=this@entry=0xb48ec808, self=self@entry=0xb4827408, idx=idx@entry=1) at art/runtime/gc/allocator/rosalloc.cc:583
+#14 0xb514b024 in art::gc::allocator::RosAlloc::AllocFromRun (this=0xb48ec808, self=0xb4827408, size=<optimized out>, bytes_allocated=0xbecbe6e0) at art/runtime/gc/allocator/rosalloc.cc:701
+#15 0xb50d3f46 in Alloc<true> (bytes_allocated=<optimized out>, size=<optimized out>, self=<optimized out>, this=<optimized out>) at art/runtime/gc/allocator/rosalloc-inl.h:33
+#16 AllocCommon<true> (usable_size=<optimized out>, bytes_allocated=<optimized out>, num_bytes=<optimized out>, self=<optimized out>, this=<optimized out>)
+    at art/runtime/gc/space/rosalloc_space-inl.h:57
+#17 AllocNonvirtual (usable_size=<optimized out>, bytes_allocated=<optimized out>, num_bytes=<optimized out>, self=<optimized out>, this=<optimized out>)
+    at art/runtime/gc/space/rosalloc_space.h:71
+#18 TryToAllocate<true, false> (usable_size=<optimized out>, bytes_allocated=<optimized out>, alloc_size=<optimized out>, allocator_type=<optimized out>, self=<optimized out>,
+    this=<optimized out>) at art/runtime/gc/heap-inl.h:220
+#19 AllocObjectWithAllocator<true, false, art::VoidFunctor> (pre_fence_visitor=..., allocator=<optimized out>, byte_count=24, klass=0x6fa38098, self=<optimized out>, this=<optimized out>)
+    at art/runtime/gc/heap-inl.h:89
+#20 Alloc<true, true> (allocator_type=<optimized out>, self=<optimized out>, this=<optimized out>) at art/runtime/mirror/class-inl.h:563
+#21 AllocObjectFromCode<false, true> (allocator_type=<optimized out>, self=<optimized out>, method=<optimized out>, type_idx=<optimized out>)
+    at art/runtime/entrypoints/entrypoint_utils-inl.h:136
+#22 art::interpreter::ExecuteGotoImpl<false, false> (self=0x0, mh=..., code_item=0x7053aaf8, shadow_frame=..., result_register=...)
+    at art/runtime/interpreter/interpreter_goto_table_impl.cc:540
+#23 0xb519736a in Execute (result_register=..., shadow_frame=..., code_item=0x7053aaf8, mh=..., self=0xb4827408) at art/runtime/interpreter/interpreter.cc:376
+#24 art::interpreter::EnterInterpreterFromStub (self=self@entry=0xb4827408, mh=..., code_item=code_item@entry=0x7053aaf8, shadow_frame=...) at art/runtime/interpreter/interpreter.cc:536
+#25 0xb52b7e44 in art::artQuickToInterpreterBridge (method=<optimized out>, self=<optimized out>, sp=<optimized out>) at art/runtime/entrypoints/quick/quick_trampoline_entrypoints.cc:531
+#26 0xb50da42e in art_quick_to_interpreter_bridge () at art/runtime/arch/arm/quick_entrypoints_arm.S:1093
+#27 0x00000000 in ?? ()
+
+#0  trace_function (context=<optimized out>, arg=0xbecbe490) at bionic/libc/bionic/debug_stacktrace.cpp:116
+        ptr = 0x1e
+        state = 0xbecbe490
+        ip = 30
+#1  0xb533ee66 in _Unwind_Backtrace (callback=0xb533c5cd <trace_function(__unwind_context*, void*)>, ref=0xbecbe490) at external/libcxxabi/src/Unwind/UnwindLevel1-gcc-ext.c:159
+        frameInfo = {start_ip = 3037564864, end_ip = 3037564944, lsda = 195948557, handler = 3040078573, gp = 0, flags = 0, format = 0, unwind_info_size = 0, unwind_info = 3039730852,
+          extra = 0}
+        len = 8
+        off = 2
+        unwindInfo = <optimized out>
+        result = <optimized out>
+        uc = <optimized out>
+        cursor = {data = {13057571894305605192, 1363974823142752256, 0, 4294967296, 13748339094052056448, 3201034656, 3201034800, 13748338886004703233, 133143986207, 13057055722095771904,
+            0, 0, 0, 0, 13019062682970488832, 0, 176093659136, 4593671621027561472, 542235426816, 4539628424389460010, 4890909195324358656, 14114281232179134464, 16068843472051765248,
+            0 <repeats 38 times>, 13046242096993636288, 13057038048501297165, 0, 0, 3039730852, 0, 0, 0, 0, 0, 0, 0, 13183697405733103286, 13057037687724044301, 13007086251507974144, 0,
+            13056635092055236368, 1, 13748332893299146244, 3201033204, 0, 0, 0, 0, 0, 0, 0, 13183697405733103286, 13057037687724044301, 0, 0, 3069715628, 13712458112623116289,
+            10464100312422547456, 18428729678268857860, 1105199103, 3252682752, 1138753536, 6845471436889391104, 13748332893971677184, 13748332566841291784, 13056674108862620512,
+            13748332926466662160, 13049588301882450784, 3201033120, 13056674105661587456, 13712458113807416836, 0, 13007086821644690320, 13007086254709007376, 13748332979330737088,
+            7496000416, 13054666782882391064, 3201033120, 1, 1868548968, 1363974823460327392, 13056673095089288424, 6173156160, 13056674108862620712, 7363755524, 8059788636712861696,
+            13748333048050213888, 1, 13748333079208919040, 0, 3201033464, 3201033360, 7496001040, 13007086253376523112, 13056995622618398721, 13056997451019482344, 6173156160, 7496000612,
+            13057571753826451488, 4294967296, 13057571753826451488, 13178841709113238980, 4294967303}}
+#2  0xb533c6d2 in get_backtrace (frames=frames@entry=0xbecbe4c0, max_depth=max_depth@entry=32) at bionic/libc/bionic/debug_stacktrace.cpp:132
+        disable = {disabled_ = false}
+        state = {frames = 0xbecbe4c0, frame_count = 12, max_depth = 32, have_skipped_self = true}
+#3  0xb533d10a in leak_malloc (bytes=20) at bionic/libc/bionic/malloc_debug_leak.cpp:315
+        locker = {mu_ = 0xb6e9e5b4 <g_hash_table>}
+        backtrace = {3040071942, 3068419510, 3051144920, 3038027592, 3038030516, 3038031238, 3038031904, 3037544258, 3038344038, 3039526464, 3037570090, 3037564918, 3201034076, 3068788228,
+          3201034352, 3201034152, 0, 0, 375, 3040072213, 3201033532, 3031360544, 3068782004, 3040202864, 3040071942, 3068419510, 3051483004, 2436363211, 3068821476, 3028760168, 1878188864,
+          3201034076}
+        numEntries = <optimized out>
+        header = <optimized out>
+        size = 28
+        base = 0xb4ad0d00
+#4  0xb6e45db8 in malloc (bytes=<optimized out>) at bionic/libc/bionic/malloc_debug_common.cpp:259
+No locals.
+#5  0xb5dcc6dc in operator new (size=<optimized out>) at external/libcxxabi/src/cxa_new_delete.cpp:44
+        p = <optimized out>
+#6  0xb5149f4c in allocate (this=<optimized out>, __n=1) at external/libcxx/include/memory:1634
+No locals.
+#7  allocate (__a=..., __n=1) at external/libcxx/include/memory:1439
+No locals.
+#8  __construct_node<art::gc::allocator::RosAlloc::FreePageRun* const&> (this=0xb48ecc58) at external/libcxx/include/__tree:1730
+No locals.
+#9  std::__1::__tree<art::gc::allocator::RosAlloc::FreePageRun*, std::__1::less<art::gc::allocator::RosAlloc::FreePageRun*>, std::__1::allocator<art::gc::allocator::RosAlloc::FreePageRun*> >::__insert_unique (this=this@entry=0xb48ecc58, __v=@0xbecbe5c4: 0x12ede000) at external/libcxx/include/__tree:1872
+        __h = <optimized out>
+        __parent = 0xb4838ee8
+        __r = 0x0
+        __inserted = false
+#10 0xb514aab8 in insert (__v=@0xbecbe5c4: 0x12ede000, this=0xb48ecc58) at external/libcxx/include/set:598
+No locals.
+#11 art::gc::allocator::RosAlloc::AllocPages (this=this@entry=0xb48ec808, self=self@entry=0xb4827408, num_pages=1, page_map_type=page_map_type@entry=2 '\002')
+    at art/runtime/gc/allocator/rosalloc.cc:138
+        remainder = 0x12ede000
+        fpr = 0x12edd000
+        fpr_byte_size = 40960
+        it = <optimized out>
+        res = 0x0
+        req_byte_size = 4096
+#12 0xb514ad8a in AllocRun (idx=1, self=0xb4827408, this=0xb48ec808) at art/runtime/gc/allocator/rosalloc.cc:539
+        new_run = 0x0
+#13 art::gc::allocator::RosAlloc::RefillRun (this=this@entry=0xb48ec808, self=self@entry=0xb4827408, idx=idx@entry=1) at art/runtime/gc/allocator/rosalloc.cc:583
+        bt = 0xb48ec824
+#14 0xb514b024 in art::gc::allocator::RosAlloc::AllocFromRun (this=0xb48ec808, self=0xb4827408, size=<optimized out>, bytes_allocated=0xbecbe6e0) at art/runtime/gc/allocator/rosalloc.cc:701
+        mu = {self_ = 0xb4827408, mu_ = @0xb4895e10}
+        is_all_free_after_merge = true
+        thread_local_run = 0x12edc000
+        bracket_size = 32
+        slot_addr = <optimized out>
+#15 0xb50d3f46 in Alloc<true> (bytes_allocated=<optimized out>, size=<optimized out>, self=<optimized out>, this=<optimized out>) at art/runtime/gc/allocator/rosalloc-inl.h:33
+No locals.
+#16 AllocCommon<true> (usable_size=<optimized out>, bytes_allocated=<optimized out>, num_bytes=<optimized out>, self=<optimized out>, this=<optimized out>)
+    at art/runtime/gc/space/rosalloc_space-inl.h:57
+        rosalloc_size = 0
+#17 AllocNonvirtual (usable_size=<optimized out>, bytes_allocated=<optimized out>, num_bytes=<optimized out>, self=<optimized out>, this=<optimized out>)
+    at art/runtime/gc/space/rosalloc_space.h:71
+No locals.
+#18 TryToAllocate<true, false> (usable_size=<optimized out>, bytes_allocated=<optimized out>, alloc_size=<optimized out>, allocator_type=<optimized out>, self=<optimized out>,
+    this=<optimized out>) at art/runtime/gc/heap-inl.h:220
+No locals.
+#19 AllocObjectWithAllocator<true, false, art::VoidFunctor> (pre_fence_visitor=..., allocator=<optimized out>, byte_count=24, klass=0x6fa38098, self=<optimized out>, this=<optimized out>)
+    at art/runtime/gc/heap-inl.h:89
+        obj = 0x0
+        bytes_allocated = 0
+        new_num_bytes_allocated = 3028858376
+        usable_size = 1875700776
+#20 Alloc<true, true> (allocator_type=<optimized out>, self=<optimized out>, this=<optimized out>) at art/runtime/mirror/class-inl.h:563
+        obj = 0x0
+#21 AllocObjectFromCode<false, true> (allocator_type=<optimized out>, self=<optimized out>, method=<optimized out>, type_idx=<optimized out>)
+    at art/runtime/entrypoints/entrypoint_utils-inl.h:136
+No locals.
+#22 art::interpreter::ExecuteGotoImpl<false, false> (self=0x0, mh=..., code_item=0x7053aaf8, shadow_frame=..., result_register=...)
+    at art/runtime/interpreter/interpreter_goto_table_impl.cc:540
+        handlersTable = {{0xb50cb94c <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+148>,
+            0xb50cb968 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+176>,
+            0xb50cb9a8 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+240>,
+            0xb50cb9e4 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+300>,
+            0xb50cba26 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+366>,
+            0xb50cba78 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+448>,
+            0xb50cbac6 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+526>,
+            0xb50cbb16 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+606>,
+            0xb50cbb50 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+664>,
+            0xb50cbb8a <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+722>,
+            0xb50cbbc4 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+780>,
+            0xb50cbbfa <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+834>,
+            0xb50cbc3e <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+902>,
+            0xb50cbcb0 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+1016>,
+            0xb50cbd02 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+1098>,
+            0xb50cbd78 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+1216>,
+            0xb50cbda0 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+1256>,
+            0xb50cbdc4 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+1292>,
+            0xb50cc146 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+2190>,
+            0xb50cc18c <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+2260>,
+            0xb50cc1cc <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+2324>,
+            0xb50cc214 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+2396>,
+            0xb50cbe28 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+1392>,
+            0xb50cbe70 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+1464>,
+            0xb50cbec2 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+1546>,
+            0xb50cbf28 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+1648>,
+            0xb50cbf76 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+1726>,
+            0xb50cc002 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+1866>,
+            0xb50cc096 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+2014>,
+            0xb50cc100 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+2120>,
+            0xb50cc25a <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+2466>,
+            0xb50cc29c <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+2532>,
+            0xb50cc35a <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+2722>,
+            0xb50cc40a <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+2898>,
+            0xb50cc45c <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+2980>,
+            0xb50d246c <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+27572>,
+            0xb50cc5ac <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+3316>,
+            0xb50cf0c0 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+14344>...}}
+        inst_data = 34
+        currentHandlersTable = 0xb5322bc8 <art::JValue art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)::handlersTable>
+        notified_method_entry_event = true
+#23 0xb519736a in Execute (result_register=..., shadow_frame=..., code_item=0x7053aaf8, mh=..., self=0xb4827408) at art/runtime/interpreter/interpreter.cc:376
+No locals.
+#24 art::interpreter::EnterInterpreterFromStub (self=self@entry=0xb4827408, mh=..., code_item=code_item@entry=0x7053aaf8, shadow_frame=...) at art/runtime/interpreter/interpreter.cc:536
+        implicit_check = <optimized out>
+#25 0xb52b7e44 in art::artQuickToInterpreterBridge (method=<optimized out>, self=<optimized out>, sp=<optimized out>) at art/runtime/entrypoints/quick/quick_trampoline_entrypoints.cc:531
+        first_arg_reg = <optimized out>
+        shorty_len = 12
+        shorty = <optimized out>
+        shadow_frame_builder = {<art::QuickArgumentVisitor> = {_vptr.QuickArgumentVisitor = 0xb53274e8 <vtable for art::BuildQuickShadowFrameVisitor+8>, static kBytesStackArgLocation = 4,
+            static kQuickCalleeSaveFrame_RefAndArgs_FrameSize = 48, static kQuickSoftFloatAbi = true, static kNumQuickGprArgs = 3, static kNumQuickFprArgs = 0,
+            static kQuickCalleeSaveFrame_RefAndArgs_Fpr1Offset = 8, static kQuickCalleeSaveFrame_RefAndArgs_Gpr1Offset = 8, static kQuickCalleeSaveFrame_RefAndArgs_LrOffset = 44,
+            is_static_ = false, shorty_ = 0x7096ad80 "VIIIIIIIIFIF", shorty_len_ = 12, gpr_args_ = 0xbecbe908 "\340\317\355\022", fpr_args_ = 0xbecbe908 "\340\317\355\022",
+            stack_args_ = 0xbecbe940 "", gpr_index_ = 3, fpr_index_ = 0, stack_index_ = 9, cur_type_ = art::Primitive::kPrimFloat, is_split_long_or_double_ = false}, sf_ = 0xbecbe7a8,
+          cur_reg_ = 14}
+        hs = {<art::HandleScope> = {link_ = 0xbecbeeb4, number_of_references_ = 1, references_ = 0xbecbe888}, references_storage_ = {
+            {<art::mirror::ObjectReference<false, art::mirror::Object>> = {reference_ = 1875700776}, <No data fields>}}, self_ = 0xb4827408, pos_ = 1}
+        mh = {method_ = {<art::ConstHandle<art::mirror::ArtMethod>> = {reference_ = 0xbecbe888}, <No data fields>}, shorty_ = 0x0, shorty_len_ = 0}
+        num_regs = <optimized out>
+        memory = 0xbecbe7a8
+        code_item = <optimized out>
+        shadow_frame = 0xbecbe7a8
+        fragment = {link_ = 0xbecbe9a0, top_shadow_frame_ = 0x0, top_quick_frame_ = 0xbecbe900, top_quick_frame_pc_ = 0}
+        result = {z = 0 '\000', b = 0 '\000', c = 0, s = 0, i = 0, j = 0, f = 0, d = 0, l = 0x0}
+#26 0xb50da42e in art_quick_to_interpreter_bridge () at art/runtime/arch/arm/quick_entrypoints_arm.S:1093
+No locals.
+#27 0x00000000 in ?? ()
+
+#+END_SRC
+
+#+BEGIN_SRC 
+Dump of assembler code for function trace_function(__unwind_context*, void*):
+95      static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) {  @@context = (unw_cursor_t *) 0xbecbe008, arg = (void *) 0xbecbe490
+   0xb533c5cc <+0>:     push    {r0, r1, r2, r3, r4, lr}
+   0xb533c5ce <+2>:     mov     r4, r1
+
+96        stack_crawl_state_t* state = static_cast<stack_crawl_state_t*>(arg);
+97
+98        uintptr_t ip = _Unwind_GetIP(context);
+   0xb533c5d0 <+4>:     movs    r1, #0
+   0xb533c5d2 <+6>:     add     r3, sp, #12
+   0xb533c5d4 <+8>:     movs    r2, #15
+   0xb533c5d6 <+10>:    str     r3, [sp, #0]
+   0xb533c5d8 <+12>:    mov     r3, r1
+   0xb533c5da <+14>:    bl      0xb533e89c <_Unwind_VRS_Get(_Unwind_Context*, _Unwind_VRS_RegClass, uint32_t, _Unwind_VRS_DataRepresentation, void*)>
+   0xb533c5de <+18>:    ldr     r0, [sp, #12]
+
+99
+100       // The first stack frame is get_backtrace itself. Skip it.                                                                                                                  [0/1961]
+101       if (ip != 0 && !state->have_skipped_self) {
+   0xb533c5e0 <+20>:    bics.w  r3, r0, #1
+   0xb533c5e4 <+24>:    beq.n   0xb533c606 <trace_function(__unwind_context*, void*)+58>
+   0xb533c5e6 <+26>:    ldrb    r0, [r4, #12]
+   0xb533c5e8 <+28>:    cbnz    r0, 0xb533c5f0 <trace_function(__unwind_context*, void*)+36>
+
+102         state->have_skipped_self = true;
+   0xb533c5ea <+30>:    movs    r3, #1
+   0xb533c5ec <+32>:    strb    r3, [r4, #12]
+
+103         return _URC_NO_REASON;
+   0xb533c5ee <+34>:    b.n     0xb533c61e <trace_function(__unwind_context*, void*)+82>
+@@@(gdb) p *state
+$37 = {frames = 0xbecbe4c0, frame_count = 12, max_depth = 32, have_skipped_self = true}
+104       }
+105
+106     #if defined(__arm__)
+107       /*
+108        * The instruction pointer is pointing at the instruction after the bl(x), and
+109        * the _Unwind_Backtrace routine already masks the Thumb mode indicator (LSB
+110        * in PC). So we need to do a quick check here to find out if the previous
+111        * instruction is a Thumb-mode BLX(2). If so subtract 2 otherwise 4 from PC.
+112        */
+113       if (ip != 0) {
+114         short* ptr = reinterpret_cast<short*>(ip);
+115         // Thumb BLX(2)
+116         if ((*(ptr-1) & 0xff80) == 0x4780) {
+=> 0xb533c5f0 <+36>:    ldrsh.w r1, [r3, #-2]
+   0xb533c5f4 <+40>:    movw    r2, #65408      ; 0xff80
+   0xb533c5f8 <+44>:    and.w   r0, r1, r2
+   0xb533c5fc <+48>:    cmp.w   r0, #18304      ; 0x4780
+
+117           ip -= 2;
+   0xb533c600 <+52>:    ite     eq
+   0xb533c602 <+54>:    subeq   r3, #2
+
+118         } else {
+119           ip -= 4;
+   0xb533c604 <+56>:    subne   r3, #4
+
+120         }
+121       }
+122     #endif
+123
+124       state->frames[state->frame_count++] = ip;
+   0xb533c606 <+58>:    ldmia.w r4, {r1, r2}
+   0xb533c60a <+62>:    adds    r0, r2, #1
+   0xb533c60c <+64>:    str     r0, [r4, #4]
+   0xb533c60e <+66>:    str.w   r3, [r1, r2, lsl #2]
+
+125       return (state->frame_count >= state->max_depth) ? _URC_END_OF_STACK : _URC_NO_REASON;
+   0xb533c612 <+70>:    ldr     r1, [r4, #4]
+   0xb533c614 <+72>:    ldr     r4, [r4, #8]
+   0xb533c616 <+74>:    cmp     r1, r4
+   0xb533c618 <+76>:    ite     cs
+   0xb533c61a <+78>:    movcs   r0, #5
+---Type <return> to continue, or q <return> to quit---
+   0xb533c61c <+80>:    movcc   r0, #0
+
+126     }
+   0xb533c61e <+82>:    add     sp, #16
+   0xb533c620 <+84>:    pop     {r4, pc}
+
+End of assembler dump.
+
+#+END_SRC
+
+#+BEGIN_SRC 
+(gdb) list
+310         void* base = g_malloc_dispatch->malloc(size);
+311         if (base != NULL) {
+312             ScopedPthreadMutexLocker locker(&g_hash_table->lock);
+313
+314             uintptr_t backtrace[BACKTRACE_SIZE];
+315             size_t numEntries = GET_BACKTRACE(backtrace, BACKTRACE_SIZE);
+316
+317             AllocationEntry* header = reinterpret_cast<AllocationEntry*>(bas
+e);
+318             header->entry = record_backtrace(backtrace, numEntries, bytes);
+319             header->guard = GUARD;
+(gdb) down
+#2  0xb533c6d2 in get_backtrace (frames=frames@entry=0xbecbe4c0, max_depth=max_d
+epth@entry=32) at bionic/libc/bionic/debug_stacktrace.cpp:132
+132       _Unwind_Backtrace(trace_function, &state);
+(gdb) list
+127
+128     __LIBC_HIDDEN__ int get_backtrace(uintptr_t* frames, size_t max_depth) {
+129       ScopedDisableDebugCalls disable;
+130
+131       stack_crawl_state_t state(frames, max_depth);
+132       _Unwind_Backtrace(trace_function, &state);
+133       return state.frame_count;
+134     }
+135
+136     __LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count
+) {
+(gdb) down
+#1  0xb533ee66 in _Unwind_Backtrace (callback=0xb533c5cd <trace_function(__unwin
+d_context*, void*)>, ref=0xbecbe490) at external/libcxxabi/src/Unwind/UnwindLeve
+l1-gcc-ext.c:159
+159         result = (*callback)((struct _Unwind_Context *)(&cursor), ref);
+(gdb) list
+154               (long long)frameInfo.start_ip, functionName, (long long)frameI
+nfo.lsda,
+155               &cursor);
+156         }
+157
+158         // call trace function with this frame
+159         result = (*callback)((struct _Unwind_Context *)(&cursor), ref);
+160         if (result != _URC_NO_REASON) {
+161           _LIBUNWIND_TRACE_UNWINDING(" _backtrace: ended because callback "
+162                                      "returned %d\n",
+163                                      result);
+
+
+#+END_SRC
+
+#+BEGIN_SRC 
+Dump of assembler code for function _Unwind_Backtrace:
+102     _Unwind_Backtrace(_Unwind_Trace_Fn callback, void *ref) {
+   0xb533ee04 <+0>:     stmdb   sp!, {r4, r5, r6, r7, r8, r9, r10, lr}
+   0xb533ee08 <+4>:     sub.w   sp, sp, #2192   ; 0x890
+   0xb533ee0c <+8>:     add     r4, sp, #48     ; 0x30
+   0xb533ee0e <+10>:    mov     r7, r0
+   0xb533ee10 <+12>:    mov     r5, sp
+   0xb533ee12 <+14>:    mov     r8, r1
+
+103       unw_cursor_t cursor;
+104       unw_context_t uc;
+105       unw_getcontext(&uc);
+   0xb533ee14 <+16>:    mov     r0, r4
+   0xb533ee16 <+18>:    blx     0xb533f538 <unw_getcontext>
+   0xb533ee1a <+22>:    add.w   r6, sp, #1072   ; 0x430
+
+106       unw_init_local(&cursor, &uc);
+   0xb533ee1e <+26>:    mov     r1, r4
+   0xb533ee20 <+28>:    mov     r0, r6
+   0xb533ee22 <+30>:    bl      0xb533f5c0 <unw_init_local(unw_cursor_t*, unw_context_t*)>
+   0xb533ee26 <+34>:    add.w   r9, sp, #8
+   0xb533ee2a <+38>:    add.w   r10, sp, #4
+
+107
+108       _LIBUNWIND_TRACE_API("_Unwind_Backtrace(callback=%p)\n", callback);
+109
+110       // walk each frame
+111       while (true) {
+112         _Unwind_Reason_Code result;
+113
+114         // ask libuwind to get next frame (skip over first frame which is
+115         // _Unwind_Backtrace())
+116         if (unw_step(&cursor) <= 0) {
+   0xb533ee2e <+42>:    mov     r0, r6
+   0xb533ee30 <+44>:    bl      0xb533f6ec <unw_step(unw_cursor_t*)>
+   0xb533ee34 <+48>:    cmp     r0, #1
+   0xb533ee36 <+50>:    blt.n   0xb533ee70 <_Unwind_Backtrace+108>
+
+117           _LIBUNWIND_TRACE_UNWINDING(" _backtrace: ended because cursor reached "
+118                                      "bottom of stack, returning %d\n",
+119                                      _URC_END_OF_STACK);
+120           return _URC_END_OF_STACK;
+121         }
+122
+123     #if LIBCXXABI_ARM_EHABI
+124         // Get the information for this frame.
+125         unw_proc_info_t frameInfo;
+126         if (unw_get_proc_info(&cursor, &frameInfo) != UNW_ESUCCESS) {
+   0xb533ee38 <+52>:    mov     r0, r6
+   0xb533ee3a <+54>:    mov     r1, r9
+   0xb533ee3c <+56>:    bl      0xb533f6f4 <unw_get_proc_info(unw_cursor_t*, unw_proc_info_t*)>
+   0xb533ee40 <+60>:    cbnz    r0, 0xb533ee70 <_Unwind_Backtrace+108>
+
+127           return _URC_END_OF_STACK;
+128         }
+129
+130         struct _Unwind_Context *context = (struct _Unwind_Context *)&cursor;
+131         size_t off;
+132         size_t len;
+133         uint32_t* unwindInfo = (uint32_t *) frameInfo.unwind_info;
+   0xb533ee42 <+62>:    ldr     r0, [r5, #40]   ; 0x28
+
+134         unwindInfo = decode_eht_entry(unwindInfo, &off, &len);
+@@(gdb) x /x 0xb52e9ca4
+0xb52e9ca4:     0x810105b1
+off=2, len=8
+   0xb533ee44 <+64>:    mov     r1, r10
+   0xb533ee46 <+66>:    mov     r2, r5
+   0xb533ee4c <+72>:    mov     r1, r0
+
+135         if (unwindInfo == NULL) {
+   0xb533ee4e <+74>:    cmp     r1, #0
+   0xb533ee50 <+76>:    beq.n   0xb533ee74 <_Unwind_Backtrace+112>
+
+136           return _URC_FAILURE;
+137         }
+138
+139         result = _Unwind_VRS_Interpret(context, unwindInfo, off, len);
+   0xb533ee52 <+78>:    ldr     r3, [r5, #0]
+   0xb533ee54 <+80>:    mov     r0, r6
+   0xb533ee56 <+82>:    ldr     r2, [r5, #4]
+   0xb533ee58 <+84>:    bl      0xb533e5e0 <_Unwind_VRS_Interpret(_Unwind_Context*, uint32_t const*, size_t, size_t)>
+
+140         if (result != _URC_CONTINUE_UNWIND) {
+   0xb533ee5c <+88>:    cmp     r0, #8
+   0xb533ee5e <+90>:    bne.n   0xb533ee70 <_Unwind_Backtrace+108>
+
+141           return _URC_END_OF_STACK;
+142         }
+143     #endif // LIBCXXABI_ARM_EHABI
+144
+145         // debugging
+146         if (_LIBUNWIND_TRACING_UNWINDING) {
+147           char functionName[512];
+148           unw_proc_info_t frameInfo;
+149           unw_word_t offset;
+150           unw_get_proc_name(&cursor, functionName, 512, &offset);
+151           unw_get_proc_info(&cursor, &frameInfo);
+152           _LIBUNWIND_TRACE_UNWINDING(
+153               " _backtrace: start_ip=0x%llX, func=%s, lsda=0x%llX, context=%p\n",
+154               (long long)frameInfo.start_ip, functionName, (long long)frameInfo.lsda,
+155               &cursor);
+156         }
+157
+158         // call trace function with this frame
+159         result = (*callback)((struct _Unwind_Context *)(&cursor), ref);
+   0xb533ee60 <+92>:    mov     r0, r6
+   0xb533ee62 <+94>:    mov     r1, r8
+   0xb533ee64 <+96>:    blx     r7
+
+160         if (result != _URC_NO_REASON) {
+161           _LIBUNWIND_TRACE_UNWINDING(" _backtrace: ended because callback "
+162                                      "returned %d\n",
+163                                      result);
+164           return result;
+165         }
+166       }
+=> 0xb533ee66 <+98>:    cmp     r0, #0
+   0xb533ee68 <+100>:   it      ne
+   0xb533ee6a <+102>:   movne   r4, r0
+   0xb533ee6c <+104>:   beq.n   0xb533ee2e <_Unwind_Backtrace+42>
+   0xb533ee6e <+106>:   b.n     0xb533ee76 <_Unwind_Backtrace+114>
+   0xb533ee70 <+108>:   movs    r4, #5
+   0xb533ee72 <+110>:   b.n     0xb533ee76 <_Unwind_Backtrace+114>
+   0xb533ee74 <+112>:   movs    r4, #9
+
+167     }
+   0xb533ee76 <+114>:   mov     r0, r4
+   0xb533ee78 <+116>:   add.w   sp, sp, #2192   ; 0x890
+   0xb533ee7c <+120>:   ldmia.w sp!, {r4, r5, r6, r7, r8, r9, r10, pc}
+
+End of assembler dump.
+
+#+END_SRC
+
+#+BEGIN_SRC 
+Dump of assembler code for function decode_eht_entry(uint32_t const*, size_t*, size_t*):
+218     decode_eht_entry(const uint32_t* data, size_t* off, size_t* len) {
+
+219       if ((*data & 0x80000000) == 0) {
+   0xb533e590 <+0>:     ldr     r3, [r0, #0]
+   0xb533e592 <+2>:     cmp     r3, #0
+   0xb533e594 <+4>:     blt.n   0xb533e5aa <decode_eht_entry(uint32_t const*, size_t*, size_t*)+26>
+   0xb533e596 <+6>:     movs    r3, #1
+
+220         // 6.2: Generic Model
+221         *off = 1; // First byte is size data.
+   0xb533e598 <+8>:     str     r3, [r1, #0]
+   0xb533e59a <+10>:    movs    r3, #4
+
+222         *len = (((data[1] >> 24) & 0xff) + 1) * 4;
+   0xb533e59c <+12>:    ldr.w   r1, [r0, #4]!
+   0xb533e5a0 <+16>:    lsrs    r1, r1, #24
+   0xb533e5a2 <+18>:    add.w   r1, r3, r1, lsl #2
+   0xb533e5a6 <+22>:    str     r1, [r2, #0]
+
+223         data++; // Skip the first word, which is the prel31 offset.
+224       } else {
+225         // 6.3: ARM Compact Model
+226         Descriptor::Format format =
+   0xb533e5aa <+26>:    ubfx    r12, r3, #24, #4
+
+227             static_cast<Descriptor::Format>((*data & 0x0f000000) >> 24);
+228         switch (format) {
+   0xb533e5ae <+30>:    cmp.w   r12, #3
+   0xb533e5b2 <+34>:    it      ne
+   0xb533e5b4 <+36>:    cmpne.w r12, #1
+   0xb533e5b8 <+40>:    beq.n   0xb533e5ce <decode_eht_entry(uint32_t const*, size_t*, size_t*)+62>
+   0xb533e5ba <+42>:    cmp.w   r12, #0
+   0xb533e5be <+46>:    itt     ne
+   0xb533e5c0 <+48>:    movne   r0, #0
+
+229           case Descriptor::SU16:
+230             *len = 4;
+   0xb533e5c6 <+54>:    str     r3, [r2, #0]
+   0xb533e5c8 <+56>:    movne   r2, #1
+
+231             *off = 1;
+232             break;
+233           case Descriptor::LU16:
+234           case Descriptor::LU32:
+235             *len = 4 + 4 * ((*data & 0x00ff0000) >> 16);
+   0xb533e5ce <+62>:    ubfx    r12, r3, #16, #8
+   0xb533e5d2 <+66>:    movs    r3, #4
+   0xb533e5d4 <+68>:    add.w   r3, r3, r12, lsl #2
+   0xb533e5d8 <+72>:    str     r3, [r2, #0]
+   0xb533e5da <+74>:    movs    r2, #2
+   0xb533e5dc <+76>:    b.n     0xb533e5ca <decode_eht_entry(uint32_t const*, size_t*, size_t*)+58>
+
+236             *off = 2;
+   0xb533e5ca <+58>:    str     r2, [r1, #0]
+
+237             break;
+238           default:
+239             return nullptr;
+240         }
+241       }
+242
+243       return data;
+244     }
+   0xb533e5a8 <+24>:    bx      lr
+   0xb533e5c2 <+50>:    bx      lr
+   0xb533e5c4 <+52>:    movs    r3, #4
+   0xb533e5cc <+60>:    bx      lr
+
+
+#+END_SRC
+
+#+BEGIN_SRC 
+0xbecbdbc0:     0xbecbdbcc      0xbecbe490      0x0000001f      0x0000001f
+0xbecbdbd0:     0xbecbdc08      0xb533ee67      0x00000008      0x00000002
+0xbecbdbe0:     0xb50d8fc0      0xb50d9010      0x0badf00d      0xb533eaed
+0xbecbdbf0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbdc00:     0xb52e9ca4      0x00000000      0xbecbdc08      0xbecbe490
+0xbecbdc10:     0x00000001      0x00000000      0xbecbdc08      0xbecbdbd8
+0xbecbdc20:     0x00000020      0xb533c5cd      0xbecbe490      0xb535d054
+0xbecbdc30:     0xb48ecc5c      0x000002de      0x00000001      0xbecbdbd8
+0xbecbdc40:     0xb533ee1b      0xb533ee1b      0x0badf00d      0xb533ea99
+0xbecbdc50:     0x00000000      0x00000001      0x00000000      0x00000000
+0xbecbdc60:     0xb6f824ac      0x00000000      0xbecbdc68      0xbecbe4f0
+0xbecbdc70:     0x00000001      0x00000000      0xbecbdc68      0xbecbdc38
+0xbecbdc80:     0x00000020      0xb533c5cd      0xbecbe4f0      0xb535d054
+0xbecbdc90:     0xb4af0008      0x00000071      0x00000001      0xbecbdc38
+0xbecbdca0:     0xb533ee1b      0xb533ee1b      0x00000000      0xb533ee35
+0xbecbdcb0:     0x00000004      0x00000001      0xb6f5e6b6      0xb6f5e6f0
+0xbecbdcc0:     0x0badf00d      0xb533ea99      0x00000000      0x00000001
+0xbecbdcd0:     0x00000000      0x00000000      0xb6f824ac      0x00000000
+0xbecbdce0:     0xbecbdce0      0xbecbe568      0x00000001      0x00000000
+0xbecbdcf0:     0xbecbdce0      0xbecbdcb0      0x00000020      0xb533c5cd
+0xbecbdd00:     0xbecbe568      0xb535d054      0x49444154      0x00000000
+0xbecbdd10:     0x00000001      0xbecbdcb0      0xb533ee1b      0xb533ee1b
+0xbecbdd20:     0x00000000      0xbecbddb4      0xbecbdd98      0x00000002
+0xbecbdd30:     0xbecbdda0      0x9137f3cb      0xbecbddb9      0x00000002
+0xbecbdd40:     0xbecbde88      0xbecbddb4      0xbecbdf2c      0x0000009d
+0xbecbdd50:     0x485f687a      0x5f736e61      0xbe004e43      0xb6937471
+0xbecbdd60:     0xbecbdd9c      0x00000002      0xbecbddb9      0x00000000
+0xbecbdd70:     0xbecbdf2c      0x0000009d      0xbecbde88      0x00000002
+0xbecbdd80:     0xb6e9fe04      0xbecbddb9      0x00000002      0x00000001
+0xbecbdd90:     0x00000000      0x00000000      0x00000002      0xb5004e43
+0xbecbdda0:     0x00000000      0x00000000      0x0000687a      0xb535d054
+0xbecbddb0:     0x00000000      0x435f687a      0x0000004e      0x00000000
+0xbecbddc0:     0xffffff7c      0xbecbdddc      0x00000008      0xb533c457
+0xbecbddd0:     0xbecbdddc      0xb533c6db      0xbecbddf0      0x00000000
+0xbecbdde0:     0x00000006      0xb4ac2640      0xb4aa7660      0x48151642
+0xbecbddf0:     0xb4ac2648      0xb4a63440      0x0000057f      0xb533d215
+0xbecbde00:     0x00000004      0xb4aa7660      0xb6e9e5b4      0xb535d070
+0xbecbde10:     0xb533d106      0xb6e45db6      0xb5dcc6d8      0xb51f08ca
+0xbecbde20:     0xb50f371c      0xb6f320e4      0xb6f63542      0x7139f73c
+0xbecbde30:     0x00000001      0x6ff2e340      0xb53274e8      0xb5316690
+0xbecbde40:     0x00006054      0xb6e9fe04      0x00000000      0x00000000
+0xbecbde50:     0xbecbe014      0x9137f3cb      0x00000000      0xbecbde88
+0xbecbde60:     0xbecbe014      0xbecbdf2c      0x00000000      0xbecbde8c
+0xbecbde70:     0x0000009d      0xb6e9fe04      0xbecbe130      0x9137f3cb
+0xbecbde80:     0xbecbde88      0x00000003      0x00000003      0xb488b308
+0xbecbde90:     0xbecbe0f0      0xb6e9fe04      0x12d15980      0xb50e9faf
+0xbecbdea0:     0x00000043      0x00000000      0x00000005      0xb4ac2648
+0xbecbdeb0:     0x00000000      0xb4827408      0x12d17cd0      0x00000000
+0xbecbdec0:     0x00000005      0x9137f3cb      0x12d15980      0xb52ec80d
+0xbecbded0:     0xbecbdf94      0xb5327c70      0x00000073      0xbecbdf84
+0xbecbdee0:     0xb5316690      0xb52ec440      0xbecbe130      0xb50eab31
+0xbecbdef0:     0x6fc1f518      0x00000000      0x00000000      0xb6e9fe04
+0xbecbdf00:     0x00000000      0xb52ec42c      0xb52ec484      0xb52ebca8
+0xbecbdf10:     0xb6ea7fe4      0xb52ec408      0x41dfffff      0x00000000
+0xbecbdf20:     0xbecbdf90      0xb490ffa8      0xb4914108      0x485f687a
+0xbecbdf30:     0x5f736e61      0x00004e43      0xdf000000      0xb4ac2640
+0xbecbdf40:     0xb6e7eba5      0xb6e7eba5      0xb6e9e5b4      0xb5327c70
+0xbecbdf50:     0xb5316690      0x9137f3cb      0xbecbe130      0xbecbdf94
+0xbecbdf60:     0xb51cd0e1      0xbecbdf94      0xb51cd0e1      0xb4ac2648
+0xbecbdf70:     0xbecbe0f0      0xb5327c70      0xb5316690      0xbecbe230
+0xbecbdf80:     0xbecbe130      0xb50f39e9      0xbecbe0f0      0xb4ac2648
+0xbecbdf90:     0xbecbe000      0xb4827408      0xb490ffa8      0xb4914108
+0xbecbdfa0:     0xb4827408      0x00000043      0x00000043      0x9137f300
+0xbecbdfb0:     0xb533f995      0x00000000      0x00000109      0xbecbe498
+0xbecbdfc0:     0xbecbe498      0x0000000e      0x713a00a1      0xb533f661
+0xbecbdfd0:     0xb533f995      0x00000000      0x00000109      0xbecbe4b8
+0xbecbdfe0:     0xbecbe4b8      0x0000000e      0x713a00a1      0xb533f661
+0xbecbdff0:     0xbecbe4b8      0x0000000d      0xbecbeea0      0xb533f661
+0xbecbe000:     0xbecbe4b8      0x00000000      0xb535c648      0xb535d074
+0xbecbe010:     0x00000000      0x12edcfe0      0x00000000      0x00000000
+0xbecbe020:     0x00000000      0x00000001      0x7096ad80      0xbecbe990
+0xbecbe030:     0xbecbe9a0      0x00000000      0xbecbea30      0x00000000
+0xbecbe040:     0x00000001      0xbecbe960      0x0000001f      0x0000001f
+0xbecbe050:     0x00000100      0xb533fb00      0x00000000      0x00000000
+0xbecbe060:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe070:     0x00000000      0x00000000      0x3f000000      0xb4ad0088
+0xbecbe080:     0x00000000      0x00000000      0x00000000      0x00000029
+0xbecbe090:     0x42240000      0x3fc00000      0x3fc00000      0x0000007e
+0xbecbe0a0:     0x0000002a      0x3f000000      0x00000000      0x43e00000
+0xbecbe0b0:     0x00000000      0xc3e00000      0x5f000000      0xdf000000
+0xbecbe0c0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe0d0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe0e0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe0f0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe100:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe110:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe120:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe130:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe140:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe150:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe160:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe170:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe180:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe190:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe1a0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe1b0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe1c0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe1d0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe1e0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe1f0:     0xb50d8fc0      0xb50d9010      0x0badf00d      0xb533eaed
+0xbecbe200:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe210:     0xb52e9ca4      0x00000000      0x00000000      0x00000000
+0xbecbe220:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe230:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe240:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe250:     0xb6f5e6b6      0xb6f5e6f0      0x0badf00d      0xb533ea99
+0xbecbe260:     0x00000000      0xb4827408      0x00000000      0x00000000
+0xbecbe270:     0x6fda1f10      0xb5327c70      0x00000001      0x00000000
+0xbecbe280:     0xb6e9fe04      0xbecbe3ec      0xbecbe3f4      0x00000000
+0xbecbe290:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe2a0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe2b0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe2c0:     0x00000000      0x00000000      0xb6f5e6b6      0xb6f5e6f0
+0xbecbe2d0:     0x0badf00d      0xb533ea99      0x00000000      0x00000000
+0xbecbe2e0:     0x00000000      0x00000000      0xb6f824ac      0x00000000
+0xbecbe2f0:     0x70530001      0xbe4c7000      0x00000000      0x9137f3cb
+0xbecbe300:     0xb6e9fe04      0xffc00000      0x41dfffff      0x00000000
+0xbecbe310:     0xc1e00000      0x00000000      0x43e00000      0x00000000
+0xbecbe320:     0xc3e00000      0x5f000000      0xdf000000      0xbecbe3ec
+0xbecbe330:     0xb4827408      0xbecbe3a0      0xbecbe360      0xb5329fec
+0xbecbe340:     0x6fda1f10      0xbecbe3f4      0xbecbe360      0xb519736b
+0xbecbe350:     0xbecbe3a0      0x00000000      0x00000000      0xb5329fec
+0xbecbe360:     0xb6e9fe04      0xbe4c7000      0x00000000      0x00000000
+0xbecbe370:     0xbecbe390      0xb482748c      0xbecbe410      0xb4827408
+0xbecbe380:     0xbecbe3c0      0xbecbe400      0xbecbe3a0      0x00000001
+0xbecbe390:     0xbecbe418      0xb52b7e45      0xbecbe3a0      0x00000000
+0xbecbe3a0:     0x00000001      0x00000000      0x6f5fcb68      0x00000000
+0xbecbe3b0:     0x12edcfe0      0x12edcfe0      0xb53274e8      0xb5329f00
+0xbecbe3c0:     0x6ff2e340      0x00000001      0xbecbe428      0xb5329fec
+0xbecbe3d0:     0xb6e9fe04      0x00000001      0x00000000      0x6fda1f10
+0xbecbe3e0:     0xbecbe400      0xbecbe410      0x00000001      0x00000000
+0xbecbe3f0:     0x00000000      0xbecbe418      0x00000000      0x00000000
+0xbecbe400:     0xbecbe4f8      0x00000000      0xbecbe490      0x00000000
+0xbecbe410:     0xbecbe610      0x00000001      0x6f5fcb68      0xb4827408
+0xbecbe420:     0x00000001      0xb533c457      0xb53274e8      0xb533c600
+0xbecbe430:     0x6ff2e340      0x00000001      0xbecbe464      0x00000001
+0xbecbe440:     0x00000020      0xb535d054      0x00000000      0x00000001
+0xbecbe450:     0x00000020      0xb535d054      0xbecbe5c4      0xb6e4a6b5
+0xbecbe460:     0x00000007      0x00000001      0xbecbe48c      0xbecbe4c0
+0xbecbe470:     0x00000020      0xb535d054      0xbecbe5c4      0xb535d054
+0xbecbe480:     0xb48ecc5c      0xb533c6d3      0xbecbe4c8      0xb535cf00
+0xbecbe490:     0xbecbe4c0      0x0000000c      0x00000020      0x00000001
+0xbecbe4a0:     0xb535cf00      0x00000014      0xb4ad0d00      0xb533d10b
+0xbecbe4b0:     0xbecbe4f8      0xbecbe5c8      0xb6e9e5b4      0xb535d070
+(gdb) p /a backtrace
+$56 = {0xb533d106 <leak_malloc(size_t)+98>, 0xb6e45db6 <malloc(size_t)+10>, 0xb5dcc6d8 <operator new(unsigned int)+16>,
+  0xb5149f48 <std::__1::__tree<art::gc::allocator::RosAlloc::FreePageRun*, std::__1::less<art::gc::allocator::RosAlloc::FreePageRun*>, std::__1::allocator<art::gc::allocator::RosAlloc::FreePageRun*> >::__insert_unique(art::gc::allocator::RosAlloc::FreePageRun* const&)+52>, 0xb514aab4 <art::gc::allocator::RosAlloc::AllocPages(art::Thread*, unsigned int, unsigned char)+380>,
+  0xb514ad86 <art::gc::allocator::RosAlloc::RefillRun(art::Thread*, unsigned int)+54>,
+  0xb514b020 <art::gc::allocator::RosAlloc::AllocFromRun(art::Thread*, unsigned int, unsigned int*)+452>,
+  0xb50d3f42 <art::interpreter::ExecuteGotoImpl<false, false>(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&, art::JValue)+34442>,
+  0xb5197366 <art::interpreter::EnterInterpreterFromStub(art::Thread*, art::MethodHelper&, art::DexFile::CodeItem const*, art::ShadowFrame&)+122>,
+  0xb52b7e40 <art::artQuickToInterpreterBridge(art::mirror::ArtMethod*, art::Thread*, art::StackReference<art::mirror::ArtMethod>*)+472>, 0xb50da42a <art_quick_to_interpreter_bridge+10>,
+  0xb50d8ff6 <art_quick_invoke_stub+54>, 0xbecbe75c, 0xb6e9fe04 <__stack_chk_guard>, 0xbecbe870, 0xbecbe7a8, 0x0, 0x0, 0x177, 0xb533d215 <leak_malloc(size_t)+368>, 0xbecbe53c, 0xb4aee420,
+  0xb6e9e5b4 <_ZL12g_hash_table>, 0xb535d070 <g_malloc_dispatch>, 0xb533d106 <leak_malloc(size_t)+98>, 0xb6e45db6 <malloc(size_t)+10>, 0xb5e1ef7c <png_malloc_warn+8>, 0x9137f3cb,
+  0xb6ea7fe4 <je_tcache_tsd>, 0xb4873668, 0x6ff2e340, 0xbecbe75c}
+(gdb) p &backtrace
+$57 = (unsigned int (*)[32]) 0xbecbe4c0
+
+0xbecbe4c0:     0xb533d106      0xb6e45db6      0xb5dcc6d8      0xb5149f48
+0xbecbe4d0:     0xb514aab4      0xb514ad86      0xb514b020      0xb50d3f42
+0xbecbe4e0:     0xb5197366      0xb52b7e40      0xb50da42a(art_quick_to_interpreter_bridge)      0xb50d8ff6(art_quick_invoke_stub)
+0xbecbe4f0:     0xbecbe75c      0xb6e9fe04      0xbecbe870      0xbecbe7a8
+0xbecbe500:     0x00000000      0x00000000      0x00000177      0xb533d215
+0xbecbe510:     0xbecbe53c      0xb4aee420      0xb6e9e5b4      0xb535d070
+0xbecbe520:     0xb533d106      0xb6e45db6      0xb5e1ef7c      0x9137f3cb
+0xbecbe530:     0xb6ea7fe4      0xb4873668      0x6ff2e340      0xbecbe75c
+0xbecbe540:     0x6f5fcb68      0x14    0xb4838ee8      0xbecbe5c8
+0xbecbe550:     0xb48ecc58      0xbecbe5c4      0xb4838ee8      0xb48ecc5c
+0xbecbe560:     0x2de   0xb6e45db9      0x12ede000      0xb5dcc6dd
+0xbecbe570:     0xb4838ee8      0xb4838ee8      0xbecbe5c8      0xb5149f4d
+0xbecbe580:     0xb4838ee8      0xb6e9e560      0xb48ec808      0xb48ec808
+0xbecbe590:     0x12edd000      0xa000  0x1000  0x2
+0xbecbe5a0:     0x1     0xb514aab9      0x0     0xb51a48f1
+0xbecbe5b0:     0xb4827408      0x19    0xb6e9fe04      0xb48ecc58
+0xbecbe5c0:     0x6f5fcb68      0x12ede000      0x0     0xffc00000
+0xbecbe5d0:     0x41dfffff      0x1     0xb48ec808      0xb48ec824
+0xbecbe5e0:     0x0     0xb4827408      0xb48ecf28      0x4
+0xbecbe5f0:     0xb4895e10      0xb514ad8b      0x4     0x12edc000
+0xbecbe600:     0x1     0x20    0x0     0xb4827408
+0xbecbe610:     0xb482740c      0xb514b025      0x6f5fcb68      0x1
+0xbecbe620:     0xbecbe6e0      0xb48ec808      0x0     0xb488b608
+0xbecbe630:     0x22    0xb5329fec      0x3     0x0
+0xbecbe640:     0xbecbe7a8      0xb5322bc8      0x7053ab0e      0xb50d3f47
+0xbecbe650:     0x1070  0xbecbe75c      0xbecbeb24      0x826042ae
+0xbecbe660:     0xb482b408      0x4c8   0x49484452      0xb4827408
+0xbecbe670:     0xb488b608      0xb482b400      0x7053aaf8      0xb5327c70
+0xbecbe680:     0x18    0x54    0xb6e9fe04      0xbecbe85c
+0xbecbe690:     0xbecbe864      0x2     0xb482b408      0xb6e9e560
+0xbecbe6a0:     0x80011 0xffffffac      0x1     0x0
+0xbecbe6b0:     0xb482b408      0xffffffac      0x6fa38098      0xb5e1edaf
+0xbecbe6c0:     0x4278f501      0x1204  0x3fc00000      0x3f800000
+0xbecbe6d0:     0x0     0xc1e00000      0x6fccec28      0x43e00000
+0xbecbe6e0:     0x0     0xc3e00000      0x5f000000      0xdf000000
+0xbecbe6f0:     0x0     0x0     0x0     0x0
+0xbecbe700:     0x0     0x9137f3cb      0x20000010      0x3fc00000
+0xbecbe710:     0x7e    0x2a    0x3f000000      0x0
+0xbecbe720:     0x43e00000      0x0     0xc3e00000      0x5f000000
+0xbecbe730:     0xdf000000      0xbecbe85c      0xb4827408      0xbecbe7a8
+0xbecbe740:     0xbecbe768      0xb5329fec      0x7053aaf8      0xbecbe864
+0xbecbe750:     0xbecbe768      0xb519736b      0xbecbe7a8      0x0
+0xbecbe760:     0x0     0x0     0x0     0xbe4c7000
+0xbecbe770:     0x0     0x0     0x0     0xb482748c
+0xbecbe780:     0xbecbe880      0xb4827408      0xbecbe830      0xbecbe870
+0xbecbe790:     0xbecbe7a8      0x1     0xbecbe888      0xb52b7e45(art::artQuickToInterpreterBridge)
+
+0xbecbe7a0:     0xbecbe7a8      0x00000000      0x0000000e      0x00000000
+0xbecbe7b0:     0x6fccec28      0x00000003      0x00000000      0x00000000
+0xbecbe7c0:     0x12edcfe0      0x00000000      0x00000000      0x00000000
+0xbecbe7d0:     0x00000000      0x00000000      0x00000000      0x00000001
+0xbecbe7e0:     0x00000000      0x00000000      0x0000001f      0x3fc00000
+0xbecbe7f0:     0x00000000      0x00000000      0x12edcfe0      0x00000000
+0xbecbe800:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe810:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe820:     0x00000000      0x00000000      0xb5e19005      0xb5e19045
+0xbecbe830:     0xb482b408      0x00000040      0xb4827408      0xb5329fec
+0xbecbe840:     0xb6e9fe04      0xb52ed18c      0xb5312324      0x7053aaf8
+0xbecbe850:     0xbecbe870      0xbecbe880      0x0000000c      0x00000000
+0xbecbe860:     0x00000000      0xbecbe888      0x00000000      0x00000000
+0xbecbe870:     0xbecbe9a0      0x00000000      0xbecbe900      0x00000000
+0xbecbe880:     0xbecbeeb4      0x00000001      0x6fccec28      0xb4827408
+0xbecbe890:     0x00000001      0x00000070      0xb53274e8      0x00000000
+0xbecbe8a0:     0x7096ad80      0x0000000c      0xbecbe908      0xbecbe908
+0xbecbe8b0:     0xbecbe940      0x00000003      0x00000000      0x00000009
+0xbecbe8c0:     0x00000007      0xae426000      0xbecbe7a8      0x0000000e
+0xbecbe8d0:     0x00000000      0x9137f3cb      0x06000000      0x00000060
+0xbecbe8e0:     0xbecbe930      0x7096ad80      0xbecbe990      0xbecbe9a0
+0xbecbe8f0:     0xb4827408      0xbecbea30      0xbecbe970      0xb50da42f<art_quick_to_interpreter_bridge>
+0xbecbe900:     0x6f60c3d8      0x00000000      0x12edcfe0      0x00000000
+0xbecbe910:     0x00000000      0xbecbe930      0x7096ad80      0xbecbe990
+0xbecbe920:     0xbecbe9a0      0xbecbea30      0xbecbe970      0xb50d8ff9(art_quick_invoke_stub)
+0xbecbe930:     0x00000000      0x12edcfe0      0x00000000      0x00000000
+0xbecbe940:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbecbe950:     0x00000001      0x00000000      0x00000000      0x0000001f(*ip)
+0xbecbe960:     0x3fc00000      0x00000000      0xbecbe9a8      0xbecbea30
+0xbecbe970:     0x6fccec28      0xb482748c      0xb4827408      0xb5327c70
+0xbecbe980:     0x00000030      0xb52126a7 <art::mirror::ArtMethod::Invoke>    0xbecbea18      0x7096ad80
+0xbecbe990:     0xb488b608      0x7096ad80      0xbecbea18      0xb6e9fe04
+0xbecbe9a0:     0xbecbef38      0x00000000      0xbecbeeb0      0x00000000
+0xbecbe9b0:     0x00000001      0x00000000      0x00000020      0x00000000
+0xbecbe9c0:     0x00000000      0x00000000      0x00000001      0x00000000
+0xbecbe9d0:     0xb6e9fe04      0x9137f3cb      0x00000020      0xb490ffa8
+0xbecbe9e0:     0xbecbea18      0xbecbeb40      0xbecbea08      0x6fccec28
+0xbecbe9f0:     0x7096ad80      0x00000046      0xbecbeb20      0xb524c735
+0xbecbea00:     0xbecbea18      0x7096ad80      0x001001ee      0xbecbea30
+0xbecbea10:     0x0000000c      0x00080001      0x00000000      0x00000000
+0xbecbea20:     0x7096ad80      0x0000000c      0x00000030      0xbecbea30
+0xbecbea30:     0x12edcfe0      0x00000000      0x00000000      0x00000000
+0xbecbea40:     0x00000000      0x00000000      0x00000000      0x00000001
+0xbecbea50:     0x00000000      0x00000000      0x0000001f      0x3fc00000
+0xbecbea60:     0x12edcfe0      0x9137f3cb      0x00000020      0x3fc00000
+0xbecbea70:     0x00000000      0x00000043      0xb4914108      0x00000043
+0xbecbea80:     0xbecbeb40      0xbecbebec      0xbecbebec      0x00000025
+0xbecbea90:     0x6fccec28      0xb5206551      0xbecbebec      0xb50e9faf
+0xbecbeaa0:     0x12edb88c      0xb51ffa17      0x00000060      0x9137f3cb
+0xbecbeab0:     0x00000043      0xb5327c70      0xbecbeb40      0xbecbebec
+0xbecbeac0:     0x00000001      0x9137f3cb      0xb6e9fe04      0xb52ec6f1
+0xbecbead0:     0xbecbeb94      0xb5327c70      0x00000063      0xbecbeb84
+0xbecbeae0:     0xbecbecc8      0xb52ec440      0xb52ec6f3      0xb50ea919
+0xbecbeaf0:     0xb52ec836      0xb50ea919      0xb52ec832      0xb6e9fe04
+0xbecbeb00:     0xb4827408      0xb490ffa8      0xb4914108      0xb4827408
+0xbecbeb10:     0x00000043      0x00000043      0xb4827400      0xb490ffa8
+0xbecbeb20:     0xb4827408      0xb490ffa8      0xb4914108      0xb4827408
+0xbecbeb30:     0x00000043      0x00000043      0x00000000      0x00430000
+#+END_SRC
+
+#+BEGIN_SRC 
+0xa0fc0 <art_quick_invoke_stub>: @0x2b1ca4 
+  Compact model index: 1                   
+  0x05      vsp = vsp + 24                 
+  0xb1 0x01 pop {r0}                       
+  0x84 0xa3 pop {r4, r5, r9, r11, r14}     
+  0xb0      finish    
+
+0x27fc68 <artQuickToInterpreterBridge>: 0x80972aaf      
+  Compact model index: 0                                
+  0x97      vsp = r7                                    
+  0x2a      vsp = vsp + 172                             
+  0xaf      pop {r4, r5, r6, r7, r8, r9, r10, r11, r14} 
+
+0xa2420 <art_quick_to_interpreter_bridge>: @0x2b1d20 
+  Compact model index: 1                             
+  0x01      vsp = vsp + 8                            
+  0xb1 0x0e pop {r1, r2, r3}                         
+  0x84 0xde pop {r5, r6, r7, r8, r10, r11, r14}      
+  0xb0      finish   
+#+END_SRC
+
+#+BEGIN_SRC 
+        .section        .text.artQuickToInterpreterBridge,"ax",%progbits
+        .align  2
+        .global artQuickToInterpreterBridge
+        .protected      artQuickToInterpreterBridge
+        .thumb
+        .thumb_func
+        .type   artQuickToInterpreterBridge, %function
+artQuickToInterpreterBridge:
+        .fnstart
+.LFB7854:
+        .loc 1 488 0
+        .cfi_startproc
+        @ args = 0, pretend = 0, frame = 168
+        @ frame_needed = 1, uses_anonymous_args = 0
+.LVL2379:
+        ldr     r3, .L1488
+        push    {r4, r5, r6, r7, r8, r9, r10, fp, lr}
+        .save {r4, r5, r6, r7, r8, r9, r10, fp, lr}
+        .cfi_def_cfa_offset 36
+        .cfi_offset 4, -36
+        .cfi_offset 5, -32
+        .cfi_offset 6, -28
+        .cfi_offset 7, -24
+        .cfi_offset 8, -20
+        .cfi_offset 9, -16
+        .cfi_offset 10, -12
+        .cfi_offset 11, -8
+        .cfi_offset 14, -4
+        mov     fp, r2
+        .pad #180
+        sub     sp, sp, #180
+        .cfi_def_cfa_offset 216
+        ldr     r2, .L1488+4
+.LVL2380:
+.LPIC230:
+        add     r3, pc
+        mov     r6, r1
+        .loc 56 29 0
+        ldr     r1, .L1488+8
+.LVL2381:
+        .loc 1 488 0
+        ldr     r4, [r3, r2]
+        .setfp r7, sp, #8
+        add     r7, sp, #8
+        .cfi_def_cfa 7, 208
+.LBB26408:
+.LBB26409:
+.LBB26410:
+.LBB26411:
+        .loc 57 457 0
+        movs    r5, #0
+.LBE26411:
+.LBE26410:
+.LBE26409:
+.LBE26408:
+        .loc 1 488 0
+        mov     r10, r0
+        ldr     r2, [r4]
+        str     r4, [r7, #16]
+        str     r2, [r7, #164]
+.LVL2382:
+        .loc 56 29 0
+        ldr     r3, [r3, r1]
+        ldr     r1, [r3]
+        str     r3, [r7, #12]
+.LBB26419:
+.LBB26416:
+
+
+#+END_SRC
+
+** solution
+add .setfp directive, only with .cfi_def_cfa call frame directive doesn't work
+
+
+* TODO androbench 4.0 sqllite
+  SCHEDULED: <2015-07-16 周四>
+
+#+BEGIN_SRC 
+com.andromeda.androbench2.DeviceDB
+com.andromeda.androbench2.History
+com.andromeda.androbench2.HistoryDB
+com.andromeda.androbench2.MemoryStatus
+com.andromeda.androbench2.Result
+com.andromeda.androbench2.Result$1
+com.andromeda.androbench2.Result$2
+com.andromeda.androbench2.Result$3
+com.andromeda.androbench2.Result$4
+com.andromeda.androbench2.Result$5
+com.andromeda.androbench2.Result$6
+com.andromeda.androbench2.Result$TestingAdapter
+com.andromeda.androbench2.Result$TestingAdapter$ViewHolder
+com.andromeda.androbench2.Result$Thread_Benchmark
+com.andromeda.androbench2.Result$Thread_Benchmark$1
+com.andromeda.androbench2.Setting
+com.andromeda.androbench2.SplashActivity
+com.andromeda.androbench2.SplashActivity$1
+com.andromeda.androbench2.Startupbench
+com.andromeda.androbench2.Startupbench$1
+com.andromeda.androbench2.Startupbench$2
+com.andromeda.androbench2.Startupbench$3
+com.andromeda.androbench2.Startupbench$4
+com.andromeda.androbench2.Startupbench$5
+com.andromeda.androbench2.Startupbench$6
+com.andromeda.androbench2.Testing_Data
+com.andromeda.androbench2.Testing_SQLite_DBHelper
+com.andromeda.androbench2.main
+com.andromeda.androbench2.main$1
+com.andromeda.androbench2.main$MyTabView
+
+> methods com.andromeda.androbench2.Testing_SQLite_DBHelper                                                                                                                          [64/1806]
+** methods list **
+com.andromeda.androbench2.Testing_SQLite_DBHelper <init>(android.content.Context, int)
+com.andromeda.androbench2.Testing_SQLite_DBHelper onCreate(android.database.sqlite.SQLiteDatabase)
+com.andromeda.androbench2.Testing_SQLite_DBHelper onUpgrade(android.database.sqlite.SQLiteDatabase, int, int)
+android.database.sqlite.SQLiteOpenHelper <clinit>()
+android.database.sqlite.SQLiteOpenHelper <init>(android.content.Context, java.lang.String, android.database.sqlite.SQLiteDatabase$CursorFactory, int)
+android.database.sqlite.SQLiteOpenHelper <init>(android.content.Context, java.lang.String, android.database.sqlite.SQLiteDatabase$CursorFactory, int, android.database.DatabaseErrorHandler)
+android.database.sqlite.SQLiteOpenHelper getDatabaseLocked(boolean)
+android.database.sqlite.SQLiteOpenHelper close()
+android.database.sqlite.SQLiteOpenHelper getDatabaseName()
+android.database.sqlite.SQLiteOpenHelper getReadableDatabase()
+android.database.sqlite.SQLiteOpenHelper getWritableDatabase()
+android.database.sqlite.SQLiteOpenHelper onConfigure(android.database.sqlite.SQLiteDatabase)
+android.database.sqlite.SQLiteOpenHelper onCreate(android.database.sqlite.SQLiteDatabase)
+android.database.sqlite.SQLiteOpenHelper onDowngrade(android.database.sqlite.SQLiteDatabase, int, int)
+android.database.sqlite.SQLiteOpenHelper onOpen(android.database.sqlite.SQLiteDatabase)
+android.database.sqlite.SQLiteOpenHelper onUpgrade(android.database.sqlite.SQLiteDatabase, int, int)
+android.database.sqlite.SQLiteOpenHelper setWriteAheadLoggingEnabled(boolean)
+java.lang.Object <init>()
+java.lang.Object internalClone()
+java.lang.Object clone()
+java.lang.Object equals(java.lang.Object)
+java.lang.Object finalize()
+java.lang.Object getClass()
+java.lang.Object hashCode()
+java.lang.Object notify()
+java.lang.Object notifyAll()
+java.lang.Object toString()
+java.lang.Object wait()
+java.lang.Object wait(long)
+java.lang.Object wait(long, int)
+
+#+END_SRC

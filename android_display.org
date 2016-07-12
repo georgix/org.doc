@@ -1,0 +1,79 @@
+#+TITLE: Android System: Display
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+#+LINK_HOME: http://
+#+LINK_UP: http://
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main-ltr.css" />  <link rel="stylesheet" type="text/css" href="css/shared.css" />  <link rel="stylesheet" type="text/css" href="css/common.css" /> 
+
+
+
+* Debug
+** MDP
+
+/android/kernel/drivers/video/msm/mdss/mdss_fb.c/
+#+BEGIN_SRC sh
+$ adb shell ls sys/class/graphics/fb0/
+#+END_SRC
+
+** MDSS
+
+/android/kernel/drivers/video/msm/mdss/mdss_mdp_trace.h/
+#+BEGIN_SRC sh
+$ adb shell ls d/tracing/events/mdss/
+enable
+filter
+mdp_cmd_kickoff
+mdp_cmd_pingpong_done
+mdp_cmd_release_bw
+mdp_cmd_wait_pingpong
+mdp_commit
+mdp_mixer_update
+mdp_perf_update_bus
+mdp_sspp_change
+mdp_sspp_set
+mdp_trace_counter
+mdp_video_underrun_done
+tracing_mark_write
+
+$ adb shell "echo 1 > d/tracing/events/mdss/enable"                             
+
+$ adb shell "echo 1 > d/tracing/events/mdss/tracing_mark_write/enable"
+
+#+END_SRC
+
+* Screen on/off flow
+
+#+BEGIN_SRC sequence
+PhoneWindowManager->PhoneWindowManager:powerPress
+PhoneWindowManager->PhoneWindowManager:interceptKeyBeforeQueueing
+PhoneWindowManager->PowerManagerServices:goToSleep
+PowerManagerServices->PowerManagerServices:goToSleepInternal
+PowerManagerServices->PowerManagerServices:updatePowerStateLocked
+PowerManagerServices->PowerManagerServices:updateDisplayPowerStateLocked
+PowerManagerServices->DisplayManagerService:requestPowerState
+DisplayManagerService->DisplayPowerController:requestPowerState
+DisplayPowerController->DisplayPowerController:sendUpdatePowerStateLocked
+DisplayPowerController-->DisplayControllerHandler:handleMessage
+DisplayControllerHandler-->DisplayPowerController:updatePowerState
+DisplayPowerController->DisplayPowerController:animateScreenStateChange
+DisplayPowerController->DisplayPowerController:setScreenState
+DisplayPowerController->DisplayPowerState:setScreenState
+DisplayPowerState->DisplayPowerState:scheduleScreenUpdate
+DisplayPowerState->DisplayPowerState:postScreenUpdateThreadSafe
+DisplayPowerState->mScreenUpdateRunnable:removeCallbacks
+DisplayPowerState-->mScreenUpdateRunnable:post
+mScreenUpdateRunnable->PhotonicModulator:setState
+PhotonicModulator-->PhotonicModulator:run(mLock.notifyAll)
+PhotonicModulator->PhotonicModulator:requestDisplayState
+PhotonicModulator->DisplayManagerService:LocalService.blanker.requestDisplayState
+DisplayManagerService->DisplayManagerService:requestGlobalDisplayStateInternal
+DisplayManagerService->DisplayManagerService:updateGlobalDisplayStateLocked
+DisplayManagerService->DisplayManagerService:updateDisplayStateLocked
+DisplayManagerService->LocalDisplayAdapter:requestDisplayStateLocked
+LocalDisplayAdapter-->SurfaceControl:setDisplayPowerMode
+SurfaceControl->SurfaceControl:nativeSetDisplayPowerMode
+SurfaceControl->SurfaceComposerClient:setDisplayPowerMode
+SurfaceComposerClient->hwcomposer.h:setPowerMode
+hwcomposer.h->qcom/hwc:hwc_setPowerMode
+#+END_SRC
+

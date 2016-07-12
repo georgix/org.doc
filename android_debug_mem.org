@@ -1,0 +1,42 @@
+#+TITLE: Android Debug: Memory corruption and leak
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+#+LINK_HOME: http://
+#+LINK_UP: http://
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main-ltr.css" />  <link rel="stylesheet" type="text/css" href="css/shared.css" />  <link rel="stylesheet" type="text/css" href="css/common.css" /> 
+
+* native
+
+** libc.debug.malloc
+
+http://blog.csdn.net/sucjhwaxp/article/details/8118522
+
+https://community.freescale.com/docs/DOC-93610
+
+#+BEGIN_SRC 
+setprop libc.debug.malloc 1 (1,5,10)
+setprop libc.debug.malloc.program app_process
+// restart process, restart zygote if target is java process
+adb shell stop
+adb shell start
+#+END_SRC
+
+** ElectricFence
+http://elinux.org/Electric_Fence
+
+** LeakTracer
+http://www.andreasen.org/LeakTracer/
+
+** valgrid
+
+** [[https://en.wikipedia.org/wiki/Mtrace][mtrace]]
+
+** [[https://wiki.gnome.org/Apps/MemProf/][MemProf]]
+
+** memorydumper
+
+** [[http://elinux.org/Using_smem_on_Android][smem]]
+
+* dvm
+
+file:///D:/dev/android-sdk/android-sdk-windows/docs/tools/debugging/debugging-memory.html

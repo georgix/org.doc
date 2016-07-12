@@ -1,0 +1,32 @@
+#+TITLE: Android Performance CR Summary
+#+AUTHOR: Zhang Jing
+#+EMAIL:     zhangjing35@zuk.com
+#+DATE: [2016-01-07 Thu]
+
+#+OPTIONS: ^:nil
+#+LINK_HOME: http://
+#+LINK_UP: http://
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main-ltr.css" />  <link rel="stylesheet" type="text/css" href="css/shared.css" />  <link rel="stylesheet" type="text/css" href="css/common.css" /> 
+
+
+* Introduce
+
+We create a series of Jira issue in [[http://work.zuk.com:8080/browse/PEFORM][Performance_CR]] database,
+
+- To summary all the performance work we have carried out
+- To track status of on-going & to-do tasks
+- To faciliate migration on future platforms
+
+* Add a Jira issue
+
+1. Creat a Jira issue
+2. Choose *Performance_CR* as project
+3. Select the components(multi components supported), additional components can be added in [[http://work.zuk.com:8080/plugins/servlet/project-config/PEFORM/components][administration]]
+4. Select labels: *Performance*, *Debug*, *Feature* are defined now.
+5. Select Affects version: only *k9_m* now.
+6. In Description area, please give a detailed description about the patch, and all the related commit list in gerrit.
+7. Add related Jira issue in KNINE(M) database, which usually is the issue reported by QA.
+
+
+
+

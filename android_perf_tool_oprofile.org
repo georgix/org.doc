@@ -1,0 +1,45 @@
+
+
+* build
+
+** mingw
+
+build-mingw64-toolchain.sh --mingw-version=svn@5861 --verbose
+
+svn co https://svn.code.sf.net/p/mingw-w64/code/trunk@5861 /tmp/build-mingw64-toolchain-zhangjing35/src/mingw-w64-svn-r5861
+
+** prebuilts
+touch /tmp/ndk-zhangjing35/ndk_build_log.txt
+export NDK_LOGFILE=/tmp/ndk-zhangjing35/ndk_build_log.txt
+ ./build-host-prebuilts.sh --verbose --arch=arm ~/WS_toolchain/
+ ./build-host-prebuilts.sh --systems=linux-x86_64 --arch=arm --verbose ~/WS_toolchain/
+
+/bin/sh ./libtool --tag=CC   --mode=link i586-pc-mingw32msvc-gcc -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wno-format -O2 -s -ffunction-sections -fdata-sections -D__USE_MINGW_ACCESS  -release `
+cat ../bfd/libtool-soversion`  -Wl,-gc-sections -Wl,--stack,12582912 -o libopcodes.la -rpath /usr/local/lib dis-buf.lo disassemble.lo dis-init.lo i386-dis.lo i386-opc.lo
+libtool: link: warning: undefined symbols not allowed in i586-pc-mingw32msvc shared libraries
+libtool: link: i586-pc-mingw32msvc-ar rc .libs/libopcodes.a  dis-buf.o disassemble.o dis-init.o i386-dis.o i386-opc.o
+libtool: link: i586-pc-mingw32msvc-ranlib .libs/libopcodes.a
+libtool: link: ( cd ".libs" && rm -f "libopcodes.la" && ln -s "../libopcodes.la" "libopcodes.la" )
+libtooldir=`/bin/sh ./libtool --config | sed -n -e 's/^objdir=//p'`; \
+        if [ -f $libtooldir/libopcodes.a ]; then \
+          cp $libtooldir/libopcodes.a libopcodes.tmp; \
+          i586-pc-mingw32msvc-ranlib libopcodes.tmp; \
+          /bin/sh /home/zhangjing35/WS_toolchain//binutils/binutils-2.24/opcodes/../move-if-change libopcodes.tmp libopcodes.a; \
+        else true; fi
+touch stamp-lib
+
+
+/bin/sh ./libtool --tag=CC   --mode=link i586-pc-mingw32msvc-gcc -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wno-format -O2 -s -ffunction-sections -fdata-sections -D__USE_MINGW_ACCESS  -Wl,-gc-se
+ctions -Wl,--stack,12582912 -o as-new.exe app.o as.o atof-generic.o compress-debug.o cond.o depend.o dwarf2dbg.o dw2gencfi.o ecoff.o ehopt.o expr.o flonum-copy.o flonum-konst.o flonum-mult.o frags.o hash.o input
+-file.o input-scrub.o listing.o literal.o macro.o messages.o output-file.o read.o remap.o sb.o stabs.o subsegs.o symbols.o write.o tc-i386.o obj-coff.o atof-ieee.o  ../opcodes/libopcodes.la ../bfd/libbfd.la ../l
+ibiberty/libiberty.a
+libtool: link: i586-pc-mingw32msvc-gcc -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wno-format -O2 -s -ffunction-sections -fdata-sections -D__USE_MINGW_ACCESS -Wl,-gc-sections -Wl,--stack -Wl,1258
+2912 -o .libs/as-new.exe app.o as.o atof-generic.o compress-debug.o cond.o depend.o dwarf2dbg.o dw2gencfi.o ecoff.o ehopt.o expr.o flonum-copy.o flonum-konst.o flonum-mult.o frags.o hash.o input-file.o input-scr
+ub.o listing.o literal.o macro.o messages.o output-file.o read.o remap.o sb.o stabs.o subsegs.o symbols.o write.o tc-i386.o obj-coff.o atof-ieee.o  ../opcodes/.libs/libopcodes.a ../bfd/.libs/libbfd.a ../libibert
+y/libiberty.a
+../opcodes/.libs/libopcodes.a: could not read symbols: Archive has no index; run ranlib to add one
+collect2: ld returned 1 exit status
+make[4]: *** [as-new.exe] Error 1
+make[4]: Leaving directory `/tmp/ndk-zhangjing35/tmp/build-8717/build-ndk-stack/binutils/gas'
+
+** 

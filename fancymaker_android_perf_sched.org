@@ -1,0 +1,132 @@
+#+TITLE: Android Performance: schedule
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+#+LINK_HOME: http://
+#+LINK_UP: http://
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main-ltr.css" />  <link rel="stylesheet" type="text/css" href="css/shared.css" />  <link rel="stylesheet" type="text/css" href="css/common.css" /> 
+
+
+
+* Target
+- UI thread & renderthread should be run on high cpufreq/light load core (performance)
+- Instant response to input ()
+- avoid cpufreq hopping (stability)
+- avoid task migration of UI thread and renderthread from high freq to low freq core (affinity)
+
+* sched_policy
+
+| /proc/sys/kernel/            | value                                            |
+|------------------------------+--------------------------------------------------|
+| auto_msgmni                  |                                                1 |
+| boot_reason                  |                                                1 |
+| cad_pid                      |                                                1 |
+| cap_last_cap                 |                                               37 |
+| cold_boot                    |                                                1 |
+| compat-log                   |                                                1 |
+| core_pattern                 |                                             core |
+| core_pipe_limit              |                                                0 |
+| core_uses_pid                |                                                0 |
+| ctrl-alt-del                 |                                                1 |
+| dmesg_restrict               |                                                0 |
+| domainname                   |                                      localdomain |
+| ftrace_dump_on_oops          |                                                0 |
+| hostname                     |                                        localhost |
+| hotplug                      |                                                  |
+| keys                         |                                  /system/bin/sh: |
+| kptr_restrict                |                                                2 |
+| max_lock_depth               |                                             1024 |
+| modprobe                     |                                   /sbin/modprobe |
+| modules_disabled             |                                                0 |
+| msgmax                       |                                             8192 |
+| msgmnb                       |                                            16384 |
+| msgmni                       |                                             7250 |
+| ngroups_max                  |                                            65536 |
+| nmi_watchdog                 |                                                1 |
+| osrelease                    |                           3.18.20-g57644d2-dirty |
+| ostype                       |                                            Linux |
+| overflowgid                  |                                            65534 |
+| overflowuid                  |                                            65534 |
+| panic                        |                                                5 |
+| panic_on_oops                |                                                1 |
+| perf_cpu_time_max_percent    |                                               25 |
+| perf_event_max_sample_rate   |                                           100000 |
+| perf_event_mlock_kb          |                                              516 |
+| perf_event_paranoid          |                                                1 |
+| pid_max                      |                                            32768 |
+| poweroff_cmd                 |                                   /sbin/poweroff |
+| print-fatal-signals          |                                                0 |
+| printk                       |                                          6 6 1 7 |
+| printk_delay                 |                                                0 |
+| printk_ratelimit             |                                                5 |
+| printk_ratelimit_burst       |                                               10 |
+| pty                          |                                  /system/bin/sh: |
+| random                       |                                  /system/bin/sh: |
+| randomize_va_space           |                                                2 |
+| real-root-dev                |                                                0 |
+| sched_account_wait_time      |                                                1 |
+| sched_boost                  |                                                0 |
+| sched_child_runs_first       |                                                0 |
+| sched_cpu_high_irqload       |                                         10000000 |
+| sched_domain                 |                                  /system/bin/sh: |
+| sched_downmigrate            |                                               90 |
+| sched_early_detection_durati |                                          9500000 |
+| sched_enable_power_aware     |                                                1 |
+| sched_freq_account_wait_time |                                                0 |
+| sched_freq_dec_notify        |                                           400000 |
+| sched_freq_inc_notify        |                                           400000 |
+| sched_heavy_task             |                                                0 |
+| sched_init_task_load         |                                              100 |
+| sched_latency_ns             |                                         10000000 |
+| sched_latency_panic_threshol |                                                0 |
+| sched_latency_warn_threshold |                                                0 |
+| sched_lowspill_freq          |                                                0 |
+| sched_max_latency_us         | cpu2 comm=logd.writer pid=425 latency=556036(us) |
+| sched_migration_cost_ns      |                                           500000 |
+| sched_migration_fixup        |                                                1 |
+| sched_min_granularity_ns     |                                          2250000 |
+| sched_new_task_windows       |                                                5 |
+| sched_nr_migrate             |                                               32 |
+| sched_pack_freq              |                                               -1 |
+| sched_power_band_limit       |                                                0 |
+| sched_ravg_hist_size         |                                                5 |
+| sched_rr_timeslice_ms        |                                               10 |
+| sched_rt_period_us           |                                          1000000 |
+| sched_rt_runtime_us          |                                           950000 |
+| sched_select_prev_cpu_us     |                                             2000 |
+| sched_shares_window_ns       |                                         10000000 |
+| sched_spill_load             |                                              100 |
+| sched_spill_nr_run           |                                                3 |
+| sched_time_avg_ms            |                                             1000 |
+| sched_tunable_scaling        |                                                0 |
+| sched_upmigrate              |                                               95 |
+| sched_upmigrate_min_nice     |                                               15 |
+| sched_wake_to_idle           |                                                0 |
+| sched_wakeup_granularity_ns  |                                          2000000 |
+| sched_wakeup_load_threshold  |                                              110 |
+| sched_window_stats_policy    |                                                2 |
+| sem                          |                                250  32000 32 128 |
+| sg-big-buff                  |                                            32768 |
+| shm_rmid_forced              |                                                0 |
+| shmall                       |                             18446744073692774399 |
+| shmmax                       |                             18446744073692774399 |
+| shmmni                       |                                             4096 |
+| softlockup_all_cpu_backtrace |                                                0 |
+| softlockup_panic             |                                                1 |
+| sysctl_writes_strict         |                                                0 |
+| sysrq                        |                                                1 |
+| tainted                      |                                              512 |
+| threads-max                  |                                            27953 |
+| timer_migration              |                                                1 |
+| traceoff_on_warning          |                                                0 |
+| usermodehelper               |                                  /system/bin/sh: |
+| version                      |                              #3 SMP  PREEMPT Thu |
+| watchdog                     |                                                1 |
+| watchdog_thresh              |                                               10 |
+
+* cpufreq
+
+* interactive governor
+
+* input boost
+
+* mpdecision

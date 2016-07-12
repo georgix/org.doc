@@ -1,0 +1,116 @@
+
+
+* iozone
+
+[[http://iozone.org/][iozone]] is a filesystem benchmark tool. The benchmark generates and measures a variety of file operations. Iozone has been ported to many machines and runs under many operating systems.
+
+** Benchmark Features:
+
+- ANSII C source
+- POSIX async I/O
+- Mmap() file I/O
+- Normal file I/O
+- Single stream measurement
+- Multiple stream measurement
+- Distributed fileserver measurements (Cluster)
+- POSIX pthreads
+- Multi-process measurement
+- Excel importable output for graph generation
+- Latency plots
+- 64bit compatible source
+- Large file compatible
+- Stonewalling in throughput tests to eliminate straggler effects
+- Processor cache size configurable
+- Selectable measurements with fsync, O_SYNC
+- Builds for: AIX, BSDI, HP-UX, IRIX, FreeBSD, Linux, OpenBSD, NetBSD, OSFV3, OSFV4, OSFV5, SCO OpenServer, Solaris, MAC OS X, Windows (95/98/Me/NT/2K/XP)
+
+** android patch to iozone
+
+#+BEGIN_SRC diff
+diff --git a/src/jni/Android.mk b/src/jni/Android.mk
+new file mode 100644
+index 0000000..250669a
+--- /dev/null
++++ b/src/jni/Android.mk
+@@ -0,0 +1,18 @@
++LOCAL_PATH := $(call my-dir)
++
++include $(CLEAR_VARS)
++
++LOCAL_MODULE := iozone
++
++LOCAL_SRC_FILES := iozone.c libbif.c
++
++LOCAL_CFLAGS := -c -O3 -Dunix -DHAVE_ANSIC_C -DHAVE_PREAD \
++               -DNAME='"linux-arm"' -DLINUX_ARM  \
++               -Dlinux -Dandroid
++#-D_LARGEFILE64_SOURCE  -DASYNC_IO
++
++#LOCAL_LDLIBS := -lrt -lpthread
++LOCAL_SHARED_LIBRARIES := rt pthread
++
++include $(BUILD_EXECUTABLE)
++
+diff --git a/src/jni/Application.mk b/src/jni/Application.mk
+new file mode 100644
+index 0000000..ed6e6d1
+--- /dev/null
++++ b/src/jni/Application.mk
+@@ -0,0 +1,2 @@
++APP_ABI := armeabi-v7a #armeabi
++APP_PLATFORM := android-21
+diff --git a/src/jni/iozone.c b/src/jni/iozone.c
+index 1bbf206..0958e90 100644
+--- a/src/jni/iozone.c
++++ b/src/jni/iozone.c
+@@ -308,6 +308,18 @@ THISVERSION,
+ #endif
+ #endif
+
++#if defined(android)
++#ifndef O_RSYNC
++#define O_RSYNC O_SYNC
++#endif
++
++__attribute__((weak)) int pthread_setaffinity_np(pthread_t thread, size_t cpusetsize,
++                                  const cpu_set_t *cpuset)
++{
++  return sched_setaffinity(pthread_gettid_np(thread), cpusetsize, cpuset);
++}
++#endif
++
+ #if ((defined(solaris) && defined(__LP64__)) || defined(__s390x__))
+ /* If we are building for 64-bit Solaris, all functions that return pointers
+  * must be declared before they are used; otherwise the compiler will assume
+diff --git a/src/jni/libbif.c b/src/jni/libbif.c
+index 890e226..a78f80b 100644
+--- a/src/jni/libbif.c
++++ b/src/jni/libbif.c
+@@ -17,7 +17,7 @@
+ #include <sys/types.h>
+ #include <stdio.h>
+ #include <sys/file.h>
+-#if defined(__AIX__) || defined(__FreeBSD__) || defined(__DragonFly__)
++#if defined(__AIX__) || defined(__FreeBSD__) || defined(__DragonFly__) || defined(android)
+ #include <fcntl.h>
+ #else
+ #include <sys/fcntl.h>
+
+#+END_SRC
+
+** usage
+- autotest
+nohup logwrapper data/iozone -Ra -g 8g -f /data/test -b /data/iozone_data_8g.xls
+
+- autotest (include small recode size test)
+nohup logwrapper /data/iozone -R -az -n 2g -g 2g -f /data/test -b /data/iozone_data_2g.xls
+
+- recode size: 4k, file size 256M, directIO(-I)
+/data/iozone -R -r 4k -s 256m -I  -f /data/test -b /data/iozone_data_random_rw.xls
+/data/iozone -R -r 4k -s 256m -I  -f /sdcard/test -b /data/iozone_data_random_rw.xls
+
+- random read write only (-i 2)
+/data/iozone -R -r 4k -s 3g -i 2 -f /data/test -b /data/iozone_data_random_rw.xls
+
+- 
+/data/iozone -R -r 4k -s 2g  -f /data/test -b /data/iozone_data_random_rw.xls

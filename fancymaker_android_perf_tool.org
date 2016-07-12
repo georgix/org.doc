@@ -3,6 +3,14 @@
 #+OPTIONS: ^:nil
 
 
+* strace
+
+* ltrace
+
+* tracepoint, trace event
+http://netsplit.com/tracing-on-linux
+
+
 * perf
 http://en.wikipedia.org/wiki/Perf_(Linux)
 
@@ -11,6 +19,21 @@ http://www.ibm.com/developerworks/cn/linux/l-cn-perf1/index.html
 http://www.ibm.com/developerworks/cn/linux/l-cn-perf2/index.html
 
 http://wiki.eclipse.org/Linux_Tools_Project/PERF/User_Guide
+
+#+BEGIN_SRC sh
+# perf record -e sched:sched_process_fork record bash
+#+END_SRC
+
+* gperf
+google perf tool (C++)
+http://code.google.com/p/gperftools
+
+* google sanitizer
+ThreadSanitizer/AddressSanitizer/MemorySanitizer
+
+- AddressSanitizer: Detects use-after-free and buffer overflows(C++)
+- ThreadSanitizer: detects data races (C++ & Go)
+- MemorySanitizer: detects uninitialized  memory reads(c++)
 
 * ftrace
 http://www.ibm.com/developerworks/cn/linux/l-cn-ftrace/index.html
@@ -63,6 +86,9 @@ http://elinux.org/Android_Memory_Usage
 
 * benchmark
 http://www.phonearena.com/news/10-useful-Android-benchmark-apps_id26876
+
+* ndk
+http://dl.google.com/android/ndk/android-ndk-r10e-linux-x86_64.bin
 
 
 * misc

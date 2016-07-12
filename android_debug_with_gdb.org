@@ -1,0 +1,164 @@
+#+TITLE: Android System: Debug with gdb
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+#+LINK_HOME: http://
+#+LINK_UP: http://
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main-ltr.css" />  <link rel="stylesheet" type="text/css" href="css/shared.css" />  <link rel="stylesheet" type="text/css" href="css/common.css" /> 
+
+
+* Basic setup
+
+** device side
+
+#+BEGIN_SRC 
+adb shell gdbserver :5039 --attach <pid>
+
+adb forward tcp:5039 tcp:5039
+#+END_SRC
+
+** pc side
+
+#+BEGIN_SRC gdb 
+(gdb) target remote :5039
+Remote debugging using :5039
+0xb6db0a64 in ?? ()
+(gdb) info inferiors
+  Num  Description       Executable
+ * 1    process 8536
+(gdb) detach
+Detaching from program: , process 8536
+Ending remote debugging.
+#+END_SRC
+
+* Debug from server
+
+** local pc
+
+#+BEGIN_SRC 
+ssh -R 5039:localhost:5039 -l zhangjing35 10.100.124.240
+
+#+END_SRC
+
+** remote server
+
+#+BEGIN_SRC 
+(gdb) target remote :5039                                                       
+Remote debugging using :5039                                                    
+0xb6db0a64 in ?? () 
+
+(gdb) symbol-file android/out/target/product/k9/symbols/system/bin/app_process32
+
+(gdb) set solib-absolute-prefix android/out/target/product/k9/symbols/ 
+(gdb) set solib-search-path android/out/target/product/k9/symbols/system/lib
+#+END_SRC
+
+* trigger a coredump
+
+#+BEGIN_SRC 
+(gdb) gcore
+Saved corefile core.8536
+(gdb) warning: Signal SIGTRAP does not exist on this system.
+warning: Memory read failed for corefile section, 1040384 bytes at 0xb3861000.
+
+Saved corefile core.8536
+
+#+END_SRC
+
+* attach to process which crash after just start
+
+setup app to wait for debugger to connect in android developer settings
+
+* auto connect when crash
+setprop debug.db.uid <pid>
+
+* [[https://github.com/keesj/gomo/wiki/AndroidGdbDebugging][debug zygote]]
+
+#+BEGIN_SRC init.zygote.rc
+  service zygote /system/bin/gdbserver :5039 /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server
+#+END_SRC
+
+echo 1 > proc/sys/fs/suid_dumpable
+
+* dump java call stack from gdb
+
+>gdb
+info addr art::Thread::CurrentFromGdb
+$1
+info addr art::Thread::DumpFromGdb
+$2
+
+call ((void (*)(int))$2)(((void * (*) ())$1)())
+
+not work yet
+
+* [[http://docs.oracle.com/javase/7/docs/technotes/tools/windows/jdb.html][jdb]]
+* generate core dump when app crash
+
+- android/art/runtime/native/dalvik_system_ZygoteHooks.cc
+- persist.debug.trace
+
+http://man7.org/linux/man-pages/man5/core.5.html
+
+** solution
+ setprop persist.debug.trace 1
+
+for android M, if not include below codes in property_service.cpp, please merge them.
+diff --git a/init/property_service.cpp b/init/property_service.cpp
+ #include <sys/mman.h>
++#include <sys/resource.h>
+ #include <private/android_filesystem_config.h>
+ 
+ #include <selinux/selinux.h>
+@@ -509,6 +510,22 @@ static void load_override_properties() {
+     }
+ }
+ 
++static int check_rlim_action() {
++    char pval[PROP_VALUE_MAX];
++    int rc;
++    struct rlimit rl;
++    rc = property_get("persist.debug.trace",pval);
++
++    if(rc && (strcmp(pval,"1") == 0)) {
++        rl.rlim_cur = RLIM_INFINITY;
++        rl.rlim_max = RLIM_INFINITY;
++        if (setrlimit(RLIMIT_CORE, &rl) < 0) {
++            ERROR("could not enable core file generation");
++        }
++    }
++    return 0;
++}
++
+
+@@ -518,6 +535,8 @@ void load_persist_props(void) {
+     load_override_properties();
+     /* Read persistent properties after all default values have been loaded. */
+     load_persistent_properties();
++    /*check for coredump*/
++    check_rlim_action();
+ }
+
+then following below steps:
+1. please disable selinux firstly,
+the ways about how to disable selinux , please refer to solution 00030170 or by the following commands
+adb root
+adb shell setenforce 0
+if using the above commands , you need to do it again everytime after you reboot your device.
+
+2. if ro.debuggable not equals 1, please set ro.debuggable to be 1.
+We can pull the '/system/build.prop' file from the device, change the value of properties and push it back to the device.
+adb root
+adb pull /system/build.prop .
+[change the 'build.prop' file]
+adb push build.prop /system/
+adb shell chmod 644 /system/build.prop
+adb reboot
+
+3. Set the persist.debug.trace property to 1 to enable core dumps:  
+adb shell setprop persist.debug.trace 1  
+adb reboot  
+
+4. Run the test. The above steps will ensure that core dumps are created for all dalvik processes when there is a segmentation fault.  
+To force a crash, you may send signal 11 to the process by adb command: kill -11 <pid>  
+
+5. When the process crashes, pull the coredump by following command and the maps file of the pid you want to debug:  adb pull /data/core/

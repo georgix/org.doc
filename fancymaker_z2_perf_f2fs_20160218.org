@@ -1,0 +1,74 @@
+#+TITLE: Propose using F2FS on Z2
+#+AUTHOR: Zhang Jing
+#+EMAIL:     zhangjing35@zuk.com
+#+DATE: <2016-02-19 Fri>
+#+OPTIONS: texht:t ^:nil
+#+startup: beamer
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS:[bigger]
+#+LATEX_HEADER:
+#+LATEX_HEADER_EXTRA:
+#+BEAMER_FRAME_LEVEL: 2
+#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+
+
+* F2FS
+
+** F2FS(Flash-Friendly File System)
+- Developed and maintained by Samsung engineer
+- Specially designed for FTL NAND devices (SSD, EMMC, UFS and ...)
+- Inclued in linux kernel since 3.8 (Year 2011)
+- Mainly used in moto android devices
+- Better performance in random write comparing to EXT4
+
+* Using F2FS on android
+
+- Change makefile to generate F2FS userdata.img
+- Enable kernel support to F2FS
+- Change fstab option to mount userdata partition (normal & recovery)
+
+* State of upstream F2FS on android
+** In Place
+- generate F2FS partition
+- fastboot flash 
+- QFIL flash
+
+** Missing
+- fastboot format F2FS
+- recovery mode format F2FS
+- OTA ?
+- full disk encryption ?
+
+* Performance - Random Read
+[[./emacs_img/f2fs_z2_perf/f2fs_ext4_randomread.PNG]]
+
+* Performance - Random Write
+[[./emacs_img/f2fs_z2_perf/f2fs_ext4_randomwrite.PNG]]
+
+* Summary
+** comparing between F2FS & EXT4
+- *2X* faster in 4K record random write
+- *5X* times patches in upstream kernel
+- lack good support in multi-thread
+
+** risk
+- Filesytem cannot be changed during OTA without losing userdata
+
+** todo
+
+- resize on-the-fly
+- FDE performance impact
+- snapshot of album (media scanner)
+
+* patch
+LINUX/android/device/fancymaker/z2_row
+
+LINUX/android/device/qcom/msm8996
+
+LINUX/android/system/core/
+
+LINUX/android/kernel
+
+LINUX/android/bootable/recovery
+
+LINUX/android/bootable/bootloader/lk

@@ -1,0 +1,33 @@
+#+TITLE: Android System: 32bit
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+#+LINK_HOME: http://
+#+LINK_UP: http://
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main-ltr.css" />  <link rel="stylesheet" type="text/css" href="css/shared.css" />  <link rel="stylesheet" type="text/css" href="css/common.css" /> 
+
+
+
+* Install
+
+ABI can be specified when the apk is installed.
+#+BEGIN_SRC 
+adb install --abi <path to apk>
+#+END_SRC
+
+In case ARM device,
+
+To run in 32 bit mode install using,
+#+BEGIN_SRC 
+adb install --abi armeabi-v7a <path to apk>
+#+END_SRC
+
+To run in 64 bit mode install using,
+#+BEGIN_SRC 
+adb install --abi arm64-v8a <path to apk>
+#+END_SRC
+
+* Build
+
+#+BEGIN_SRC 
+LOCAL_MULTILIB := 32 // or 64 or both or first
+#+END_SRC

@@ -1,0 +1,60 @@
+
+* 
+
+
+11-20 08:22:07.923 10726 10726 W art     : Failed to find OatDexFile for DexFile /data/data/com.loading/app_libs/sdk.jar ( canonical path /data/data/com.loading/app_libs/sdk.jar) with checksum 0x13120191 in OatFile /data/data/com.loading/app_libs/sdk.dex
+11-20 08:22:07.943 10747 10747 I dex2oat : /system/bin/dex2oat --runtime-arg -classpath --runtime-arg  --instruction-set=arm --instruction-set-features=div --runtime-arg -Xrelocate --boot-image=/system/framework/boot.art --dex-file=/data/data/com.loading/app_libs/sdk.jar --oat-fd=25 --oat-location=/data/data/com.loading/app_libs/sdk.dex --runtime-arg -Xms64m --runtime-arg -Xmx512m
+
+* 
+
+08-12 01:31:42.621 16353 16353 V appproc : copy_preload_apps linked = 1
+08-12 01:31:42.621 16353 16353 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+08-12 01:31:42.631 16353 16353 D AndroidRuntime: CheckJNI is OFF
+08-12 01:31:42.631 16353 16353 I art     : option[0]=-Xzygote
+08-12 01:31:42.631 16353 16353 I art     : option[1]=-Xstacktracefile:/data/anr/traces.txt
+08-12 01:31:42.631 16353 16353 I art     : option[2]=exit
+08-12 01:31:42.631 16353 16353 I art     : option[3]=vfprintf
+08-12 01:31:42.631 16353 16353 I art     : option[4]=sensitiveThread
+08-12 01:31:42.631 16353 16353 I art     : option[5]=-verbose:gc
+08-12 01:31:42.631 16353 16353 I art     : option[6]=-Xms12m
+08-12 01:31:42.631 16353 16353 I art     : option[7]=-Xmx512m
+08-12 01:31:42.631 16353 16353 I art     : option[8]=-XX:mainThreadStackSize=24K
+08-12 01:31:42.631 16353 16353 I art     : option[9]=-XX:HeapGrowthLimit=256m
+08-12 01:31:42.631 16353 16353 I art     : option[10]=-XX:HeapMinFree=8m
+08-12 01:31:42.631 16353 16353 I art     : option[11]=-XX:HeapMaxFree=16m
+08-12 01:31:42.631 16353 16353 I art     : option[12]=-XX:HeapTargetUtilization=0.75
+08-12 01:31:42.631 16353 16353 I art     : option[13]=-agentlib:jdwp=transport=dt_android_adb,suspend=n,server=y
+08-12 01:31:42.631 16353 16353 I art     : option[14]=-Xlockprofthreshold:500
+08-12 01:31:42.631 16353 16353 I art     : option[15]=-Ximage-compiler-option
+08-12 01:31:42.631 16353 16353 I art     : option[16]=--runtime-arg
+08-12 01:31:42.631 16353 16353 I art     : option[17]=-Ximage-compiler-option
+08-12 01:31:42.631 16353 16353 I art     : option[18]=-Xms64m
+08-12 01:31:42.631 16353 16353 I art     : option[19]=-Ximage-compiler-option
+08-12 01:31:42.631 16353 16353 I art     : option[20]=--runtime-arg
+08-12 01:31:42.631 16353 16353 I art     : option[21]=-Ximage-compiler-option
+08-12 01:31:42.631 16353 16353 I art     : option[22]=-Xmx64m
+08-12 01:31:42.631 16353 16353 I art     : option[23]=-Ximage-compiler-option
+08-12 01:31:42.631 16353 16353 I art     : option[24]=--image-classes=/system/etc/preloaded-classes
+08-12 01:31:42.631 16353 16353 I art     : option[25]=-Xcompiler-option
+08-12 01:31:42.631 16353 16353 I art     : option[26]=--runtime-arg
+08-12 01:31:42.631 16353 16353 I art     : option[27]=-Xcompiler-option
+08-12 01:31:42.631 16353 16353 I art     : option[28]=-Xms64m
+08-12 01:31:42.631 16353 16353 I art     : option[29]=-Xcompiler-option
+08-12 01:31:42.631 16353 16353 I art     : option[30]=--runtime-arg
+08-12 01:31:42.631 16353 16353 I art     : option[31]=-Xcompiler-option
+08-12 01:31:42.631 16353 16353 I art     : option[32]=-Xmx512m
+08-12 01:31:42.631 16353 16353 I art     : option[33]=-Duser.language=zh
+08-12 01:31:42.631 16353 16353 I art     : option[34]=-Duser.region=CN
+08-12 01:31:42.641 16353 16353 I art     : Pruning dalvik-cache since we are generating an image and will need to recompile
+08-12 01:31:42.641 16353 16353 I art     : Using an offset of 0xffcad000 from default art base address of 0x70000000
+08-12 01:31:42.641 16353 16353 I art     : GenerateImage: /system/bin/dex2oat --image=/data/dalvik-cache/arm/system@framework@boot.art --dex-file=/system/framework/core-libart.jar --dex-file=/system/framework/conscrypt.jar --dex-file=/system/framework/okhttp.jar --dex-file=/system/framework/core-junit.jar --dex-file=/system/framework/bouncycastle.jar --dex-file=/system/framework/ext.jar --dex-file=/system/framework/framework.jar --dex-file=/system/framework/telephony-common.jar --dex-file=/system/framework/voip-common.jar --dex-file=/system/framework/ims-common.jar --dex-file=/system/framework/mms-common.jar --dex-file=/system/framework/android.policy.jar --dex-file=/system/framework/apache-xml.jar --dex-file=/system/framework/qcmediaplayer.jar --dex-file=/system/framework/WfdCommon.jar --dex-file=/system/framework/oem-services.jar --dex-file=/system/framework/org.codeaurora.Performance.jar --dex-file=/system/framework/security-bridge.jar --dex-file=/system/framework/qsb-port.jar --dex-file=/system/framework/vcard.jar --dex-file=/system/framework/tcm
+08-12 01:31:42.641 16388 16388 E art     : Failed to execv(/system/bin/dex2oat --image=/data/dalvik-cache/arm/system@framework@boot.art --dex-file=/system/framework/core-libart.jar --dex-file=/system/framework/conscrypt.jar --dex-file=/system/framework/okhttp.jar --dex-file=/system/framework/core-junit.jar --dex-file=/system/framework/bouncycastle.jar --dex-file=/system/framework/ext.jar --dex-file=/system/framework/framework.jar --dex-file=/system/framework/telephony-common.jar --dex-file=/system/framework/voip-common.jar --dex-file=/system/framework/ims-common.jar --dex-file=/system/framework/mms-common.jar --dex-file=/system/framework/android.policy.jar --dex-file=/system/framework/apache-xml.jar --dex-file=/system/framework/qcmediaplayer.jar --dex-file=/system/framework/WfdCommon.jar --dex-file=/system/framework/oem-services.jar --dex-file=/system/framework/org.codeaurora.Performance.jar --dex-file=/system/framework/security-bridge.jar --dex-file=/system/framework/qsb-port.jar --dex-file=/system/framework/vcard.jar --dex-file=/system/framework/tc
+
+08-12 01:31:42.641 16354 16354 W SRS_QDSP_Adapter: Mixer opened 0xb58951c0
+08-12 01:31:42.641 16354 16354 W SRS_QDSP_Adapter: SRS TruMedia ctl opened 0xb5894cf8
+08-12 01:31:42.641 16354 16354 W SRS_QDSP_Adapter: Not creating SRS DSP thread.
+08-12 01:31:42.651 16354 16354 I mediaserver: ServiceManager: 0xb58703e0
+08-12 01:31:42.651 16354 16354 I AudioFlinger: Using default 3000 mSec as standby time.
+08-12 01:31:42.651 16354 16354 I ServiceManager: Waiting for service batterystats...
+08-12 01:31:42.651 16353 16353 W art     : Could not create image space with image file '/system/framework/boot.art'. Attempting to fall back to imageless running. Error was: Failed to generate image '/data/dalvik-cache/arm/system@framework@boot.art': Failed execv(/system/bin/dex2oat --image=/data/dalvik-cache/arm/system@framework@boot.art --dex-file=/system/framework/core-libart.jar --dex-file=/system/framework/conscrypt.jar --dex-file=/system/framework/okhttp.jar --dex-file=/system/framework/core-junit.jar --dex-file=/system/framework/bouncycastle.jar --dex-file=/system/framework/ext.jar --dex-file=/system/framework/framework.jar --dex-file=/system/framework/telephony-common.jar --dex-file=/system/framework/voip-common.jar --dex-file=/system/framework/ims-common.jar --dex-file=/system/framework/mms-common.jar --dex-file=/system/framework/android.policy.jar --dex-file=/system/framework/apache-xml.jar --dex-file=/system/framework/qcmediaplayer.jar --dex-file=/system/framework/WfdCommon.jar --dex-file=/system/framework/oem-services.jar --dex-file=/sys
+

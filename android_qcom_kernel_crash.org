@@ -1,0 +1,31 @@
+
+
+
+** QPST configuration
+
+Dump auto start when 9006 qcom diagnosis port is detected and system reboot when dump done
+
+** Qcom crash dump file list
+
+#+BEGIN_SRC 
+
+$ ls -l  /c/ProgramData/Qualcomm/QPST/Sahara/Port_COM6/
+
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513)     131072 六月 13 16:52 CODERAM.BIN
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513)      65536 六月 13 16:52 DATARAM.BIN
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513)       2048 六月 13 16:52 DDR_DATA.BIN
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513) 1610612736 六月 13 16:53 DDRCS0.BIN
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513) 1610612736 六月 13 16:54 DDRCS1.BIN
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513)       1116 六月 13 16:54 dump_info.txt
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513)     524288 六月 13 16:52 LASTKMSG.txt
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513)        976 六月 13 16:54 load.cmm
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513)      65536 六月 13 16:52 LPM.BIN
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513)      16384 六月 13 16:52 MSGRAM.BIN
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513)     262144 六月 13 16:52 OCIMEM.BIN
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513)          8 六月 13 16:52 PMIC_PON.BIN
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513)          4 六月 13 16:52 PMIC_RTC.BIN
+-rw-r--r-- 1 zhangjing35 LENOVO+Group(513)          4 六月 13 16:52 RST_STAT.BIN
+
+#+END_SRC
+
+* 

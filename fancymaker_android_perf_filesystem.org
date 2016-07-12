@@ -12,6 +12,40 @@
 
 - lzo instead of zip ?
 
+* profiling
+
+** iozone
+
+* f2fs
+
+** DONE mkfs.f2fs userdata.img
+
+** DONE kernel support to f2fs
+
+** fastboot
+
+*** DONE download scatter image of userdata
+- fix full image size > 4GB bug
+
+*** DONE format partition as f2fs format
+- windows version need f2fs-tools library [k9]
+- native support from upstream [z2]
+
+** TODO recovery mode to format f2fs partition
+
+** TODO OTA support with f2fs
+
+
+** DONE QPST support f2fs
+- native support from qcom on 8996
+
+** DONE f2fs performance
+- faster with small record size random write
+
+
+
+
+
 
 
 

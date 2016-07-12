@@ -1,4 +1,4 @@
-#+TITLE: Android Performance: Memory
+#+TITLE: Android Performance: Memory usage
 #+AUTHOR: Zhang Jing
 #+OPTIONS: ^:nil
 #+LINK_HOME: http://
@@ -11,3 +11,40 @@
 * Settings -> Developer options -> Process Stats
 
 frameworks/base/core/android/internal/Process_Stat.java
+
+* kernel vm
+
+| /proc/sys/vm              |  value |
+|---------------------------+--------|
+| admin_reserve_kbytes      |   8192 |
+| block_dump                |      0 |
+| compact_memory            |        |
+| dirty_background_bytes    |      0 |
+| dirty_background_ratio    |      5 |
+| dirty_bytes               |      0 |
+| dirty_expire_centisecs    |    200 |
+| dirty_ratio               |     20 |
+| dirty_writeback_centisecs |    500 |
+| drop_caches               |      0 |
+| extfrag_threshold         |    500 |
+| extra_free_kbytes         |  24300 |
+| laptop_mode               |      0 |
+| legacy_va_layout          |      0 |
+| lowmem_reserve_ratio      | 256 32 |
+| max_map_count             |  65530 |
+| min_free_kbytes           |   7707 |
+| min_free_order_shift      |      4 |
+| mmap_min_addr             |  32768 |
+| nr_pdflush_threads        |      0 |
+| oom_dump_tasks            |      1 |
+| oom_kill_allocating_task  |      0 |
+| overcommit_kbytes         |      0 |
+| overcommit_memory         |      1 |
+| overcommit_ratio          |     50 |
+| page-cluster              |      3 |
+| panic_on_oom              |      0 |
+| percpu_pagelist_fraction  |      0 |
+| stat_interval             |      1 |
+| swappiness                |     60 |
+| user_reserve_kbytes       | 115101 |
+| vfs_cache_pressure        |    100 |

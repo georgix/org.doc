@@ -1,0 +1,66 @@
+#+TITLE: Workplans for 2015 H2
+#+AUTHOR: Zhang Jing
+#+EMAIL:     zhangjing35@zuk.com
+#+DATE: 
+#+OPTIONS: texht:t ^:nil
+#+startup: beamer
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS:[bigger]
+#+LATEX_HEADER:
+#+LATEX_HEADER_EXTRA:
+#+BEAMER_FRAME_LEVEL: 2
+#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+
+
+* OTA patches
+
+* Exception monitor tool (1/2)
+
+** An bug report extension based on android dropbox
+- has limitation that system_server can start and broadcast works
+
+** Capeture exception events
+- Java/Native crash, ANR, System_server WDT
+- Manual triggered warning(OOM/FD overflow)
+
+** Package all required logs to single file
+- android default bugreport
+- coredump (native crash)
+- hprof? (java)
+- screenshot
+
+* Exception monitor tool (2/2)
+
+** Notification on exception occurs
+- Statusbar notification
+- abnormal color pattern as screen background
+
+** Submit exception log package to server
+- easy access to all reserch RD
+- useful for collect infomation about 3rd party app compatibility
+
+* Performance tool
+
+** monitor bootup and wakup time
+
+** monitor fd/memory usage
+
+** monitor frame drop in display
+
+* Debug tool
+
+** gdb script for easy analysis
+- libc malloc tracker
+- extract java calltrace from coredump
+- extract java heap info from coredump
+- convert qcom RAM Dump file to elf format
+
+* Survey and study
+
+** Graphics, display, 3d, gpu
+
+** aarch64 debug and performance
+
+** new filesystem F2FS
+
+

@@ -1,0 +1,1433 @@
+#+TITLE: Android Performance: Graphics (Z2)
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+#+LINK_HOME: http://
+#+LINK_UP: http://
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main-ltr.css" />  <link rel="stylesheet" type="text/css" href="css/shared.css" />  <link rel="stylesheet" type="text/css" href="css/common.css" /> 
+
+
+* cpufreq
+
+#+BEGIN_SRC sh
+
+zhangjing35@ZHANGJING35-606 MSYS /d/CR/KNINEM-z2-disp/ramdump_motox
+$ adb shell ls  sys/devices/system/cpu/cpu0/cpufreq/interactive
+above_hispeed_delay
+align_windows
+boost
+boostpulse
+boostpulse_duration
+fast_ramp_down
+go_hispeed_load
+hispeed_freq
+ignore_hispeed_on_notif
+io_is_busy
+max_freq_hysteresis
+min_sample_time
+target_loads
+timer_rate
+timer_slack
+use_migration_notif
+use_sched_load
+
+zhangjing35@ZHANGJING35-606 MSYS /d/CR/KNINEM-z2-disp/ramdump_motox
+$ adb shell cat sys/devices/system/cpu/cpu0/cpufreq/interactive/*
+19000
+0
+0
+/system/bin/sh: cat: sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse: Permission denied
+80000
+0
+50
+1190400
+1
+1
+79000
+60000
+95
+20000
+80000
+1
+1
+
+zhangjing35@ZHANGJING35-606 MSYS /d/CR/KNINEM-z2-disp/ramdump_motox
+$ adb shell cat sys/devices/system/cpu/cpu2/cpufreq/interactive/*
+19000 1400000:39000 1700000:19000
+0
+0
+/system/bin/sh: cat: sys/devices/system/cpu/cpu2/cpufreq/interactive/boostpulse: Permission denied
+80000
+0
+50
+1248000
+1
+1
+79000
+60000
+95
+20000
+80000
+1
+1
+
+
+#+END_SRC
+
+* input boost
+#+BEGIN_SRC 
+$ adb shell ls sys/module/cpu_boost/parameters/
+boost_ms
+input_boost_freq
+input_boost_ms
+load_based_syncs
+migration_load_threshold
+sched_boost_on_input
+sync_threshold
+
+#+END_SRC
+
+* perflock
+#+BEGIN_SRC 
+android/frameworks/base/core/res/res/values/config.xml
+#+END_SRC
+* gpu devfeq
+
+#+BEGIN_SRC 
+$ adb shell cat sys/class/kgsl/kgsl-3d0/devfreq/*
+133000000 214000000 315000000 401800000 510000000 560000000 624000000
+spdm_bw_hyp cache_hwmon mem_latency bw_hwmon msm-vidc-vmem+ msm-vidc-vmem msm-vidc-ddr bw_vbif gpubw_mon msm-adreno-tz cpufreq userspace powersave performance simple_ondemand
+214000000
+/system/bin/sh: cat: sys/class/kgsl/kgsl-3d0/devfreq/device: Is a directory
+msm-adreno-tz
+624000000
+133000000
+10
+/system/bin/sh: cat: sys/class/kgsl/kgsl-3d0/devfreq/power: Is a directory
+/system/bin/sh: cat: sys/class/kgsl/kgsl-3d0/devfreq/subsystem: Is a directory
+214000000
+   From  :   To
+         :624000000560000000510000000401800000315000000214000000133000000   time(ms)
+ 624000000:       0       0       0       0       0       0       0         0
+ 560000000:       0       0       0       0       0       0       0         0
+ 510000000:       0       0       0       0       0       0       0         0
+ 401800000:       0       0       0       0       0       0       0         0
+ 315000000:       0       0       0       0       0       0       0         0
+*214000000:       0       0       0       0       0       0     275   6371640
+ 133000000:       0       0       0       0       0     275       0    730450
+
+#+END_SRC
+
+* enable mdss tracer
+#+BEGIN_SRC 
+adb shell "echo mdss:* > d/tracing/set_event"
+#+END_SRC
+
+* mdp debug
+
+#+BEGIN_SRC 
+$ adb shell cat d/mdp/buffers
+List of buffers for fb0
+ Buffers used:
+        pnum=7 state=ACTIVE  addr=0x00000000008a0000 size=352256 alloc_time=8064.735037328
+                plane[0] domain=mdp_unsecure permission=read
+        pnum=6 state=ACTIVE  addr=0x0000000003520000 size=8417280 alloc_time=8064.735066026
+                plane[0] domain=mdp_unsecure permission=read
+ Buffers in free list:
+        pnum=6 state=CLEANUP addr=0x0000000002c20000 size=8417280 alloc_time=8064.718724099
+                plane[0] domain=mdp_unsecure permission=read
+        pnum=7 state=CLEANUP addr=0x00000000008a0000 size=352256 alloc_time=8064.718706495
+                plane[0] domain=mdp_unsecure permission=read
+ Last 10 buffers used:
+        pnum=7 state=UNUSED  addr=0x00000000008a0000 size=352256 alloc_time=8064.702602172 freed_time=8064.746576026
+        pnum=6 state=UNUSED  addr=0x0000000001220000 size=8417280 alloc_time=8064.702631651 freed_time=8064.746526391
+        pnum=7 state=UNUSED  addr=0x00000000008a0000 size=352256 alloc_time=8064.686874151 freed_time=8064.729824359
+        pnum=6 state=UNUSED  addr=0x0000000003520000 size=8417280 alloc_time=8064.686912068 freed_time=8064.729789099
+        pnum=7 state=UNUSED  addr=0x00000000008a0000 size=352256 alloc_time=8064.670072745 freed_time=8064.713210141
+        pnum=6 state=UNUSED  addr=0x0000000002c20000 size=8417280 alloc_time=8064.670118213 freed_time=8064.713189099
+        pnum=7 state=UNUSED  addr=0x00000000008a0000 size=352256 alloc_time=8064.652093890 freed_time=8064.696494307
+        pnum=6 state=UNUSED  addr=0x0000000001220000 size=8417280 alloc_time=8064.652121286 freed_time=8064.696472120
+        pnum=7 state=UNUSED  addr=0x00000000008a0000 size=352256 alloc_time=8064.635188994 freed_time=8064.680152276
+        pnum=6 state=UNUSED  addr=0x0000000003520000 size=8417280 alloc_time=8064.635212692 freed_time=8064.680127276
+#+END_SRC
+
+#+BEGIN_SRC 
+$ adb shell cat d/mdp/dump
+
+--[ Control path #0 - MIPI_CMD]--
+Panel #0 1080x1920p60
+        vbp=4 vfp=20 vpw=1 hbp=1 hfp=1 hpw=1
+MDP Clk=150042857  Final BW=802451428
+Play Count=1  Underrun Count=0
+
+Intf Mixer #0  res=1080x1920 roi[0, 0, 1080, 1920]
+
+SSPP #6 type=DMA ndx=40 flags=0x00000000 play_cnt=230
+        stage=2 alpha=0xff transp=0xffffffff blend_op=2
+        src w=1088 h=1920 format=45 (RGBA_8888_UBWC)
+        src_rect x=0 y=0 w=1080 h=1920 H.dec=0 V.dec=0
+        dst_rect x=0 y=0 w=1080 h=1920
+        SMP allocated=[0 0] reserved=[0 0]
+Data:
+        state=ACTIVE  addr=0x0000000002c2f000 size=8355840 alloc_time=8101.330757336
+                plane[0] domain=mdp_unsecure permission=read
+                plane[1] domain=mdp_unsecure permission=read/write
+
+SSPP #7 type=DMA ndx=80 flags=0x00000000 play_cnt=230
+        stage=3 alpha=0xff transp=0xffffffff blend_op=2
+        src w=1088 h=80 format=45 (RGBA_8888_UBWC)
+        src_rect x=0 y=0 w=1080 h=72 H.dec=0 V.dec=0
+        dst_rect x=0 y=0 w=1080 h=72
+        SMP allocated=[0 0] reserved=[0 0]
+Data:
+        state=ACTIVE  addr=0x00000000011a1000 size=348160 alloc_time=8101.330721346
+                plane[0] domain=mdp_unsecure permission=read
+                plane[1] domain=mdp_unsecure permission=read/write
+
+Total pipes=2
+#+END_SRC
+
+#+BEGIN_SRC 
+$ adb shell cat d/mdp/xlog/dump
+mdss_mdp_cmd_pingpong_done:1006 =>[859740  :8461824699 :     4032][814 ]:0 1 0
+mdss_mdp_resource_control:535   =>[859741  :8461824740 :       41][814 ]:0 1 2 1111
+mdss_mdp_resource_control:834   =>[859742  :8461824746 :        6][814 ]:2 1 2222
+mdss_dsi_isr:2900               =>[859743  :8461824823 :       77][814 ]:0 1 2200703 98
+mdss_dsi_isr:2908               =>[859744  :8461824851 :       28][814 ]:0 1 2200703 99
+mdss_dsi_disable_irq_nosync:235 =>[859745  :8461824853 :        2][814 ]:0 100
+mdss_mdp_cmd_wait4pingpong:1533 =>[859746  :8461825053 :      200][13367]:0 0 0
+mdss_mdp_display_commit:5173    =>[859747  :8461825072 :       19][13367]:2 800 0 0
+mdss_mdp_cmd_kickoff:1838       =>[859748  :8461825081 :        9][13367]:0 0 0 0 438 780
+mdss_mdp_resource_control:535   =>[859749  :8461825085 :        4][13367]:0 1 1 1111
+mdss_mdp_resource_control:574   =>[859750  :8461825094 :        9][13367]:0 1 1 11
+mdss_mdp_resource_control:834   =>[859751  :8461825098 :        4][13367]:1 1 2222
+mdss_dsi_event_handler:2299     =>[859752  :8461825104 :        6][13367]:11 0 0 3333
+mdss_dsi_cmdlist_commit:2396    =>[859753  :8461825113 :        9][13367]:0 1 0 3437 1111
+mdss_dsi_cmdlist_commit:2493    =>[859754  :8461825116 :        3][13367]:0 1 0 3437 2222
+mdss_dsi_enable_irq:194         =>[859755  :8461825121 :        5][13367]:0 100
+mdss_dsi_cmd_mdp_start:2233     =>[859756  :8461825126 :        5][13367]:0 1 3437
+mdss_mdp_cmd_kickoff:1911       =>[859757  :8461825156 :       30][13367]:0 0
+__mdss_fb_display_thread:3404   =>[859758  :8461825418 :      262][13367]:0 2222
+mdss_dsi_clk_req_state:744      =>[859759  :8461827273 :     1855][1702]:3 0 1 1
+mdss_dsi_clk_req_state:810      =>[859760  :8461827277 :        4][1702]:3 0 0 0
+dsi_recheck_clk_state:585       =>[859761  :8461827282 :        5][1702]:1 1 1 1
+mdss_dsi_cmdlist_commit:2493    =>[859762  :8461827287 :        5][1702]:0 0 1 6a6 2222
+mdss_mdp_cmd_readptr_done:921   =>[859763  :8461827480 :      193][814 ]:0 1
+mdss_mdp_cmd_remove_vsync_handler:1396=>[859764  :8461827948 :      468][13254]:0 1 88888
+mdss_mdp_cmd_pingpong_done:1006 =>[859765  :8461841446 :    13498][0   ]:0 1 0
+mdss_mdp_resource_control:535   =>[859766  :8461841472 :       26][0   ]:0 1 2 1111
+mdss_mdp_resource_control:662   =>[859767  :8461841476 :        4][0   ]:0 1 2 22
+mdss_mdp_resource_control:834   =>[859768  :8461841485 :        9][0   ]:2 1 2222
+mdss_dsi_isr:2908               =>[859769  :8461841508 :       23][0   ]:0 1 2200702 99
+mdss_dsi_disable_irq_nosync:235 =>[859770  :8461841511 :        3][0   ]:0 100
+clk_ctrl_gate_work:1193         =>[859771  :8461841694 :      183][13254]:0 1 1111
+mdss_dsi_event_handler:2299     =>[859772  :8461841698 :        4][13254]:10 c6233d58 0 3333
+mdss_dsi_clk_req:156            =>[859773  :8461841703 :        5][13254]:0 2 0 33c6 0
+mdss_dsi_clk_req:165            =>[859774  :8461841705 :        2][13254]:0 2 0 33c6 0
+mdss_dsi_clk_req_state:744      =>[859775  :8461841715 :       10][13254]:3 2 1 1
+mdss_dsi_clk_req_state:810      =>[859776  :8461841717 :        2][13254]:3 2 2 2
+dsi_recheck_clk_state:585       =>[859777  :8461841723 :        6][13254]:1 2 1 2
+mdss_update_reg_bus_vote:443    =>[859778  :8461841858 :      135][13254]:0 1 6 0
+
+#+END_SRC
+* gpu profile
+#+BEGIN_SRC 
+$ adb shell setprop debug.hwui.profile visual_bars
+
+#+END_SRC
+
+* dumpsys gfxinfo
+#+BEGIN_SRC 
+$ adb shell dumpsys gfxinfo com.android.settings
+Applications Graphics Acceleration Info:
+Uptime: 8159561 Realtime: 24897279
+
+**Graphics info for pid 1851 [com.android.settings] **
+
+Stats since: 46454696491ns
+Total frames rendered: 15064
+Janky frames: 3147 (20.89%)
+90th percentile: 21ms
+95th percentile: 25ms
+99th percentile: 38ms
+Number Missed Vsync: 50
+Number High input latency: 9
+Number Slow UI thread: 668
+Number Slow bitmap uploads: 48
+Number Slow issue draw commands: 1913
+
+Caches:
+Current memory usage / total memory usage (bytes):
+  TextureCache           478656 / 75497472
+  LayerCache                  0 / 50331648 (numLayers = 0)
+  Layers total          0 (numLayers = 0)
+  RenderBufferCache           0 /  8388608
+  GradientCache               0 /  1048576
+  PathCache                   0 / 33554432
+  TessellationCache           0 /  1048576
+  TextDropShadowCache         0 /  6291456
+  PatchCache               1728 /   131072
+  FontRenderer 0 A8     1048576 /  1048576
+  FontRenderer 0 RGBA         0 /        0
+  FontRenderer 0 total  1048576 /  1048576
+Other:
+  FboCache                    0 /        0
+Total memory usage:
+  1528960 bytes, 1.46 MB
+
+Profile data in ms:
+
+        com.android.settings/com.android.settings.Settings/android.view.ViewRootImpl@97f3d90 (visibility=0)
+        Draw    Prepare Process Execute
+        5.65    0.48    4.63    1.22
+        3.25    0.48    4.90    0.91
+        4.08    0.81    5.86    1.15
+        4.60    0.39    3.61    0.81
+        2.77    0.40    3.32    0.96
+        3.69    0.62    4.31    0.87
+        2.23    0.38    3.53    0.62
+        5.29    0.40    3.44    0.79
+        1.19    0.70    4.98    0.84
+        1.49    0.38    3.35    0.70
+        1.04    0.57    3.34    0.87
+        1.87    0.41    3.59    0.91
+        1.62    0.58    5.29    1.04
+        1.32    0.51    5.00    1.22
+        2.57    0.47    4.88    0.95
+        1.56    0.47    4.58    0.92
+        3.17    0.90    4.59    1.00
+        3.87    0.45    4.66    1.47
+        3.04    0.75    9.17    1.58
+        2.60    0.66    5.50    1.47
+        2.15    0.35    4.73    0.99
+        1.70    0.44    6.65    1.21
+        2.27    0.42    4.66    0.99
+        2.68    0.66    5.04    1.09
+        2.06    0.51    6.59    1.43
+        3.29    1.01    7.95    1.42
+        3.93    0.48    4.74    0.93
+        2.47    0.47    5.01    1.18
+        1.79    0.58    4.80    0.98
+        2.46    0.52    4.67    1.03
+        3.94    0.80    13.96   2.18
+        3.98    0.65    9.29    1.64
+        1.89    1.43    4.77    0.85
+        1.44    0.86    6.24    1.08
+        2.93    1.40    7.41    1.40
+        2.21    1.15    5.07    0.83
+        2.85    1.21    6.30    1.06
+        2.63    1.35    6.58    1.13
+        3.25    1.61    6.43    1.38
+        1.56    1.32    4.72    0.99
+        1.96    1.03    6.19    0.90
+        2.10    0.98    5.04    0.85
+        3.87    1.24    4.81    0.86
+        3.32    1.66    8.44    1.58
+        3.78    1.34    5.71    0.95
+        2.95    1.19    4.92    1.23
+        1.62    1.40    4.92    1.14
+        5.30    4.75    29.20   2.07
+        6.45    0.92    6.96    1.10
+        12.44   1.28    5.67    1.07
+        2.71    1.18    4.36    0.78
+        1.99    0.98    4.23    0.91
+        2.00    1.05    4.41    1.21
+        2.08    1.06    4.55    0.88
+        4.27    1.53    9.65    2.67
+        4.17    1.33    4.90    1.27
+        2.45    0.91    6.22    1.22
+        2.70    0.83    4.34    1.04
+        2.72    1.13    5.16    0.97
+        2.48    1.27    6.53    1.44
+        2.66    0.99    4.90    0.88
+        1.90    0.98    4.82    1.14
+        1.83    1.65    4.70    0.87
+        3.67    1.09    4.48    0.99
+        4.99    0.44    4.57    0.81
+        3.12    0.44    4.80    1.09
+        2.79    0.42    4.31    1.00
+        5.66    1.12    7.06    1.15
+        1.65    0.47    4.71    0.93
+        1.45    0.48    4.73    1.15
+        1.46    0.47    4.83    1.12
+        1.45    0.50    5.49    1.06
+        1.45    0.50    5.25    0.91
+        1.49    0.69    4.49    1.04
+        3.54    0.79    5.26    1.06
+        2.95    0.51    4.60    1.15
+        2.21    0.51    4.93    1.02
+        1.54    0.47    4.99    1.41
+        2.87    0.66    5.27    1.16
+        2.58    0.55    5.10    1.19
+        3.80    0.93    14.59   1.94
+        3.04    1.11    7.41    2.94
+        3.51    1.87    6.08    0.93
+        2.09    0.98    4.79    0.86
+        1.98    0.90    4.38    0.92
+        2.70    1.12    4.82    0.81
+        4.49    1.10    4.96    1.32
+        2.60    1.51    8.28    1.77
+        3.08    1.53    6.31    1.57
+        2.43    0.83    5.79    1.31
+        1.79    1.37    5.70    1.20
+        1.74    1.77    7.44    2.20
+        3.81    1.86    6.64    1.68
+        4.33    1.63    6.60    1.48
+        4.66    1.94    5.70    1.02
+        1.64    1.03    5.19    0.88
+        1.65    0.93    4.59    0.80
+        2.06    1.10    4.92    0.93
+        2.70    1.10    4.96    0.96
+        2.77    1.04    5.11    1.09
+        3.04    1.93    7.34    1.66
+        3.88    1.82    6.47    1.05
+        2.20    1.06    7.24    1.47
+        4.29    3.67    15.80   1.54
+        4.01    1.03    6.53    1.28
+        2.88    0.50    8.78    1.07
+        2.12    0.83    4.57    0.92
+        1.60    0.98    4.73    0.86
+        1.64    0.89    4.79    0.95
+        2.58    1.69    7.73    1.33
+        2.54    1.54    5.79    1.28
+        2.97    2.24    6.71    2.09
+        2.81    1.75    7.61    1.24
+        2.92    1.55    5.66    1.18
+        4.25    3.93    9.14    2.20
+        3.10    1.18    5.79    0.86
+        2.25    0.86    3.94    0.75
+        1.69    0.80    3.68    0.78
+        2.14    0.97    3.73    1.06
+        1.34    0.95    5.95    1.26
+
+Stats since: 46454696491ns
+Total frames rendered: 15064
+Janky frames: 3147 (20.89%)
+90th percentile: 21ms
+95th percentile: 25ms
+99th percentile: 38ms
+Number Missed Vsync: 50
+Number High input latency: 9
+Number Slow UI thread: 668
+Number Slow bitmap uploads: 48
+Number Slow issue draw commands: 1913
+
+View hierarchy:
+
+  com.android.settings/com.android.settings.Settings/android.view.ViewRootImpl@97f3d90
+  223 views, 273.79 kB of display lists
+
+
+Total ViewRootImpl: 1
+Total Views:        223
+Total DisplayList:  273.79 kB
+
+
+#+END_SRC
+
+* dumpsys SurfaceFlinger
+
+#+BEGIN_SRC 
+$ adb shell dumpsys SurfaceFlinger
+Build configuration: [sf] [libui] [libgui]
+Sync configuration: [using: EGL_ANDROID_native_fence_sync EGL_KHR_wait_sync]
+DispSync configuration: app phase 0 ns, sf phase 0 ns, present offset 0 ns (refresh 16666666 ns)
+
+Static screen stats:
+  < 1 frames: 192.725 s (8.4%)
+  < 2 frames: 226.003 s (9.9%)
+  < 3 frames: 5.192 s (0.2%)
+  < 4 frames: 2.301 s (0.1%)
+  < 5 frames: 6.473 s (0.3%)
+  < 6 frames: 5.919 s (0.3%)
+  < 7 frames: 2.103 s (0.1%)
+  7+ frames: 1851.641 s (80.8%)
+
+Visible layers (count = 9)
++ Layer 0x7fb438dc00 (FocusedStackFrame)
+  Region transparentRegion (this=0x7fb438de08, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0x7fb438dc10, count=1)
+    [  0,   0,   0,   0]
+  Region surfaceDamageRegion (this=0x7fb438dc88, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=        0, pos=(0,0), size=(   1,   1), crop=(   0,   0,  -1,  -1), isOpaque=0, invalidate=1, alpha=0x4d, flags=0x00000001, tr=[1.00, 0.00][0.00, 1.00]
+      client=0x7fb0ac23c0
+      format= 1, activeBuffer=[   0x   0:   0,  0], queued-frames=0, mRefreshPending=0
+            mTexName=3 mCurrentTexture=-1
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1x1], default-format=1, transform-hint=00, FIFO(0)={}
++ LayerDim 0x7fb4393000 (DimLayer)
+  Region transparentRegion (this=0x7fb4393208, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0x7fb4393010, count=1)
+    [  0,   0,   0,   0]
+  Region surfaceDamageRegion (this=0x7fb4393088, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=        0, pos=(0,0), size=(  16,  16), crop=(   0,   0,  -1,  -1), isOpaque=0, invalidate=0, alpha=0xff, flags=0x00000001, tr=[1.00, 0.00][0.00, 1.00]
+      client=0x7fb0ac23c0
+      format= 0, activeBuffer=[   0x   0:   0,  0], queued-frames=0, mRefreshPending=0
+            mTexName=5 mCurrentTexture=-1
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1x1], default-format=1, transform-hint=00, FIFO(0)={}
++ LayerDim 0x7fb0c21800 (DimLayer)
+  Region transparentRegion (this=0x7fb0c21a08, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0x7fb0c21810, count=1)
+    [  0,   0,   0,   0]
+  Region surfaceDamageRegion (this=0x7fb0c21888, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=    20999, pos=(-270,-480), size=(1620,2880), crop=(   0,   0,  -1,  -1), isOpaque=0, invalidate=0, alpha=0x00, flags=0x00000001, tr=[1.00, 0.00][0.00, 1.00]
+      client=0x7fb0ac23c0
+      format= 0, activeBuffer=[   0x   0:   0,  0], queued-frames=0, mRefreshPending=0
+            mTexName=11 mCurrentTexture=-1
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1620x2880], default-format=1, transform-hint=00, FIFO(0)={}
++ LayerDim 0x7fb0c1fc00 (DimLayer)
+  Region transparentRegion (this=0x7fb0c1fe08, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0x7fb0c1fc10, count=1)
+    [  0,   0,   0,   0]
+  Region surfaceDamageRegion (this=0x7fb0c1fc88, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=    21019, pos=(-270,-480), size=(1620,2880), crop=(   0,   0,  -1,  -1), isOpaque=0, invalidate=0, alpha=0x00, flags=0x00000001, tr=[1.00, 0.00][0.00, 1.00]
+      client=0x7fb0ac23c0
+      format= 0, activeBuffer=[   0x   0:   0,  0], queued-frames=0, mRefreshPending=0
+            mTexName=10 mCurrentTexture=-1
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1620x2880], default-format=1, transform-hint=00, FIFO(0)={}
++ Layer 0x7fb4585800 (com.android.settings/com.android.settings.Settings)
+  Region transparentRegion (this=0x7fb4585a08, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0x7fb4585810, count=1)
+    [  0,   0,   0,   0]
+  Region surfaceDamageRegion (this=0x7fb4585888, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=    21040, pos=(0,0), size=(1080,1920), crop=(   0,   0,1080,1920), isOpaque=1, invalidate=1, alpha=0xff, flags=0x00000003, tr=[1.00, 0.00][0.00, 1.00]
+      client=0x7fb3949aa0
+      format= 1, activeBuffer=[1080x1920:1088,  1], queued-frames=0, mRefreshPending=0
+            mTexName=61 mCurrentTexture=2
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1080x1920], default-format=1, transform-hint=00, FIFO(0)={}
+             [00:0x7fad804800] state=FREE    , 0x7fb395b1e0 [1080x1920:1088,  1]
+             [01:0x7fad804000] state=FREE    , 0x7fb395b9c0 [1080x1920:1088,  1]
+            >[02:0x7fad804900] state=ACQUIRED, 0x7fb395b0c0 [1080x1920:1088,  1]
++ Layer 0x7fb0bd8400 (com.android.systemui.ImageWallpaper)
+  Region transparentRegion (this=0x7fb0bd8608, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0x7fb0bd8410, count=1)
+    [  0,   0,   0,   0]
+  Region surfaceDamageRegion (this=0x7fb0bd8488, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=    21045, pos=(0,0), size=(1080,1920), crop=(   0,   0,1080,1920), isOpaque=1, invalidate=1, alpha=0xff, flags=0x00000002, tr=[1.00, 0.00][0.00, 1.00]
+      client=0x7fb0ac25a0
+      format= 2, activeBuffer=[1080x1920:1088,  2], queued-frames=0, mRefreshPending=0
+            mTexName=9 mCurrentTexture=0
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1080x1920], default-format=2, transform-hint=00, FIFO(0)={}
++ LayerDim 0x7fb4391400 (DimLayer)
+  Region transparentRegion (this=0x7fb4391608, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0x7fb4391410, count=1)
+    [  0,   0,   0,   0]
+  Region surfaceDamageRegion (this=0x7fb4391488, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=   110999, pos=(-270,-480), size=(1620,2880), crop=(   0,   0,  -1,  -1), isOpaque=0, invalidate=0, alpha=0x00, flags=0x00000001, tr=[1.00, 0.00][0.00, 1.00]
+      client=0x7fb0ac23c0
+      format= 0, activeBuffer=[   0x   0:   0,  0], queued-frames=0, mRefreshPending=0
+            mTexName=4 mCurrentTexture=-1
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1620x2880], default-format=1, transform-hint=00, FIFO(0)={}
++ Layer 0x7fb0bd4c00 (StatusBar)
+  Region transparentRegion (this=0x7fb0bd4e08, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0x7fb0bd4c10, count=1)
+    [  0,   0,   0,   0]
+  Region surfaceDamageRegion (this=0x7fb0bd4c88, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=   161000, pos=(0,0), size=(1080,1920), crop=(   0,   0,1080,1920), isOpaque=0, invalidate=1, alpha=0xff, flags=0x00000000, tr=[1.00, 0.00][0.00, 1.00]
+      client=0x7fb0ac25a0
+      format= 1, activeBuffer=[1080x1920:1088,  1], queued-frames=0, mRefreshPending=0
+            mTexName=7 mCurrentTexture=0
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1080x1920], default-format=1, transform-hint=00, FIFO(0)={}
+            >[00:0x7fb0b2eb00] state=ACQUIRED, 0x7fb09ce720 [1080x1920:1088,  1]
++ Layer 0x7fb0bd6800 (ColorFade)
+  Region transparentRegion (this=0x7fb0bd6a08, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0x7fb0bd6810, count=1)
+    [  0,   0, 1080, 1920]
+  Region surfaceDamageRegion (this=0x7fb0bd6888, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=1073741825, pos=(0,0), size=(1080,1920), crop=(   0,   0,  -1,  -1), isOpaque=1, invalidate=1, alpha=0xff, flags=0x00000002, tr=[1.00, 0.00][0.00, 1.00]
+      client=0x7fb3949a00
+      format= 2, activeBuffer=[1080x1920:1088,  1], queued-frames=0, mRefreshPending=0
+            mTexName=62 mCurrentTexture=-1
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1080x1920], default-format=2, transform-hint=00, FIFO(0)={}
+Displays (1 entries)
++ DisplayDevice: Built-in Screen
+   type=0, hwcId=0, layerStack=4294967295, (1080x1920), ANativeWindow=0x7fb0f05010, orient= 0 (type=00000000), flips=25903, isSecure=1, secureVis=0, powerMode=0, activeConfig=0, numLayers=0
+   v:[0,0,1080,1920], f:[0,0,1080,1920], s:[0,0,1080,1920],transform:[[1.000,0.000,-0.000][0.000,1.000,-0.000][0.000,0.000,1.000]]
+mAbandoned=0
+-BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1080x1920], default-format=1, transform-hint=00, FIFO(0)={}
+>[00:0x7fb0dbc500] state=ACQUIRED, 0x7fb0a28360 [1080x1920:1088,  1]
+ [01:0x7fb0b6fb00] state=FREE    , 0x7fb0a28c00 [1080x1920:1088,  1]
+SurfaceFlinger global state:
+EGL implementation : 1.4
+EGL_QUALCOMM_shared_image EGL_KHR_image EGL_KHR_image_base EGL_QCOM_create_image EGL_QCOM_gpu_perf EGL_KHR_lock_surface EGL_KHR_lock_surface2 EGL_KHR_lock_surface3 EGL_KHR_fence_sync EGL_KHR_wait_sync EGL_KHR_cl_event EGL_KHR_cl_event2 EGL_KHR_reusable_sync EGL_IMG_context_priority EGL_KHR_gl_texture_2D_image EGL_KHR_gl_texture_cubemap_image EGL_KHR_gl_texture_3D_image EGL_KHR_gl_renderbuffer_image EGL_EXT_create_context_robustness EGL_EXT_yuv_surface EGL_ANDROID_blob_cache EGL_KHR_create_context EGL_KHR_gl_colorspace EGL_KHR_surfaceless_context EGL_KHR_create_context_no_error EGL_KHR_get_all_proc_addresses EGL_QCOM_lock_image2 EGL_KHR_partial_update EGL_ANDROID_recordable EGL_ANDROID_native_fence_sync EGL_ANDROID_image_native_buffer EGL_ANDROID_framebuffer_target EGL_ANDROID_image_crop EGL_IMG_image_plane_attribs
+GLES: Qualcomm, Adreno (TM) 530, OpenGL ES 3.1 V@142.0 (GIT@I6834e9b1ee)
+GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_EGL_sync GL_OES_vertex_half_float GL_OES_framebuffer_object GL_OES_rgb8_rgba8 GL_OES_compressed_ETC1_RGB8_texture GL_AMD_compressed_ATC_texture GL_KHR_texture_compression_astc_ldr GL_KHR_texture_compression_astc_hdr GL_OES_texture_compression_astc GL_OES_texture_npot GL_EXT_texture_filter_anisotropic GL_EXT_texture_format_BGRA8888 GL_OES_texture_3D GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_QCOM_alpha_test GL_OES_depth24 GL_OES_packed_depth_stencil GL_OES_depth_texture GL_OES_depth_texture_cube_map GL_EXT_sRGB GL_OES_texture_float GL_OES_texture_float_linear GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_EXT_texture_type_2_10_10_10_REV GL_EXT_texture_sRGB_decode GL_OES_element_index_uint GL_EXT_copy_image GL_EXT_geometry_shader GL_EXT_tessellation_shader GL_OES_texture_stencil8 GL_EXT_shader_io_blocks GL_OES_shader_image_atomic GL_OES_sample_variables GL_EXT_texture_border_clamp GL_EXT_multisampled_render_to_texture GL_OES_shader_multisample_interpolation GL_EXT_texture_cube_map_array GL_EXT_draw_buffers_indexed GL_EXT_gpu_shader5 GL_EXT_robustness GL_EXT_texture_buffer GL_EXT_shader_framebuffer_fetch GL_ARM_shader_framebuffer_fetch_depth_stencil GL_OES_texture_storage_multisample_2d_array GL_OES_sample_shading GL_OES_get_program_binary GL_EXT_debug_label GL_KHR_blend_equation_advanced GL_KHR_blend_equation_advanced_coherent GL_QCOM_tiled_rendering GL_ANDROID_extension_pack_es31a GL_EXT_primitive_bounding_box GL_OES_standard_derivatives GL_OES_vertex_array_object GL_EXT_disjoint_timer_query GL_KHR_debug GL_EXT_YUV_target GL_EXT_sRGB_write_control GL_EXT_texture_norm16 GL_EXT_discard_framebuffer GL_OES_surfaceless_context GL_OVR_multiview GL_OVR_multiview2 GL_EXT_texture_sRGB_R8 GL_KHR_no_error GL_EXT_debug_marker GL_OVR_multiview_multisampled_render_to_texture GL_EXT_buffer_storage GL_EXT_blit_framebuffer_params
+  Region undefinedRegion (this=0x7fb45a9598, count=1)
+    [  0,   0, 1080, 1920]
+  orientation=0, isDisplayOn=0
+  last eglSwapBuffers() time: 330.990000 us
+  last transaction time     : 73.020000 us
+  transaction-flags         : 00000000
+  refresh-rate              : 60.000002 fps
+  x-dpi                     : 160.421005
+  y-dpi                     : 159.895004
+  gpu_to_cpu_unsupported    : 0
+  eglSwapBuffers time: 0.000000 us
+  transaction time: 0.000000 us
+VSYNC state: enabled
+  soft-vsync: enabled
+  numListeners=26,
+  events-delivered: 32766
+    0x7fb0c022d0: count=-1
+    0x7fb0c02320: count=-1
+    0x7fb0c02460: count=-1
+    0x7fb0c028c0: count=-1
+    0x7fb0c029b0: count=-1
+    0x7fb0c02a50: count=-1
+    0x7fb0c03090: count=-1
+    0x7fb0c03180: count=-1
+    0x7fb0c03270: count=-1
+    0x7fb0c032c0: count=-1
+    0x7fb0c03310: count=-1
+    0x7fb0c03360: count=-1
+    0x7fb0c03590: count=-1
+    0x7fb0c03630: count=-1
+    0x7fb3960000: count=-1
+    0x7fb3960050: count=-1
+    0x7fb39600a0: count=-1
+    0x7fb39600f0: count=-1
+    0x7fb3960140: count=-1
+    0x7fb45a4580: count=-1
+    0x7fb45a45d0: count=-1
+    0x7fb45a4620: count=-1
+    0x7fb45a52a0: count=-1
+    0x7fb45a63d0: count=-1
+    0x7fb45a6ec0: count=-1
+    0x7fb45a6f10: count=-1
+h/w composer state:
+  h/w composer present and enabled
+Hardware Composer state (version 01050000):
+  mDebugForceFakeVSync=0
+  Display[0] configurations (* current):
+    * 0: 1080x1920, xdpi=160.421005, ydpi=159.895004, refresh=16666666, colorTransform=0
+  numHwLayers=1, flags=00000000
+    type   |  handle  | hint | flag | tr | blnd |   format    |     source crop (l,t,r,b)      |          frame         | name
+-----------+----------+------+------+----+------+-------------+--------------------------------+------------------------+------
+ FB TARGET | 7fb0a28360 | 0000 | 0000 | 00 | 0105 | RGBA_8888   |    0.0,    0.0, 1080.0, 1920.0 |    0,    0, 1080, 1920 | HWC_FRAMEBUFFER_TARGET
+
+-------- Snapdragon Display Manager --------
+-----------------------
+device type: 0
+state: 0, vsync on: 0, max. mixer stages: 7
+num configs: 1, active config index: 0
+res:1080 x 1920, dpi:160.42 x 159.90, fps:60,vsync period: 16666666
+
+No hardware layers programmed
+
+Allocated buffers:
+0x7fb09ce720: 8160.00 KiB | 1080 (1088) x 1920 |        1 | 0x20000900
+0x7fb09ceae0: 8160.00 KiB | 1080 (1088) x 1920 |        1 | 0x20000900
+0x7fb0a28360: 8160.00 KiB | 1080 (1088) x 1920 |        1 | 0x20001a00
+0x7fb0a28c00: 8160.00 KiB | 1080 (1088) x 1920 |        1 | 0x20001a00
+0x7fb395b0c0: 8160.00 KiB | 1080 (1088) x 1920 |        1 | 0x20000900
+0x7fb395b1e0: 8160.00 KiB | 1080 (1088) x 1920 |        1 | 0x20000900
+0x7fb395b420:  306.00 KiB | 1080 (1088) x   72 |        1 | 0x20000900
+0x7fb395b9c0: 8160.00 KiB | 1080 (1088) x 1920 |        1 | 0x20000900
+0x7fb4593440: 8160.00 KiB | 1080 (1088) x 1920 |        2 | 0x20000900
+Total allocated (estimate): 65586.00 KB
+
+#+END_SRC
+
+* dumpsys display
+#+BEGIN_SRC 
+$ adb shell dumpsys display
+DISPLAY MANAGER (dumpsys display)
+  mOnlyCode=false
+  mSafeMode=false
+  mPendingTraversal=false
+  mGlobalDisplayState=ON
+  mNextNonDefaultDisplayId=1
+  mDefaultViewport=DisplayViewport{valid=true, displayId=0, orientation=0, logicalFrame=Rect(0, 0 - 1080, 1920), physicalFrame=Rect(0, 0 - 1080, 1920), deviceWidth=1080, deviceHeight=1920}
+  mExternalTouchViewport=DisplayViewport{valid=false, displayId=0, orientation=0, logicalFrame=Rect(0, 0 - 0, 0), physicalFrame=Rect(0, 0 - 0, 0), deviceWidth=0, deviceHeight=0}
+  mSingleDisplayDemoMode=false
+  mWifiDisplayScanRequestCount=0
+
+Display Adapters: size=4
+  LocalDisplayAdapter
+  OverlayDisplayAdapter
+    mCurrentOverlaySetting=
+    mOverlays: size=0
+  WifiDisplayAdapter
+    mCurrentStatus=WifiDisplayStatus{featureState=1, scanState=0, activeDisplayState=0, activeDisplay=null, displays=[], sessionInfo=WifiDisplaySessionInfo:
+        Client/Owner: Client
+        GroupId:
+        Passphrase:
+        SessionId: 0
+        IP Address: }
+    mFeatureState=1
+    mScanState=0
+    mActiveDisplayState=0
+    mActiveDisplay=null
+    mDisplays=[]
+    mAvailableDisplays=[]
+    mRememberedDisplays=[]
+    mPendingStatusChangeBroadcast=false
+    mSupportsProtectedBuffers=true
+    mDisplayController:
+      mWifiDisplayOnSetting=false
+      mWifiP2pEnabled=false
+      mWfdEnabled=false
+      mWfdEnabling=false
+      mNetworkInfo=null
+      mScanRequested=false
+      mDiscoverPeersInProgress=false
+      mDesiredDevice=null
+      mConnectingDisplay=null
+      mDisconnectingDisplay=null
+      mCancelingDisplay=null
+      mConnectedDevice=null
+      mConnectionRetriesLeft=0
+      mRemoteDisplay=null
+      mRemoteDisplayInterface=null
+      mRemoteDisplayConnected=false
+      mAdvertisedDisplay=null
+      mAdvertisedDisplaySurface=null
+      mAdvertisedDisplayWidth=0
+      mAdvertisedDisplayHeight=0
+      mAdvertisedDisplayFlags=0
+      mAvailableWifiDisplayPeers: size=0
+  VirtualDisplayAdapter
+
+Display Devices: size=1
+  DisplayDeviceInfo{"内置屏幕": uniqueId="local:0", 1080 x 1920, modeId 1, defaultModeId 1, supportedModes [{id=1, width=1080, height=1920, fps=60.000004}], colorTransformId 1, defaultColorTransformId 1, supportedColorTransforms [{id=1, colorTransform=0}], density 480, 160.421 x 159.895 dpi, appVsyncOff 0, presDeadline 17666666, touch INTERNAL, rotation 0, type BUILT_IN, state ON, FLAG_DEFAULT_DISPLAY, FLAG_ROTATES_WITH_CONTENT, FLAG_SECURE, FLAG_SUPPORTS_PROTECTED_BUFFERS}
+    mAdapter=LocalDisplayAdapter
+    mUniqueId=local:0
+    mDisplayToken=android.os.BinderProxy@51864f8
+    mCurrentLayerStack=0
+    mCurrentOrientation=0
+    mCurrentLayerStackRect=Rect(0, 0 - 1080, 1920)
+    mCurrentDisplayRect=Rect(0, 0 - 1080, 1920)
+    mCurrentSurface=null
+    mBuiltInDisplayId=0
+    mActivePhysIndex=0
+    mActiveModeId=1
+    mActiveColorTransformId=1
+    mState=ON
+    mBrightness=41
+    mBacklight=com.android.server.lights.LightsService$LightImpl@9f6bdd1
+    mDisplayInfos=
+      PhysicalDisplayInfo{1080 x 1920, 60.000004 fps, density 3.0, 160.421 x 159.895 dpi, secure true, appVsyncOffset 0, bufferDeadline 17666666, colorTransform 0}
+    mSupportedModes=
+      DisplayModeRecord{mMode={id=1, width=1080, height=1920, fps=60.000004}}
+    mSupportedColorTransforms=[
+    {id=1, colorTransform=0}]
+
+Logical Displays: size=1
+  Display 0:
+    mDisplayId=0
+    mLayerStack=0
+    mHasContent=true
+    mRequestedMode=0
+    mRequestedColorTransformId=0
+    mDisplayOffset=(0, 0)
+    mPrimaryDisplayDevice=内置屏幕
+    mBaseDisplayInfo=DisplayInfo{"内置屏幕", uniqueId "local:0", app 1080 x 1920, real 1080 x 1920, largest app 1080 x 1920, smallest app 1080 x 1920, mode 1, defaultMode 1, modes [{id=1, width=1080, height=1920, fps=60.000004}], colorTransformId 1, defaultColorTransformId 1, supportedColorTransforms [{id=1, colorTransform=0}], rotation 0, density 480 (160.421 x 159.895) dpi, layerStack 0, appVsyncOff 0, presDeadline 17666666, type BUILT_IN, state ON, FLAG_SECURE, FLAG_SUPPORTS_PROTECTED_BUFFERS}
+    mOverrideDisplayInfo=DisplayInfo{"内置屏幕", uniqueId "local:0", app 1080 x 1920, real 1080 x 1920, largest app 1920 x 1848, smallest app 1080 x 1008, mode 1, defaultMode 1, modes [{id=1, width=1080, height=1920, fps=60.000004}], colorTransformId 1, defaultColorTransformId 1, supportedColorTransforms [{id=1, colorTransform=0}], rotation 0, density 480 (160.421 x 159.895) dpi, layerStack 0, appVsyncOff 0, presDeadline 17666666, type BUILT_IN, state ON, FLAG_SECURE, FLAG_SUPPORTS_PROTECTED_BUFFERS}
+
+Callbacks: size=36
+  0: mPid=1116, mWifiDisplayScanRequested=false
+  1: mPid=1704, mWifiDisplayScanRequested=false
+  2: mPid=1741, mWifiDisplayScanRequested=false
+  3: mPid=1769, mWifiDisplayScanRequested=false
+  4: mPid=1831, mWifiDisplayScanRequested=false
+  5: mPid=1851, mWifiDisplayScanRequested=false
+  6: mPid=1870, mWifiDisplayScanRequested=false
+  7: mPid=2160, mWifiDisplayScanRequested=false
+  8: mPid=2201, mWifiDisplayScanRequested=false
+  9: mPid=2279, mWifiDisplayScanRequested=false
+  10: mPid=2295, mWifiDisplayScanRequested=false
+  11: mPid=2328, mWifiDisplayScanRequested=false
+  12: mPid=2334, mWifiDisplayScanRequested=false
+  13: mPid=2343, mWifiDisplayScanRequested=false
+  14: mPid=2366, mWifiDisplayScanRequested=false
+  15: mPid=2399, mWifiDisplayScanRequested=false
+  16: mPid=2529, mWifiDisplayScanRequested=false
+  17: mPid=2694, mWifiDisplayScanRequested=false
+  18: mPid=2713, mWifiDisplayScanRequested=false
+  19: mPid=2740, mWifiDisplayScanRequested=false
+  20: mPid=2766, mWifiDisplayScanRequested=false
+  21: mPid=2799, mWifiDisplayScanRequested=false
+  22: mPid=2826, mWifiDisplayScanRequested=false
+  23: mPid=2844, mWifiDisplayScanRequested=false
+  24: mPid=2892, mWifiDisplayScanRequested=false
+  25: mPid=2960, mWifiDisplayScanRequested=false
+  26: mPid=2976, mWifiDisplayScanRequested=false
+  27: mPid=2990, mWifiDisplayScanRequested=false
+  28: mPid=3013, mWifiDisplayScanRequested=false
+  29: mPid=3229, mWifiDisplayScanRequested=false
+  30: mPid=4691, mWifiDisplayScanRequested=false
+  31: mPid=5960, mWifiDisplayScanRequested=false
+  32: mPid=9934, mWifiDisplayScanRequested=false
+  33: mPid=9985, mWifiDisplayScanRequested=false
+  34: mPid=10055, mWifiDisplayScanRequested=false
+  35: mPid=10326, mWifiDisplayScanRequested=false
+
+Display Power Controller Locked State:
+  mDisplayReadyLocked=true
+  mPendingRequestLocked=policy=BRIGHT, useProximitySensor=false, screenBrightness=102, screenAutoBrightnessAdjustment=0.0, brightnessSetByUser=true, useAutoBrightness=true, useZUKAutoBrightnessFlag=true, actualBrightnessWhenUserSet=-1, newBrightnessWhenUserSet=-1, turningTemporaryScreenBrightness=false, blockScreenOn=false, lowPowerMode=false, boostScreenBrightness=false, dozeScreenBrightness=-1, dozeScreenState=UNKNOWN
+  mPendingRequestChangedLocked=false
+  mPendingWaitForNegativeProximityLocked=false
+  mPendingUpdatePowerStateLocked=false
+
+Display Power Controller Configuration:
+  mScreenBrightnessDozeConfig=17
+  mScreenBrightnessDimConfig=10
+  mScreenBrightnessDarkConfig=1
+  mScreenBrightnessRangeMinimum=1
+  mScreenBrightnessRangeMaximum=255
+  mUseSoftwareAutoBrightnessConfig=true
+  mAllowAutoBrightnessWhileDozingConfig=false
+  mColorFadeFadesConfig=false
+
+Display Power Controller Thread State:
+  mPowerRequest=policy=BRIGHT, useProximitySensor=false, screenBrightness=102, screenAutoBrightnessAdjustment=0.0, brightnessSetByUser=true, useAutoBrightness=true, useZUKAutoBrightnessFlag=true, actualBrightnessWhenUserSet=-1, newBrightnessWhenUserSet=-1, turningTemporaryScreenBrightness=false, blockScreenOn=false, lowPowerMode=false, boostScreenBrightness=false, dozeScreenBrightness=-1, dozeScreenState=UNKNOWN
+  mWaitingForNegativeProximity=false
+  mProximitySensor=null
+  mProximitySensorEnabled=false
+  mProximityThreshold=0.0
+  mProximity=Unknown
+  mPendingProximity=Unknown
+  mPendingProximityDebounceTime=-1 (8429845 ms ago)
+  mScreenOffBecauseOfProximity=false
+  mAppliedAutoBrightness=false
+  mAppliedDimming=true
+  mAppliedLowPower=false
+  mPendingScreenOnUnblocker=null
+  mPendingScreenOff=false
+  mReportedToPolicy=REPORTED_TO_POLICY_SCREEN_ON
+  mScreenBrightnessRampAnimator.isAnimating()=false
+  mColorFadeOnAnimator.isStarted()=false
+  mColorFadeOffAnimator.isStarted()=false
+
+Display Power State:
+  mScreenState=ON
+  mScreenBrightness=102
+  mScreenReady=true
+  mScreenUpdatePending=false
+  mColorFadePrepared=false
+  mColorFadeLevel=1.0
+  mColorFadeReady=true
+  mColorFadeDrawPending=false
+
+Photonic Modulator State:
+  mPendingState=ON
+  mPendingBacklight=102
+  mActualState=ON
+  mActualBacklight=102
+  mStateChangeInProgress=false
+  mBacklightChangeInProgress=false
+
+Color Fade State:
+  mPrepared=false
+  mMode=1
+  mDisplayLayerStack=0
+  mDisplayWidth=1080
+  mDisplayHeight=1920
+  mSurfaceVisible=false
+  mSurfaceAlpha=0.0
+
+Automatic Brightness Controller Configuration:
+  mScreenAutoBrightnessSpline=MonotoneCubicSpline{[(0.0, 0.039215688: 0.003921569), (10.0, 0.078431375: 0.003921569), (30.0, 0.15686275: 0.003921569), (60.0, 0.27450982: 0.0039215684), (100.0, 0.43137255: 0.0039215684), (150.0, 0.627451: 0.003267974), (210.0, 0.78431374: 0.0037037034), (255.0, 1.0: 0.004793028)]}
+  mScreenBrightnessRangeMinimum=1
+  mScreenBrightnessRangeMaximum=255
+  mLightSensorWarmUpTimeConfig=0
+  mBrighteningLightDebounceConfig=4000
+  mDarkeningLightDebounceConfig=8000
+  mResetAmbientLuxAfterWarmUpConfig=true
+
+Automatic Brightness Controller State:
+  mLightSensor={Sensor name="TSL27713FN", vendor="Taos", version=1, type=5, maxRange=3626657.8, resolution=1.0, power=0.75, minDelay=0}
+  mTwilight.getCurrentState()=null
+  mLightSensorEnabled=true
+  mLightSensorEnableTime=8399738 (30111 ms ago)
+  mAmbientLux=0.0
+  mBrighteningLuxThreshold=0.0
+  mDarkeningLuxThreshold=0.0
+  mLastObservedLux=0.0
+  mLastObservedLuxTime=0 (8429849 ms ago)
+  mRecentLightSamples=0
+  mAmbientLightRingBuffer=[]
+  mScreenAutoBrightness=-1
+  mScreenAutoBrightnessAdjustment=0.0
+  mLastScreenAutoBrightnessGamma=1.0
+  mDozing=false
+
+#+END_SRC
+
+* dumpsys input
+#+BEGIN_SRC 
+$ adb shell dumpsys input
+INPUT MANAGER (dumpsys input)
+
+Input Manager State:
+  Interactive: false
+  System UI Visibility: 0x8600
+  Pointer Speed: 0
+  Pointer Gestures Enabled: true
+  Show Touches: false
+
+Event Hub State:
+  BuiltInKeyboardId: -2
+  Devices:
+    -1: Virtual
+      Classes: 0x40000023
+      Path: <virtual>
+      Descriptor: a718a782d34bc767f4689c232d64d527998ea7fd
+      Location:
+      ControllerNumber: 0
+      UniqueId: <virtual>
+      Identifier: bus=0x0000, vendor=0x0000, product=0x0000, version=0x0000
+      KeyLayoutFile: /system/usr/keylayout/Generic.kl
+      KeyCharacterMapFile: /system/usr/keychars/Virtual.kcm
+      ConfigurationFile:
+      HaveKeyboardLayoutOverlay: false
+    1: msm8996-tasha-mtp-snd-card Button Jack
+      Classes: 0x00000001
+      Path: /dev/input/event11
+      Descriptor: 698ffb145a51c95c547fad528fb8595ff120f553
+      Location: ALSA
+      ControllerNumber: 0
+      UniqueId:
+      Identifier: bus=0x0000, vendor=0x0000, product=0x0000, version=0x0000
+      KeyLayoutFile: /system/usr/keylayout/Generic.kl
+      KeyCharacterMapFile: /system/usr/keychars/Generic.kcm
+      ConfigurationFile:
+      HaveKeyboardLayoutOverlay: false
+    2: msm8996-tasha-mtp-snd-card Headset Jack
+      Classes: 0x00000080
+      Path: /dev/input/event10
+      Descriptor: 2d922c0a854cb40c1dad809affcb83d850190c3b
+      Location: ALSA
+      ControllerNumber: 0
+      UniqueId:
+      Identifier: bus=0x0000, vendor=0x0000, product=0x0000, version=0x0000
+      KeyLayoutFile:
+      KeyCharacterMapFile:
+      ConfigurationFile:
+      HaveKeyboardLayoutOverlay: false
+    3: qpnp_pon
+      Classes: 0x00000001
+      Path: /dev/input/event8
+      Descriptor: fb60d4f4370f5dbe8267b63d38dea852987571ab
+      Location: qpnp_pon/input0
+      ControllerNumber: 0
+      UniqueId:
+      Identifier: bus=0x0000, vendor=0x0000, product=0x0000, version=0x0000
+      KeyLayoutFile: /system/usr/keylayout/qpnp_pon.kl
+      KeyCharacterMapFile: /system/usr/keychars/Generic.kcm
+      ConfigurationFile:
+      HaveKeyboardLayoutOverlay: false
+    4: hall-switch
+      Classes: 0x00000001
+      Path: /dev/input/event7
+      Descriptor: 17dfe958c111dc95a7a0669d3e0f47ce68cc42d4
+      Location:
+      ControllerNumber: 0
+      UniqueId:
+      Identifier: bus=0x0000, vendor=0x0000, product=0x0000, version=0x0000
+      KeyLayoutFile: /system/usr/keylayout/Generic.kl
+      KeyCharacterMapFile: /system/usr/keychars/Generic.kcm
+      ConfigurationFile:
+      HaveKeyboardLayoutOverlay: false
+    5: hbtp_vm
+      Classes: 0x00000008
+      Path: /dev/input/event6
+      Descriptor: 793e303307c34fc398863d5f83ee4c6ea6a7c5c6
+      Location:
+      ControllerNumber: 0
+      UniqueId:
+      Identifier: bus=0x0000, vendor=0x0000, product=0x0000, version=0x0000
+      KeyLayoutFile:
+      KeyCharacterMapFile:
+      ConfigurationFile:
+      HaveKeyboardLayoutOverlay: false
+    6: goodix-ts
+      Classes: 0x00000014
+      Path: /dev/input/event5
+      Descriptor: 9e6143a1bc5dd41251b165ed559e32d49b5aad8f
+      Location: input/ts
+      ControllerNumber: 0
+      UniqueId:
+      Identifier: bus=0x0018, vendor=0xdead, product=0xbeef, version=0x28bb
+      KeyLayoutFile:
+      KeyCharacterMapFile:
+      ConfigurationFile:
+      HaveKeyboardLayoutOverlay: false
+    10: fpc1020tp
+      Classes: 0x00000001
+      Path: /dev/input/event1
+      Descriptor: d1270101ad57f609371fd689d39d97814d1de86d
+      Location:
+      ControllerNumber: 0
+      UniqueId:
+      Identifier: bus=0x0000, vendor=0x0000, product=0x0000, version=0x0000
+      KeyLayoutFile: /system/usr/keylayout/fpc1020tp.kl
+      KeyCharacterMapFile: /system/usr/keychars/Generic.kcm
+      ConfigurationFile:
+      HaveKeyboardLayoutOverlay: false
+    11: qbt1000_key_input
+      Classes: 0x00000005
+      Path: /dev/input/event0
+      Descriptor: 485d69228e24f5e46da1598745890b214130dbc4
+      Location:
+      ControllerNumber: 0
+      UniqueId:
+      Identifier: bus=0x0019, vendor=0x0001, product=0x0001, version=0x0100
+      KeyLayoutFile: /system/usr/keylayout/Generic.kl
+      KeyCharacterMapFile: /system/usr/keychars/Generic.kcm
+      ConfigurationFile:
+      HaveKeyboardLayoutOverlay: false
+    12: gpio-keys
+      Classes: 0x00000001
+      Path: /dev/input/event9
+      Descriptor: d2c52ff0f656fac4cd7b7a118d575e0109a9fe1c
+      Location: gpio-keys/input0
+      ControllerNumber: 0
+      UniqueId:
+      Identifier: bus=0x0019, vendor=0x0001, product=0x0001, version=0x0100
+      KeyLayoutFile: /system/usr/keylayout/gpio-keys.kl
+      KeyCharacterMapFile: /system/usr/keychars/Generic.kcm
+      ConfigurationFile:
+      HaveKeyboardLayoutOverlay: false
+
+Input Reader State:
+  Device -1: Virtual
+    Generation: 2
+    IsExternal: false
+    HasMic:     false
+    Sources: 0x00000301
+    KeyboardType: 2
+    Keyboard Input Mapper:
+      Parameters:
+        HasAssociatedDisplay: false
+        OrientationAware: false
+        HandlesKeyRepeat: false
+      KeyboardType: 2
+      Orientation: 0
+      KeyDowns: 0 keys currently down
+      MetaState: 0x0
+      DownTime: 0
+  Device 1: msm8996-tasha-mtp-snd-card Button Jack
+    Generation: 21
+    IsExternal: false
+    HasMic:     false
+    Sources: 0x00000101
+    KeyboardType: 1
+    Keyboard Input Mapper:
+      Parameters:
+        HasAssociatedDisplay: false
+        OrientationAware: false
+        HandlesKeyRepeat: false
+      KeyboardType: 1
+      Orientation: 0
+      KeyDowns: 0 keys currently down
+      MetaState: 0x0
+      DownTime: 0
+  Device 2: msm8996-tasha-mtp-snd-card Headset Jack
+    Generation: 19
+    IsExternal: false
+    HasMic:     false
+    Sources: 0x80000000
+    KeyboardType: 0
+    Switch Input Mapper:
+      SwitchValues: 0
+  Device 3: qpnp_pon
+    Generation: 17
+    IsExternal: false
+    HasMic:     false
+    Sources: 0x00000101
+    KeyboardType: 1
+    Keyboard Input Mapper:
+      Parameters:
+        HasAssociatedDisplay: false
+        OrientationAware: false
+        HandlesKeyRepeat: false
+      KeyboardType: 1
+      Orientation: 0
+      KeyDowns: 0 keys currently down
+      MetaState: 0x0
+      DownTime: 8399718662000
+  Device 4: hall-switch
+    Generation: 15
+    IsExternal: false
+    HasMic:     false
+    Sources: 0x00000101
+    KeyboardType: 1
+    Keyboard Input Mapper:
+      Parameters:
+        HasAssociatedDisplay: false
+        OrientationAware: false
+        HandlesKeyRepeat: false
+      KeyboardType: 1
+      Orientation: 0
+      KeyDowns: 0 keys currently down
+      MetaState: 0x0
+      DownTime: 0
+  Device 5: hbtp_vm
+    Generation: 35
+    IsExternal: false
+    HasMic:     false
+    Sources: 0x00002002
+    KeyboardType: 0
+    Motion Ranges:
+      X: source=0x00002002, min=0.000, max=1079.000, flat=0.000, fuzz=0.000, resolution=0.000
+      Y: source=0x00002002, min=0.000, max=1919.000, flat=0.000, fuzz=0.000, resolution=0.000
+      PRESSURE: source=0x00002002, min=0.000, max=1.000, flat=0.000, fuzz=0.000, resolution=0.000
+    Cursor Input Mapper:
+      Parameters:
+        HasAssociatedDisplay: true
+        Mode: pointer
+        OrientationAware: false
+      XScale: 1.000
+      YScale: 1.000
+      XPrecision: 1.000
+      YPrecision: 1.000
+      HaveVWheel: false
+      HaveHWheel: false
+      VWheelScale: 1.000
+      HWheelScale: 1.000
+      Orientation: 0
+      ButtonState: 0x00000000
+      Down: false
+      DownTime: 0
+  Device 6: goodix-ts
+    Generation: 36
+    IsExternal: false
+    HasMic:     false
+    Sources: 0x00001002
+    KeyboardType: 0
+    Motion Ranges:
+      X: source=0x00001002, min=0.000, max=1079.000, flat=0.000, fuzz=0.000, resolution=0.000
+      Y: source=0x00001002, min=0.000, max=1919.000, flat=0.000, fuzz=0.000, resolution=0.000
+      PRESSURE: source=0x00001002, min=0.000, max=1.000, flat=0.000, fuzz=0.000, resolution=0.000
+      SIZE: source=0x00001002, min=0.000, max=1.000, flat=0.000, fuzz=0.000, resolution=0.000
+      TOUCH_MAJOR: source=0x00001002, min=0.000, max=2202.907, flat=0.000, fuzz=0.000, resolution=0.000
+      TOUCH_MINOR: source=0x00001002, min=0.000, max=2202.907, flat=0.000, fuzz=0.000, resolution=0.000
+      TOOL_MAJOR: source=0x00001002, min=0.000, max=2202.907, flat=0.000, fuzz=0.000, resolution=0.000
+      TOOL_MINOR: source=0x00001002, min=0.000, max=2202.907, flat=0.000, fuzz=0.000, resolution=0.000
+    Touch Input Mapper:
+      Parameters:
+        GestureMode: spots
+        DeviceType: touchScreen
+        AssociatedDisplay: hasAssociatedDisplay=true, isExternal=false
+        OrientationAware: true
+      Raw Touch Axes:
+        X: min=0, max=1080, flat=0, fuzz=0, resolution=0
+        Y: min=0, max=1920, flat=0, fuzz=0, resolution=0
+        Pressure: min=0, max=255, flat=0, fuzz=0, resolution=0
+        TouchMajor: min=0, max=255, flat=0, fuzz=0, resolution=0
+        TouchMinor: unknown range
+        ToolMajor: unknown range
+        ToolMinor: unknown range
+        Orientation: unknown range
+        Distance: unknown range
+        TiltX: unknown range
+        TiltY: unknown range
+        TrackingId: min=0, max=255, flat=0, fuzz=0, resolution=0
+        Slot: unknown range
+      Calibration:
+        touch.size.calibration: geometric
+        touch.pressure.calibration: physical
+        touch.orientation.calibration: none
+        touch.distance.calibration: none
+        touch.coverage.calibration: none
+      Affine Transformation:
+        X scale: 1.000
+        X ymix: 0.000
+        X offset: 0.000
+        Y xmix: 0.000
+        Y scale: 1.000
+        Y offset: 0.000
+      Viewport: displayId=0, orientation=0, logicalFrame=[0, 0, 1080, 1920], physicalFrame=[0, 0, 1080, 1920], deviceSize=[1080, 1920]
+      SurfaceWidth: 1080px
+      SurfaceHeight: 1920px
+      SurfaceLeft: 0
+      SurfaceTop: 0
+      SurfaceOrientation: 0
+      Translation and Scaling Factors:
+        XTranslate: 0.000
+        YTranslate: 0.000
+        XScale: 0.999
+        YScale: 0.999
+        XPrecision: 1.001
+        YPrecision: 1.001
+        GeometricScale: 0.999
+        PressureScale: 0.004
+        SizeScale: 0.004
+        OrientationScale: 0.000
+        DistanceScale: 0.000
+        HaveTilt: false
+        TiltXCenter: 0.000
+        TiltXScale: 0.000
+        TiltYCenter: 0.000
+        TiltYScale: 0.000
+      Last Raw Button State: 0x00000000
+      Last Raw Touch: pointerCount=0
+      Last Cooked Button State: 0x00000000
+      Last Cooked Touch: pointerCount=0
+      Stylus Fusion:
+        ExternalStylusConnected: false
+        External Stylus ID: -1
+        External Stylus Data Timeout: 9223372036854775807
+      External Stylus State:
+        When: 9223372036854775807
+        Pressure: 0.000000
+        Button State: 0x00000000
+        Tool Type: 0
+  Device 10: fpc1020tp
+    Generation: 8
+    IsExternal: false
+    HasMic:     false
+    Sources: 0x00000101
+    KeyboardType: 1
+    Keyboard Input Mapper:
+      Parameters:
+        HasAssociatedDisplay: false
+        OrientationAware: false
+        HandlesKeyRepeat: false
+      KeyboardType: 1
+      Orientation: 0
+      KeyDowns: 0 keys currently down
+      MetaState: 0x0
+      DownTime: 5933466261000
+  Device 11: qbt1000_key_input
+    Generation: 37
+    IsExternal: false
+    HasMic:     false
+    Sources: 0x00002103
+    KeyboardType: 1
+    Motion Ranges:
+      X: source=0x00002002, min=0.000, max=1079.000, flat=0.000, fuzz=0.000, resolution=0.000
+      Y: source=0x00002002, min=0.000, max=1919.000, flat=0.000, fuzz=0.000, resolution=0.000
+      PRESSURE: source=0x00002002, min=0.000, max=1.000, flat=0.000, fuzz=0.000, resolution=0.000
+    Keyboard Input Mapper:
+      Parameters:
+        HasAssociatedDisplay: false
+        OrientationAware: false
+        HandlesKeyRepeat: false
+      KeyboardType: 1
+      Orientation: 0
+      KeyDowns: 0 keys currently down
+      MetaState: 0x0
+      DownTime: 0
+    Touch Input Mapper:
+      Parameters:
+        GestureMode: spots
+        DeviceType: pointer
+        AssociatedDisplay: hasAssociatedDisplay=true, isExternal=false
+        OrientationAware: false
+      Raw Touch Axes:
+        X: min=0, max=1000, flat=0, fuzz=0, resolution=0
+        Y: min=0, max=1000, flat=0, fuzz=0, resolution=0
+        Pressure: unknown range
+        TouchMajor: unknown range
+        TouchMinor: unknown range
+        ToolMajor: unknown range
+        ToolMinor: unknown range
+        Orientation: unknown range
+        Distance: unknown range
+        TiltX: unknown range
+        TiltY: unknown range
+        TrackingId: unknown range
+        Slot: unknown range
+      Calibration:
+        touch.size.calibration: none
+        touch.pressure.calibration: none
+        touch.orientation.calibration: none
+        touch.distance.calibration: none
+        touch.coverage.calibration: none
+      Affine Transformation:
+        X scale: 1.000
+        X ymix: 0.000
+        X offset: 0.000
+        Y xmix: 0.000
+        Y scale: 1.000
+        Y offset: 0.000
+      Viewport: displayId=0, orientation=0, logicalFrame=[0, 0, 1080, 1920], physicalFrame=[0, 0, 1080, 1920], deviceSize=[1080, 1920]
+      SurfaceWidth: 1080px
+      SurfaceHeight: 1920px
+      SurfaceLeft: 0
+      SurfaceTop: 0
+      SurfaceOrientation: 0
+      Translation and Scaling Factors:
+        XTranslate: 0.000
+        YTranslate: 0.000
+        XScale: 1.079
+        YScale: 1.918
+        XPrecision: 0.927
+        YPrecision: 0.521
+        GeometricScale: 1.499
+        PressureScale: 0.000
+        SizeScale: 0.000
+        OrientationScale: 0.000
+        DistanceScale: 0.000
+        HaveTilt: false
+        TiltXCenter: 0.000
+        TiltXScale: 0.000
+        TiltYCenter: 0.000
+        TiltYScale: 0.000
+      Last Raw Button State: 0x00000000
+      Last Raw Touch: pointerCount=0
+      Last Cooked Button State: 0x00000000
+      Last Cooked Touch: pointerCount=0
+      Stylus Fusion:
+        ExternalStylusConnected: false
+        External Stylus ID: -1
+        External Stylus Data Timeout: 9223372036854775807
+      External Stylus State:
+        When: 9223372036854775807
+        Pressure: 0.000000
+        Button State: 0x00000000
+        Tool Type: 0
+      Pointer Gesture Detector:
+        XMovementScale: 1.245
+        YMovementScale: 1.245
+        XZoomScale: 0.467
+        YZoomScale: 0.467
+        MaxSwipeWidth: 353.906952
+  Device 12: gpio-keys
+    Generation: 4
+    IsExternal: false
+    HasMic:     false
+    Sources: 0x00000101
+    KeyboardType: 1
+    Keyboard Input Mapper:
+      Parameters:
+        HasAssociatedDisplay: false
+        OrientationAware: false
+        HandlesKeyRepeat: false
+      KeyboardType: 1
+      Orientation: 0
+      KeyDowns: 0 keys currently down
+      MetaState: 0x0
+      DownTime: 5893020548000
+  Configuration:
+    ExcludedDeviceNames: []
+    VirtualKeyQuietTime: 0.0ms
+    PointerVelocityControlParameters: scale=1.000, lowThreshold=500.000, highThreshold=3000.000, acceleration=3.000
+    WheelVelocityControlParameters: scale=1.000, lowThreshold=15.000, highThreshold=50.000, acceleration=4.000
+    PointerGesture:
+      Enabled: true
+      QuietInterval: 100.0ms
+      DragMinSwitchSpeed: 50.0px/s
+      TapInterval: 150.0ms
+      TapDragInterval: 300.0ms
+      TapSlop: 20.0px
+      MultitouchSettleInterval: 100.0ms
+      MultitouchMinDistance: 15.0px
+      SwipeTransitionAngleCosine: 0.3
+      SwipeMaxWidthRatio: 0.2
+      MovementSpeedRatio: 0.8
+      ZoomSpeedRatio: 0.3
+
+Input Dispatcher State:
+  DispatchEnabled: 1
+  DispatchFrozen: 0
+  FocusedApplication: name='AppWindowToken{faab6b8 token=Token{514c9cc ActivityRecord{f5587ff u0 com.android.settings/.Settings t12}}}', dispatchingTimeout=5000.000ms
+  FocusedWindow: name='Window{a30bb9f u0 StatusBar}'
+  TouchStates: <no displays touched>
+  Windows:
+    0: name='Window{a30bb9f u0 StatusBar}', displayId=0, paused=false, hasFocus=true, hasWallpaper=false, visible=true, canReceiveKeys=true, flags=0x81960040, type=0x000007d0, layer=161000, frame=[0,0][1080,1920], scale=1.000000, touchableRegion=[0,0][1080,1920], inputFeatures=0x00000004, ownerPid=1769, ownerUid=10020, dispatchingTimeout=5000.000ms
+    1: name='Window{1a304c9 u0 KeyguardScrim}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=false, canReceiveKeys=false, flags=0x01110900, type=0x000007ed, layer=141000, frame=[0,0][1080,1920], scale=1.000000, touchableRegion=[0,0][1080,1920], inputFeatures=0x00000000, ownerPid=1116, ownerUid=1000, dispatchingTimeout=5000.000ms
+    2: name='Window{5faff8d u0 com.android.systemui.ImageWallpaper}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=true, canReceiveKeys=false, flags=0x00000318, type=0x000007dd, layer=21045, frame=[0,0][1080,1920], scale=1.000000, touchableRegion=[0,0][1080,1920], inputFeatures=0x00000000, ownerPid=1769, ownerUid=10020, dispatchingTimeout=5000.000ms
+    3: name='Window{c41f8ff u0 InputMethod}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=false, canReceiveKeys=false, flags=0x01800108, type=0x000007db, layer=21040, frame=[0,72][1080,1920], scale=1.000000, touchableRegion=[0,1130][1080,1920], inputFeatures=0x00000000, ownerPid=2295, ownerUid=10038, dispatchingTimeout=5000.000ms
+    4: name='Window{b9d4ac7 u0 com.android.settings/com.android.settings.Settings}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=false, canReceiveKeys=false, flags=0x81810120, type=0x00000001, layer=21035, frame=[0,0][1080,1920], scale=1.000000, touchableRegion=[0,0][1080,1920], inputFeatures=0x00000000, ownerPid=1851, ownerUid=1000, dispatchingTimeout=5000.000ms
+    5: name='Window{b2c4219 u0 com.android.deskclock/com.android.deskclock.DeskClock}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=false, canReceiveKeys=false, flags=0x81810120, type=0x00000001, layer=21030, frame=[0,0][1080,1920], scale=1.000000, touchableRegion=[0,0][1080,1920], inputFeatures=0x00000000, ownerPid=2529, ownerUid=10029, dispatchingTimeout=5000.000ms
+    6: name='Window{87dbb2c u0 com.android.calculator2/com.android.calculator2.Calculator}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=false, canReceiveKeys=false, flags=0x81810120, type=0x00000001, layer=21025, frame=[0,0][1080,1920], scale=1.000000, touchableRegion=[0,0][1080,1920], inputFeatures=0x00000000, ownerPid=10055, ownerUid=10032, dispatchingTimeout=5000.000ms
+    7: name='Window{7ff0888 u0 com.android.quicksearchbox/com.android.quicksearchbox.SearchActivity}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=false, canReceiveKeys=false, flags=0x01810120, type=0x00000001, layer=21020, frame=[0,0][1080,1920], scale=1.000000, touchableRegion=[0,0][1080,1920], inputFeatures=0x00000000, ownerPid=9985, ownerUid=10053, dispatchingTimeout=5000.000ms
+    8: name='Window{d3105d3 u0 com.android.gallery3d/com.android.gallery3d.app.GalleryActivity}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=false, canReceiveKeys=false, flags=0x01810120, type=0x00000001, layer=21015, frame=[0,0][1080,1920], scale=1.000000, touchableRegion=[0,0][1080,1920], inputFeatures=0x00000000, ownerPid=9934, ownerUid=10035, dispatchingTimeout=5000.000ms
+    9: name='Window{b26db5f u0 com.android.calendar/com.android.calendar.AllInOneActivity}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=false, canReceiveKeys=false, flags=0x01810120, type=0x00000001, layer=21005, frame=[0,0][1080,1920], scale=1.000000, touchableRegion=[0,0][1080,1920], inputFeatures=0x00000000, ownerPid=2799, ownerUid=10025, dispatchingTimeout=5000.000ms
+    10: name='Window{5c0e160 u0 com.android.launcher/com.android.launcher2.Launcher}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=false, canReceiveKeys=false, flags=0x01910120, type=0x00000001, layer=21000, frame=[0,0][1080,1920], scale=1.000000, touchableRegion=[0,0][1080,1920], inputFeatures=0x00000000, ownerPid=2366, ownerUid=10010, dispatchingTimeout=5000.000ms
+  MonitoringChannels:
+    0: 'WindowManager (server)'
+  RecentQueue: length=10
+    MotionEvent(deviceId=6, source=0x00001002, action=1, actionButton=0x00000000, flags=0x00000000, metaState=0x00000000, buttonState=0x00000000, edgeFlags=0x00000000, xPrecision=1.0, yPrecision=1.0, displayId=0, pointers=[0: (222.8, 858.6)]), policyFlags=0x62000000, age=124698.0ms
+    MotionEvent(deviceId=6, source=0x00001002, action=0, actionButton=0x00000000, flags=0x00000000, metaState=0x00000000, buttonState=0x00000000, edgeFlags=0x00000000, xPrecision=1.0, yPrecision=1.0, displayId=0, pointers=[0: (1031.0, 1542.2)]), policyFlags=0x62000000, age=124039.1ms
+    MotionEvent(deviceId=6, source=0x00001002, action=2, actionButton=0x00000000, flags=0x00000000, metaState=0x00000000, buttonState=0x00000000, edgeFlags=0x00000000, xPrecision=1.0, yPrecision=1.0, displayId=0, pointers=[0: (1031.0, 1542.2)]), policyFlags=0x62000000, age=124030.4ms
+    MotionEvent(deviceId=6, source=0x00001002, action=2, actionButton=0x00000000, flags=0x00000000, metaState=0x00000000, buttonState=0x00000000, edgeFlags=0x00000000, xPrecision=1.0, yPrecision=1.0, displayId=0, pointers=[0: (1031.0, 1542.2)]), policyFlags=0x62000000, age=124021.3ms
+    MotionEvent(deviceId=6, source=0x00001002, action=2, actionButton=0x00000000, flags=0x00000000, metaState=0x00000000, buttonState=0x00000000, edgeFlags=0x00000000, xPrecision=1.0, yPrecision=1.0, displayId=0, pointers=[0: (1031.0, 1542.2)]), policyFlags=0x62000000, age=124012.3ms
+    MotionEvent(deviceId=6, source=0x00001002, action=2, actionButton=0x00000000, flags=0x00000000, metaState=0x00000000, buttonState=0x00000000, edgeFlags=0x00000000, xPrecision=1.0, yPrecision=1.0, displayId=0, pointers=[0: (1031.0, 1542.2)]), policyFlags=0x62000000, age=124003.9ms
+    MotionEvent(deviceId=6, source=0x00001002, action=2, actionButton=0x00000000, flags=0x00000000, metaState=0x00000000, buttonState=0x00000000, edgeFlags=0x00000000, xPrecision=1.0, yPrecision=1.0, displayId=0, pointers=[0: (1031.0, 1542.2)]), policyFlags=0x62000000, age=123994.9ms
+    MotionEvent(deviceId=6, source=0x00001002, action=2, actionButton=0x00000000, flags=0x00000000, metaState=0x00000000, buttonState=0x00000000, edgeFlags=0x00000000, xPrecision=1.0, yPrecision=1.0, displayId=0, pointers=[0: (1031.0, 1542.2)]), policyFlags=0x62000000, age=123985.6ms
+    MotionEvent(deviceId=6, source=0x00001002, action=2, actionButton=0x00000000, flags=0x00000000, metaState=0x00000000, buttonState=0x00000000, edgeFlags=0x00000000, xPrecision=1.0, yPrecision=1.0, displayId=0, pointers=[0: (1031.0, 1542.2)]), policyFlags=0x62000000, age=123976.5ms
+    MotionEvent(deviceId=6, source=0x00001002, action=1, actionButton=0x00000000, flags=0x00000000, metaState=0x00000000, buttonState=0x00000000, edgeFlags=0x00000000, xPrecision=1.0, yPrecision=1.0, displayId=0, pointers=[0: (1031.0, 1542.2)]), policyFlags=0x62000000, age=123967.1ms
+  PendingEvent: <none>
+  InboundQueue: <empty>
+  ReplacedKeys: <empty>
+  Connections:
+    0: channelName='b9d4ac7 com.android.settings/com.android.settings.Settings (server)', windowName='Window{b9d4ac7 u0 com.android.settings/com.android.settings.Settings}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    1: channelName='WindowManager (server)', windowName='monitor', status=NORMAL, monitor=true, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    2: channelName='5faff8d com.android.systemui.ImageWallpaper (server)', windowName='Window{5faff8d u0 com.android.systemui.ImageWallpaper}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    3: channelName='1a304c9 KeyguardScrim (server)', windowName='Window{1a304c9 u0 KeyguardScrim}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    4: channelName='b26db5f com.android.calendar/com.android.calendar.AllInOneActivity (server)', windowName='Window{b26db5f u0 com.android.calendar/com.android.calendar.AllInOneActivity}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    5: channelName='a30bb9f StatusBar (server)', windowName='Window{a30bb9f u0 StatusBar}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    6: channelName='d3105d3 com.android.gallery3d/com.android.gallery3d.app.GalleryActivity (server)', windowName='Window{d3105d3 u0 com.android.gallery3d/com.android.gallery3d.app.GalleryActivity}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    7: channelName='5c0e160 com.android.launcher/com.android.launcher2.Launcher (server)', windowName='Window{5c0e160 u0 com.android.launcher/com.android.launcher2.Launcher}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    8: channelName='7ff0888 com.android.quicksearchbox/com.android.quicksearchbox.SearchActivity (server)', windowName='Window{7ff0888 u0 com.android.quicksearchbox/com.android.quicksearchbox.SearchActivity}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    9: channelName='c41f8ff InputMethod (server)', windowName='Window{c41f8ff u0 InputMethod}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    10: channelName='87dbb2c com.android.calculator2/com.android.calculator2.Calculator (server)', windowName='Window{87dbb2c u0 com.android.calculator2/com.android.calculator2.Calculator}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    11: channelName='b2c4219 com.android.deskclock/com.android.deskclock.DeskClock (server)', windowName='Window{b2c4219 u0 com.android.deskclock/com.android.deskclock.DeskClock}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+  AppSwitch: not pending
+  Configuration:
+    KeyRepeatDelay: 50.0ms
+    KeyRepeatTimeout: 500.0ms
+
+#+END_SRC

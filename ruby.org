@@ -1,0 +1,14 @@
+
+* rvm
+
+** install ruby without root permission
+
+rvm install ruby --autolibs=rvm_pkg
+
+** Errno::ECONNRESET: Connection reset by peer - SSL_connect
+gem sources --remove https://rubygems.org/
+gem sources -a https://ruby.taobao.org
+gem sources -l
+
+
+

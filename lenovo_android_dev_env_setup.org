@@ -139,14 +139,24 @@ make -j16 all
 
 More detailed k9 branch and build info, please refer to
 http://10.100.124.250:8090/pages/viewpage.action?pageId=5407684
-  
+
+** module
+make bootimage/userimage/lk
+
+** HOST windows
+make USE_MINGW=y adb/fastboot
 
 * File exchange between PC & Linux Server 
 *Filezilla* is recomended for this purpose, and use *sftp* protocol.
 
 * ROM download
+** QPST
 *QPST* is qualcomm's tool for ROM download.
 http://10.100.124.250:8090/pages/viewpage.action?pageId=5408290
+
+** fastboot
+fastboot -i 0x2b4c devices
+
 
 * submit code
 
@@ -168,3 +178,14 @@ repo upload
 [[file:emacs_img/15_04_23_repo_upload.PNG]]
   
 - add a reviewer in gerrit
+
+* 
+
+Target system fs image: out/target/product/k9/obj/PACKAGING/systemimage_intermediates/system.img
+Running:  mkuserimg.sh -s out/target/product/k9/system out/target/product/k9/obj/PACKAGING/systemimage_intermediates/system.img ext4 system 2147483648 out/target/product/k9/root/file_contexts
+make_ext4fs -s -T -1 -S out/target/product/k9/root/file_contexts -l 2147483648 -a system out/target/product/k9/obj/PACKAGING/systemimage_intermediates/system.img out/target/product/k9/system
+procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----
+
+Running:  simg2img /tmp/system-VYZUlY.img /tmp/unsparse_system-VYZUlY.img
+Running:  e2fsck -f -n /tmp/unsparse_system-VYZUlY.img
+

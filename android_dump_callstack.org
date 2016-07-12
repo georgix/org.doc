@@ -1,0 +1,35 @@
+#+TITLE: Android System: Dump Callstack/Backtrace
+#+AUTHOR: Zhang Jing
+#+OPTIONS: ^:nil
+#+LINK_HOME: http://
+#+LINK_UP: http://
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main-ltr.css" />  <link rel="stylesheet" type="text/css" href="css/shared.css" />  <link rel="stylesheet" type="text/css" href="css/common.css" /> 
+
+
+* java
+Thread.dumpStack() Prints a stack trace of the current thread to the standard error stream. 
+Thread.getAllStackTraces() Returns a map of stack traces for all live threads.
+Thread.getStackTrace() Returns an array of stack trace elements representing the stack dump of this thread.
+Throwable.getStackTrace(). Just create a new Throwable; you don't actually have to throw it.
+new RuntimeException().printStackTrace();
+
+* cpp
+
+#+BEGIN_SRC 
+#include "utils/CallStack.h"
+
+android::CallStack stack("backtrace");
+#+END_SRC
+
+#+BEGIN_SRC 
+#include "backtrace/Backtrace.h"
+#include <UniquePtr.h>
+
+UniquePtr<Backtrace> bt(Backtrace::Create(-1, 0));
+if (bt->Unwind(0, uc)) {
+  for (size_t i = 0; i < bt->NumFrames(); i++)
+    LOG << android::String8(bt->FormatFrameData(i).c_str());
+}
+#+END_SRC
+
+* kernel
