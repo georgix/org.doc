@@ -1,0 +1,36 @@
+* Install basictex on mac
+
+Instead of the full MacTex, https://www.tug.org/mactex/morepackages.html might be a better choise for most people.
+
+* install additional packages
+
+#+BEGIN_SRC 
+! LaTeX Error: File `filehook.sty' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: sty)
+
+#+END_SRC
+
+when some module is not installed, just install it with 
+
+#+BEGIN_SRC 
+hangs-MBP:examples george$ sudo tlmgr install filehook
+tlmgr: package repository http://mirror.aut.ac.nz/CTAN/systems/texlive/tlnet (not verified: gnupg not available)
+[1/1, ??:??/??:??] install: filehook [4k]
+tlmgr: package log updated: /usr/local/texlive/2016basic/texmf-var/web2c/tlmgr.log
+running mktexlsr ...
+done running mktexlsr.
+
+#+END_SRC
+
+sometimes we may need to search for the exact package to install
+
+#+BEGIN_SRC 
+Zhangs-MBP:examples george$ sudo tlmgr list | grep math
+  12many: Generalising mathematical index sets
+  Asana-Math: A font to typeset maths in Xe(La)TeX and Lua(La)TeX
+  abraces: Asymmetric over-/underbraces in maths
+i amsmath: AMS mathematical facilities for LaTeX
+
+#+END_SRC
